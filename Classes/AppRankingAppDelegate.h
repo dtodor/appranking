@@ -32,16 +32,12 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "ARRankQuery.h"
 #import "ARMainViewController.h"
 
 
-@interface AppRankingAppDelegate : NSObject <NSApplicationDelegate, RankQueryDelegate> {
+@interface AppRankingAppDelegate : NSObject <NSApplicationDelegate> {
     NSWindow *window;
 	ARMainViewController *mainViewController;
-	
-	NSMutableArray *runningQueries;
-	NSMutableArray *pendingQueries;
 }
 
 @property (assign) IBOutlet NSWindow *window;

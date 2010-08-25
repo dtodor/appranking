@@ -196,4 +196,8 @@ NSString * tupleTypeUrlPart(CategoryTupleType type) {
 	return dict;
 }
 
+- (NSString *)typeName {
+	return tupleTypeName(type);
+}
+
 @end

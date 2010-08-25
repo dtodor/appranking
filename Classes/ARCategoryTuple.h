@@ -54,5 +54,6 @@ typedef enum {
 - (id)initWithDictionary:(NSDictionary *)dictionary error:(NSError **)error;
 
 - (NSURL *)rankingURLForCountry:(NSString *)country;
+- (NSString *)typeName;
 
 @end

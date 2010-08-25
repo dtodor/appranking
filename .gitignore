@@ -1,2 +1,4 @@
 build
 .DS_Store
+AppRanking.xcodeproj/*.pbxuser
+AppRanking.xcodeproj/*.perspectivev3

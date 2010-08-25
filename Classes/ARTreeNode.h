@@ -31,27 +31,26 @@
  *
  */
 
-#import "AppRankingAppDelegate.h"
-#import "ARConfiguration.h"
+#import <Cocoa/Cocoa.h>
 
 
-@implementation AppRankingAppDelegate
-
-@synthesize window;
-@synthesize mainViewController;
-
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-	NSError *error = nil;
-	if (![[ARConfiguration sharedARConfiguration] loadConfiguration:&error]) {
-		[window presentError:error];
-	}
-	NSView *mainView = [mainViewController view];
-	NSView *contentView = [window contentView];
-	CGRect frame = [contentView frame];
-	[mainView setFrame:frame];
-	[[window contentView] addSubview:mainView];
-	
-	[mainViewController reloadApplications];
+@interface ARTreeNode : NSObject {
+	NSMutableArray *children;
+	NSString *name;
+	NSImage *icon;
+	NSUInteger badge;
+	BOOL displaysBadge;
+	id userObject;
 }
+
+@property (readonly, assign) ARTreeNode *parent;
+@property (readonly, retain) NSArray *children;
+@property (copy) NSString *name;
+@property (retain) NSImage *icon;
+@property NSUInteger badge;
+@property BOOL displaysBadge;
+@property (retain) id userObject;
+
+- (void)addChild:(ARTreeNode *)child;
 
 @end

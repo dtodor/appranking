@@ -31,27 +31,47 @@
  *
  */
 
-#import "AppRankingAppDelegate.h"
-#import "ARConfiguration.h"
+#import "ARTreeNode.h"
+
+@interface ARTreeNode()
+
+@property (assign) ARTreeNode *parent;
+@property (retain) NSArray *children;
+
+@end
 
 
-@implementation AppRankingAppDelegate
+@implementation ARTreeNode
 
-@synthesize window;
-@synthesize mainViewController;
+@synthesize parent;
+@synthesize children;
+@synthesize name;
+@synthesize icon;
+@synthesize badge;
+@synthesize displaysBadge;
+@synthesize userObject;
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-	NSError *error = nil;
-	if (![[ARConfiguration sharedARConfiguration] loadConfiguration:&error]) {
-		[window presentError:error];
+- (id)init {
+	self = [super init];
+	if (self != nil) {
+		self.children = [NSMutableArray array];
 	}
-	NSView *mainView = [mainViewController view];
-	NSView *contentView = [window contentView];
-	CGRect frame = [contentView frame];
-	[mainView setFrame:frame];
-	[[window contentView] addSubview:mainView];
-	
-	[mainViewController reloadApplications];
+	return self;
+}
+
+- (void)dealloc {
+	self.userObject = nil;
+	self.icon = nil;
+	self.children = nil;
+	self.name = nil;
+	[super dealloc];
+}
+
+- (void)addChild:(ARTreeNode *)child {
+	if (child) {
+		[children addObject:child];
+		child.parent = self;
+	}
 }
 
 @end

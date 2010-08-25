@@ -40,8 +40,14 @@ typedef enum {
 } ConfigurationErrorCodes;
 
 @interface ARConfiguration : NSObject {
+
+	// NSString -> NSString
 	NSDictionary *appStoreIds;
+
+	// NSString -> NSString
 	NSDictionary *genres;
+	
+	// ARCategoryTuple -> NSArray<ARApplication>
 	NSDictionary *applications;
 }
 
