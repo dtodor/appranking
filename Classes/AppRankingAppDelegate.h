@@ -33,23 +33,18 @@
 
 #import <Cocoa/Cocoa.h>
 #import "ARRankQuery.h"
+#import "ARMainViewController.h"
 
 
 @interface AppRankingAppDelegate : NSObject <NSApplicationDelegate, RankQueryDelegate> {
     NSWindow *window;
-	NSTextView *logTextView;
-	NSButton *startButton;
-	NSProgressIndicator *progressIndicator;
+	ARMainViewController *mainViewController;
 	
 	NSMutableArray *runningQueries;
 	NSMutableArray *pendingQueries;
 }
 
 @property (assign) IBOutlet NSWindow *window;
-@property (retain) IBOutlet NSTextView *logTextView;
-@property (retain) IBOutlet NSButton *startButton;
-@property (retain) IBOutlet NSProgressIndicator *progressIndicator;
-
-- (IBAction)start:(NSButton *)sender;
+@property (assign) IBOutlet ARMainViewController *mainViewController;
 
 @end

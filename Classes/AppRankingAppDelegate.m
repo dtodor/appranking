@@ -40,35 +40,29 @@
 @implementation AppRankingAppDelegate
 
 @synthesize window;
-@synthesize logTextView;
-@synthesize startButton;
-@synthesize progressIndicator;
+@synthesize mainViewController;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 	NSError *error = nil;
 	if (![[ARConfiguration sharedARConfiguration] loadConfiguration:&error]) {
 		[window presentError:error];
 	}
-	[progressIndicator setHidden:YES];
+	NSView *mainView = [mainViewController view];
+	NSView *contentView = [window contentView];
+	CGRect frame = [contentView frame];
+	[mainView setFrame:frame];
+	[[window contentView] addSubview:mainView];
 }
 
 - (void)dealloc {
 	[runningQueries release];
 	[pendingQueries release];
-	self.progressIndicator = nil;
-	self.startButton = nil;
-	self.logTextView = nil;
-	self.window = nil;
 	[super dealloc];
 }
 
 - (IBAction)start:(NSButton *)sender {
 	[sender setEnabled:NO];
 	
-	[progressIndicator setHidden:NO];
-	[progressIndicator setIndeterminate:YES];
-	[progressIndicator setMinValue:0.0];
-
 	runningQueries = [[NSMutableArray alloc] init];
 	pendingQueries = [[NSMutableArray alloc] init];
 	
@@ -89,29 +83,20 @@
 				}
 				[query release];
 			} else {
-				[self.logTextView insertText:[NSString stringWithFormat:@"%@ - %@ failed.\n", country, tuple]];
+				// TODO log error message
 			}
 			count++;
 		}
 	}
-	
-	[progressIndicator setMaxValue:count];
-	[progressIndicator setIndeterminate:NO];
-	[progressIndicator setDoubleValue:0.0];
 }
 
 - (void)processQuery:(ARRankQuery *)query {
-	[progressIndicator setDoubleValue:[progressIndicator doubleValue]+1];
 	[runningQueries removeObject:query];
 	if ([runningQueries count] == 0) {
 		[runningQueries release];
 		runningQueries = nil;
 		[pendingQueries release];
 		pendingQueries = nil;
-		
-		[self.startButton setEnabled:YES];
-		[progressIndicator setHidden:YES];
-		[progressIndicator setIndeterminate:YES];
 	}
 	if ([pendingQueries count] > 0) {
 		ARRankQuery *query = [pendingQueries lastObject];
@@ -127,8 +112,7 @@
 	while (appName = [appNames nextObject]) {
 		id value = [query.ranks objectForKey:appName];
 		if ([value isKindOfClass:[NSNumber class]]) {
-			[self.logTextView insertText:[NSString stringWithFormat:@"[%@] %@ - %d\n", 
-										  appName, query.country, [(NSNumber *)value integerValue]]];
+			// TODO Process rank
 		}
 	}
 	[self processQuery:query];
@@ -139,7 +123,7 @@
 	NSString *message = [NSString stringWithFormat:@"%@ - %@ failed (error: %@)\n", 
 						 query.country, query.category, [error localizedDescription]];
 	NSAttributedString *text = [[NSAttributedString alloc] initWithString:message attributes:attributes];
-	[self.logTextView insertText:text];
+	// TODO log error message
 	[text release];
 	[self processQuery:query];
 }

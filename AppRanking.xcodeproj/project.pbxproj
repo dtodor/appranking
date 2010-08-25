@@ -22,11 +22,29 @@
 		1A2D2D281223B77A0074AE7F /* applications.json in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D2D241223B77A0074AE7F /* applications.json */; };
 		1A2D2D291223B77A0074AE7F /* genres.json in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D2D251223B77A0074AE7F /* genres.json */; };
 		1A2D2D2A1223B77A0074AE7F /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D2D261223B77A0074AE7F /* icon.icns */; };
+		1A2D2EB512255D630074AE7F /* MainView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D2EB412255D630074AE7F /* MainView.xib */; };
+		1A2D2EBD122560460074AE7F /* ARMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2EBC122560460074AE7F /* ARMainViewController.m */; };
+		1A2D2EE4122562E90074AE7F /* BWToolkitFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A2D2EE3122562E90074AE7F /* BWToolkitFramework.framework */; };
+		1A2D2F16122563130074AE7F /* BWToolkitFramework.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A2D2EE3122562E90074AE7F /* BWToolkitFramework.framework */; };
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1A2D2F1B1225632F0074AE7F /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1A2D2F16122563130074AE7F /* BWToolkitFramework.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -59,6 +77,10 @@
 		1A2D2D241223B77A0074AE7F /* applications.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = applications.json; path = Resources/applications.json; sourceTree = "<group>"; };
 		1A2D2D251223B77A0074AE7F /* genres.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = genres.json; path = Resources/genres.json; sourceTree = "<group>"; };
 		1A2D2D261223B77A0074AE7F /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = icon.icns; path = Resources/icon.icns; sourceTree = "<group>"; };
+		1A2D2EB412255D630074AE7F /* MainView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainView.xib; sourceTree = "<group>"; };
+		1A2D2EBB122560460074AE7F /* ARMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARMainViewController.h; sourceTree = "<group>"; };
+		1A2D2EBC122560460074AE7F /* ARMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARMainViewController.m; sourceTree = "<group>"; };
+		1A2D2EE3122562E90074AE7F /* BWToolkitFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BWToolkitFramework.framework; sourceTree = "<group>"; };
 		1AC5B1FC1221B80F00999BCF /* SynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynthesizeSingleton.h; sourceTree = "<group>"; };
 		1DDD58150DA1D0A300B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		256AC3F00F4B6AF500CF3369 /* AppRanking_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppRanking_Prefix.pch; sourceTree = "<group>"; };
@@ -75,6 +97,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				1A2D2EE4122562E90074AE7F /* BWToolkitFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,6 +146,8 @@
 				1A2D2D0A1223B7580074AE7F /* JSON */,
 				1A2D2D161223B7580074AE7F /* SBJSON+Additions.h */,
 				1A2D2D171223B7580074AE7F /* SBJSON+Additions.m */,
+				1A2D2EBB122560460074AE7F /* ARMainViewController.h */,
+				1A2D2EBC122560460074AE7F /* ARMainViewController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -170,11 +195,13 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1A2D2EE3122562E90074AE7F /* BWToolkitFramework.framework */,
 				1A2D2D231223B77A0074AE7F /* app-store-ids.json */,
 				1A2D2D241223B77A0074AE7F /* applications.json */,
 				1A2D2D251223B77A0074AE7F /* genres.json */,
 				1A2D2D261223B77A0074AE7F /* icon.icns */,
 				8D1107310486CEB800E47090 /* AppRanking-Info.plist */,
+				1A2D2EB412255D630074AE7F /* MainView.xib */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
 			);
@@ -200,6 +227,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
+				1A2D2F1B1225632F0074AE7F /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
@@ -239,6 +267,7 @@
 				1A2D2D281223B77A0074AE7F /* applications.json in Resources */,
 				1A2D2D291223B77A0074AE7F /* genres.json in Resources */,
 				1A2D2D2A1223B77A0074AE7F /* icon.icns in Resources */,
+				1A2D2EB512255D630074AE7F /* MainView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +290,7 @@
 				1A2D2D201223B7580074AE7F /* SBJsonParser.m in Sources */,
 				1A2D2D211223B7580074AE7F /* SBJsonWriter.m in Sources */,
 				1A2D2D221223B7580074AE7F /* SBJSON+Additions.m in Sources */,
+				1A2D2EBD122560460074AE7F /* ARMainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,6 +321,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -308,6 +342,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = AppRanking_Prefix.pch;
