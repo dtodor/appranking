@@ -22,8 +22,11 @@
 		1A2D2D281223B77A0074AE7F /* applications.json in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D2D241223B77A0074AE7F /* applications.json */; };
 		1A2D2D291223B77A0074AE7F /* genres.json in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D2D251223B77A0074AE7F /* genres.json */; };
 		1A2D2EBD122560460074AE7F /* ARMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2EBC122560460074AE7F /* ARMainViewController.m */; };
-		1A2D2EE4122562E90074AE7F /* BWToolkitFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A2D2EE3122562E90074AE7F /* BWToolkitFramework.framework */; };
-		1A2D2F16122563130074AE7F /* BWToolkitFramework.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A2D2EE3122562E90074AE7F /* BWToolkitFramework.framework */; };
+		1A45D9B3122640D500A1DF36 /* BWToolkitFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A45D9B1122640D500A1DF36 /* BWToolkitFramework.framework */; };
+		1A45D9B4122640D500A1DF36 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A45D9B2122640D500A1DF36 /* Sparkle.framework */; };
+		1A45D9ED122640FE00A1DF36 /* BWToolkitFramework.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A45D9B1122640D500A1DF36 /* BWToolkitFramework.framework */; };
+		1A45D9EE122640FE00A1DF36 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A45D9B2122640D500A1DF36 /* Sparkle.framework */; };
+		1A45D9F51226430400A1DF36 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 1A45D9F41226430400A1DF36 /* dsa_pub.pem */; };
 		1A5A3C6B122568B800F08485 /* SidebarBadgeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A5A3C68122568B800F08485 /* SidebarBadgeCell.m */; };
 		1A5A3C6C122568B800F08485 /* ARTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A5A3C6A122568B800F08485 /* ARTreeNode.m */; };
 		1A5A3C891225775F00F08485 /* MainView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A5A3C881225775F00F08485 /* MainView.xib */; };
@@ -50,7 +53,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1A2D2F16122563130074AE7F /* BWToolkitFramework.framework in Copy Frameworks */,
+				1A45D9ED122640FE00A1DF36 /* BWToolkitFramework.framework in Copy Frameworks */,
+				1A45D9EE122640FE00A1DF36 /* Sparkle.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -90,7 +94,9 @@
 		1A2D2EB412255D630074AE7F /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainView.xib; sourceTree = "<group>"; };
 		1A2D2EBB122560460074AE7F /* ARMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARMainViewController.h; sourceTree = "<group>"; };
 		1A2D2EBC122560460074AE7F /* ARMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARMainViewController.m; sourceTree = "<group>"; };
-		1A2D2EE3122562E90074AE7F /* BWToolkitFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BWToolkitFramework.framework; sourceTree = "<group>"; };
+		1A45D9B1122640D500A1DF36 /* BWToolkitFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BWToolkitFramework.framework; path = Frameworks/BWToolkitFramework.framework; sourceTree = "<group>"; };
+		1A45D9B2122640D500A1DF36 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
+		1A45D9F41226430400A1DF36 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dsa_pub.pem; path = Resources/Keys/dsa_pub.pem; sourceTree = "<group>"; };
 		1A5A3C67122568B800F08485 /* SidebarBadgeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SidebarBadgeCell.h; sourceTree = "<group>"; };
 		1A5A3C68122568B800F08485 /* SidebarBadgeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SidebarBadgeCell.m; sourceTree = "<group>"; };
 		1A5A3C69122568B800F08485 /* ARTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARTreeNode.h; sourceTree = "<group>"; };
@@ -123,8 +129,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
-				1A2D2EE4122562E90074AE7F /* BWToolkitFramework.framework in Frameworks */,
 				1A5A3E591225BBB000F08485 /* QuartzCore.framework in Frameworks */,
+				1A45D9B3122640D500A1DF36 /* BWToolkitFramework.framework in Frameworks */,
+				1A45D9B4122640D500A1DF36 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,6 +141,9 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1A45D9B1122640D500A1DF36 /* BWToolkitFramework.framework */,
+				1A45D9B2122640D500A1DF36 /* Sparkle.framework */,
+				1A5A3E581225BBB000F08485 /* QuartzCore.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
@@ -234,7 +244,6 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				1A5A3E581225BBB000F08485 /* QuartzCore.framework */,
 			);
 			name = AppRanking;
 			sourceTree = "<group>";
@@ -252,8 +261,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1A45D9F41226430400A1DF36 /* dsa_pub.pem */,
 				1A5A3EC91225C16E00F08485 /* Images */,
-				1A2D2EE3122562E90074AE7F /* BWToolkitFramework.framework */,
 				1A2D2D231223B77A0074AE7F /* app-store-ids.json */,
 				1A2D2D241223B77A0074AE7F /* applications.json */,
 				1A2D2D251223B77A0074AE7F /* genres.json */,
@@ -332,6 +341,7 @@
 				1A5A3EC61225C16500F08485 /* status-view-center.png in Resources */,
 				1A5A3EC71225C16500F08485 /* status-view-left.png in Resources */,
 				1A5A3EC81225C16500F08485 /* status-view-right.png in Resources */,
+				1A45D9F51226430400A1DF36 /* dsa_pub.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,6 +418,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/Frameworks\"",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -429,6 +440,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/Frameworks\"",
 				);
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
