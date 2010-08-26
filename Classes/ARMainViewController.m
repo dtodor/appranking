@@ -59,8 +59,10 @@
 @synthesize statusToolBarItem;
 @synthesize statusViewController;
 @synthesize treeSelection;
+@synthesize tableSortDescriptors;
 
 - (void)dealloc {
+	self.tableSortDescriptors = nil;
 	self.treeSelection = nil;
 	self.statusViewController = nil;
 	self.sidebar = nil;
@@ -95,6 +97,7 @@
 		}
 		[array addObject:node];
 	}
+	self.tableSortDescriptors = [NSMutableArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"rank" ascending:YES]];
 	self.applicationsTree = array;
 	self.treeSelection = [NSMutableArray array];
 	

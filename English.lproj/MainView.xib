@@ -21,7 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="30"/>
+			<integer value="27"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -410,7 +410,6 @@
 																				</object>
 																				<int key="NSResizingMask">3</int>
 																				<bool key="NSIsResizeable">YES</bool>
-																				<bool key="NSIsEditable">YES</bool>
 																				<reference key="NSTableView" ref="693503265"/>
 																			</object>
 																			<object class="NSTableColumn" id="746167021">
@@ -436,12 +435,7 @@
 																				</object>
 																				<int key="NSResizingMask">3</int>
 																				<bool key="NSIsResizeable">YES</bool>
-																				<bool key="NSIsEditable">YES</bool>
 																				<reference key="NSTableView" ref="693503265"/>
-																				<object class="NSSortDescriptor" key="NSSortDescriptorPrototype">
-																					<bool key="NSAscending">YES</bool>
-																					<string key="NSSelector">compare:</string>
-																				</object>
 																			</object>
 																		</object>
 																		<double key="NSIntercellSpacingWidth">3</double>
@@ -449,13 +443,13 @@
 																		<reference key="NSBackgroundColor" ref="616704078"/>
 																		<reference key="NSGridColor" ref="565408359"/>
 																		<double key="NSRowHeight">17</double>
-																		<int key="NSTvFlags">-700416000</int>
+																		<int key="NSTvFlags">1388347392</int>
 																		<reference key="NSDelegate"/>
 																		<reference key="NSDataSource"/>
 																		<int key="NSColumnAutoresizingStyle">1</int>
 																		<int key="NSDraggingSourceMaskForLocal">15</int>
 																		<int key="NSDraggingSourceMaskForNonLocal">0</int>
-																		<bool key="NSAllowsTypeSelect">YES</bool>
+																		<bool key="NSAllowsTypeSelect">NO</bool>
 																		<int key="NSTableViewDraggingDestinationStyle">0</int>
 																	</object>
 																</object>
@@ -771,6 +765,24 @@
 				<string key="NSTreeContentChildrenKey">childNodes</string>
 				<string key="NSTreeContentLeafKey">isLeaf</string>
 			</object>
+			<object class="NSArrayController" id="821018088">
+				<object class="NSMutableArray" key="NSDeclaredKeys">
+					<bool key="EncodedWithXMLCoder">YES</bool>
+					<object class="NSMutableString">
+						<characters key="NS.bytes">representedObject.country</characters>
+					</object>
+					<string>country</string>
+					<object class="NSMutableString">
+						<characters key="NS.bytes">representedObject.rank</characters>
+					</object>
+					<string>rank</string>
+				</object>
+				<object class="_NSManagedProxy" key="_NSManagedProxy"/>
+				<bool key="NSSelectsInsertedObjects">YES</bool>
+				<bool key="NSFilterRestrictsInsertion">YES</bool>
+				<bool key="NSClearsFilterPredicateOnInsertion">YES</bool>
+				<bool key="NSAutomaticallyRearrangesObjects">YES</bool>
+			</object>
 		</object>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 			<object class="NSMutableArray" key="connectionRecords">
@@ -862,60 +874,31 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">content: selection.representedObject</string>
-						<reference key="source" ref="693503265"/>
+						<string key="label">contentArray: selection.representedObject</string>
+						<reference key="source" ref="821018088"/>
 						<reference key="destination" ref="57600838"/>
 						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="693503265"/>
+							<reference key="NSSource" ref="821018088"/>
 							<reference key="NSDestination" ref="57600838"/>
-							<string key="NSLabel">content: selection.representedObject</string>
-							<string key="NSBinding">content</string>
+							<string key="NSLabel">contentArray: selection.representedObject</string>
+							<string key="NSBinding">contentArray</string>
 							<string key="NSKeyPath">selection.representedObject</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">128</int>
+					<int key="connectionID">137</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.representedObject.rank</string>
-						<reference key="source" ref="746167021"/>
-						<reference key="destination" ref="57600838"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="746167021"/>
-							<reference key="NSDestination" ref="57600838"/>
-							<string key="NSLabel">value: selection.representedObject.rank</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.representedObject.rank</string>
-							<object class="NSDictionary" key="NSOptions">
-								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSArray" key="dict.sortedKeys">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<string>NSAllowsEditingMultipleValuesSelection</string>
-									<string>NSConditionallySetsEditable</string>
-								</object>
-								<object class="NSMutableArray" key="dict.values">
-									<bool key="EncodedWithXMLCoder">YES</bool>
-									<boolean value="NO"/>
-									<boolean value="NO"/>
-								</object>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">132</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: selection.representedObject.country</string>
+						<string key="label">value: arrangedObjects.country</string>
 						<reference key="source" ref="763587696"/>
-						<reference key="destination" ref="57600838"/>
+						<reference key="destination" ref="821018088"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="763587696"/>
-							<reference key="NSDestination" ref="57600838"/>
-							<string key="NSLabel">value: selection.representedObject.country</string>
+							<reference key="NSDestination" ref="821018088"/>
+							<string key="NSLabel">value: arrangedObjects.country</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">selection.representedObject.country</string>
+							<string key="NSKeyPath">arrangedObjects.country</string>
 							<object class="NSDictionary" key="NSOptions">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSArray" key="dict.sortedKeys">
@@ -932,7 +915,52 @@
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">134</int>
+					<int key="connectionID">140</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: arrangedObjects.rank</string>
+						<reference key="source" ref="746167021"/>
+						<reference key="destination" ref="821018088"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="746167021"/>
+							<reference key="NSDestination" ref="821018088"/>
+							<string key="NSLabel">value: arrangedObjects.rank</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">arrangedObjects.rank</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSAllowsEditingMultipleValuesSelection</string>
+									<string>NSConditionallySetsEditable</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<boolean value="NO"/>
+									<boolean value="NO"/>
+								</object>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">143</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">sortDescriptors: tableSortDescriptors</string>
+						<reference key="source" ref="821018088"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="821018088"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">sortDescriptors: tableSortDescriptors</string>
+							<string key="NSBinding">sortDescriptors</string>
+							<string key="NSKeyPath">tableSortDescriptors</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">145</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1236,6 +1264,11 @@
 						<reference key="object" ref="928389038"/>
 						<reference key="parent" ref="945126232"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">135</int>
+						<reference key="object" ref="821018088"/>
+						<reference key="parent" ref="0"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1248,6 +1281,7 @@
 					<string>11.IBPluginDependency</string>
 					<string>12.IBPluginDependency</string>
 					<string>13.IBPluginDependency</string>
+					<string>135.IBPluginDependency</string>
 					<string>14.IBPluginDependency</string>
 					<string>15.IBPluginDependency</string>
 					<string>16.IBPluginDependency</string>
@@ -1292,6 +1326,7 @@
 					<string>com.brandonwalkin.BWToolkit</string>
 					<string>com.brandonwalkin.BWToolkit</string>
 					<string>com.brandonwalkin.BWToolkit</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.brandonwalkin.BWToolkit</string>
 					<string>com.brandonwalkin.BWToolkit</string>
 					<string>com.brandonwalkin.BWToolkit</string>
@@ -1345,7 +1380,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">134</int>
+			<int key="maxID">145</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1623,6 +1658,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">BWToolkitFramework.framework/Headers/NSApplication+BWAdditions.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSArrayController</string>
+					<string key="superclassName">NSObjectController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSArrayController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

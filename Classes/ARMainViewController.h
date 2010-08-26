@@ -42,6 +42,7 @@
 	NSMutableArray *pendingQueries;
 	NSMutableArray *applicationsTree;
 	NSMutableArray *treeSelection;
+	NSMutableArray *tableSortDescriptors;
 	
 	NSOutlineView *sidebar;
 	NSToolbarItem *statusToolBarItem;
@@ -50,6 +51,7 @@
 
 @property (readonly, retain) NSArray *applicationsTree;
 @property (retain) NSMutableArray *treeSelection;
+@property (retain) NSMutableArray *tableSortDescriptors;
 @property (retain) IBOutlet NSOutlineView *sidebar;
 @property (retain) IBOutlet NSToolbarItem *statusToolBarItem;
 @property (retain) IBOutlet ARStatusViewController *statusViewController;
