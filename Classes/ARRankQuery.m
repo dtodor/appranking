@@ -89,12 +89,15 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 }
 
 - (void)start {
-	@synchronized(self) {
-		assert(!started);
-		started = YES;
-	}
-	[connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+	assert(!started);
+	started = YES;
+	[connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 	[connection start];
+}
+
+- (void)cancel {
+	[connection cancel];
+	canceled = YES;
 }
 
 #pragma mark -
@@ -214,7 +217,7 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 	[receivedData release];
 	receivedData = nil;
-	if (delegate) {
+	if (delegate && !canceled) {
 		[delegate query:self didFailWithError:error];
 	}
 }
@@ -224,7 +227,9 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-	[self retrieveRank];
+	if (!canceled) {
+		[self retrieveRank];
+	}
 }
 
 @end

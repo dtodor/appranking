@@ -41,7 +41,7 @@
 #import "ARStatusView.h"
 
 
-@interface ARMainViewController() <RankQueryDelegate>
+@interface ARMainViewController() <ARRankQueryDelegate>
 
 @property (retain) NSMutableArray *runningQueries;
 @property (retain) NSMutableArray *pendingQueries;
@@ -58,8 +58,10 @@
 @synthesize sidebar;
 @synthesize statusToolBarItem;
 @synthesize statusViewController;
+@synthesize treeSelection;
 
 - (void)dealloc {
+	self.treeSelection = nil;
 	self.statusViewController = nil;
 	self.sidebar = nil;
 	self.statusToolBarItem = nil;
@@ -72,38 +74,48 @@
 - (void)awakeFromNib {
 	[statusToolBarItem setView:[statusViewController view]];
 	[statusViewController.mainLabel setStringValue:@"Welcome"];
+	[statusViewController.secondaryLabel setHidden:YES];
+	[statusViewController setProgress:0.0];
 }
 
 - (void)reloadApplications {
 	NSDictionary *appsDict = [ARConfiguration sharedARConfiguration].applications;
 	NSMutableArray *array = [NSMutableArray array];
 	for (ARCategoryTuple *category in appsDict) {
-		ARTreeNode *node = [[ARTreeNode alloc] init];
+		ARTreeNode *node = [ARTreeNode treeNodeWithRepresentedObject:nil];
+		node.category = category;
 		node.name = [NSString stringWithFormat:@"%@ (%@)", 
 					 [[category typeName] uppercaseString], 
 					 (category.name?[category.name uppercaseString]:@"ALL")];
 		NSArray *applications = [appsDict objectForKey:category];
 		for (ARApplication *application in applications) {
-			ARTreeNode *child = [[ARTreeNode alloc] init];
+			ARTreeNode *child = [ARTreeNode treeNodeWithRepresentedObject:[NSMutableArray array]];
 			child.name = application.name;
-			[node addChild:child];
-			[child release];
+			[[node mutableChildNodes] addObject:child];
 		}
 		[array addObject:node];
-		[node release];
 	}
 	self.applicationsTree = array;
+	self.treeSelection = [NSMutableArray array];
 	
 	[sidebar expandItem:nil expandChildren:YES];
 }
 
-- (IBAction)start:(id)sender {
-	[sender setEnabled:NO];
-	
+#pragma mark -
+#pragma mark IBAction methods
+
+- (IBAction)refresh:(NSToolbarItem *)sender {
+	if (self.runningQueries) {
+		return;
+	}
+	[statusViewController.mainLabel setStringValue:@"Processing RSS feeds ..."];
+	[statusViewController.secondaryLabel setStringValue:@""];
+	[statusViewController.secondaryLabel setHidden:NO];
+
 	self.runningQueries = [NSMutableArray array];
 	self.pendingQueries = [NSMutableArray array];
 	
-	static NSUInteger maxConcurrent = 30;
+	static NSUInteger maxConcurrent = 20;
 	
 	NSUInteger count = 0;
 	ARConfiguration *config = [ARConfiguration sharedARConfiguration];
@@ -125,13 +137,41 @@
 			count++;
 		}
 	}
+	totalNumberOfDownloads = count;
 }
+
+- (IBAction)stop:(NSToolbarItem *)sender {
+	for (ARRankQuery *query in runningQueries) {
+		[query cancel];
+	}
+	for (ARRankQuery *query in pendingQueries) {
+		[query cancel];
+	}
+	self.runningQueries = nil;
+	self.pendingQueries = nil;
+	
+	[statusViewController.mainLabel setStringValue:@"Done"];
+	[statusViewController.secondaryLabel setHidden:YES];
+	[statusViewController setProgress:0.0];
+}
+
+- (IBAction)info:(NSToolbarItem *)sender {
+}
+
+#pragma mark -
+#pragma mark ARRankQueryDelegate
 
 - (void)processQuery:(ARRankQuery *)query {
 	[runningQueries removeObject:query];
+	NSUInteger count = [runningQueries count] + [pendingQueries count];
+	double percent = ((double)totalNumberOfDownloads-count)/totalNumberOfDownloads;
+	[statusViewController setProgress:percent];
 	if ([runningQueries count] == 0) {
 		self.runningQueries = nil;
 		self.pendingQueries = nil;
+		[statusViewController.mainLabel setStringValue:@"Done"];
+		[statusViewController.secondaryLabel setHidden:YES];
+		[statusViewController setProgress:0.0];
 	}
 	if ([pendingQueries count] > 0) {
 		ARRankQuery *query = [pendingQueries lastObject];
@@ -141,13 +181,36 @@
 	}
 }
 
+- (ARTreeNode *)nodeForCategory:(ARCategoryTuple *)category application:(NSString *)app {
+	for (ARTreeNode *rootNode in applicationsTree) {
+		if (rootNode.category == category) {
+			NSArray *children = [rootNode childNodes];
+			for (ARTreeNode *child in children) {
+				if ([child.name isEqualToString:app]) {
+					return child;
+				}
+			}
+		}
+	}
+	return nil;
+}
+
 - (void)queryDidFinish:(ARRankQuery *)query {
+	[statusViewController.secondaryLabel setStringValue:[NSString stringWithFormat:@"Finished processing %@ [%@]", query.country, query.category]];
 	NSEnumerator *appNames = [query.ranks keyEnumerator];
 	NSString *appName = nil;
 	while (appName = [appNames nextObject]) {
 		id value = [query.ranks objectForKey:appName];
 		if ([value isKindOfClass:[NSNumber class]]) {
-			// TODO Process rank
+			ARTreeNode *node = [self nodeForCategory:query.category application:appName];
+			if (node) {
+				NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:value, @"rank", query.country, @"country", nil];
+				NSMutableArray *entries = [node representedObject];
+				[node willChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:[entries count]] forKey:@"representedObject"];
+				[entries addObject:entry];
+				[node didChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:[entries count]-1] forKey:@"representedObject"];
+			}
+			NSLog(@"[ARRankQuery] %@ (%@) - %d", query.country, query.category, [value intValue]);
 		}
 	}
 	[self processQuery:query];
@@ -192,6 +255,13 @@
 #pragma mark NSToolbarItemValidation
 
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem {
+	if ([[theItem itemIdentifier] isEqualToString:@"RefreshToolbarItem"]) {
+		return self.runningQueries == nil;
+	} else if ([[theItem itemIdentifier] isEqualToString:@"StopToolbarItem"]) {
+		return self.runningQueries != nil;
+	} else if ([[theItem itemIdentifier] isEqualToString:@"InfoToolbarItem"]) {
+		return [[sidebar selectedRowIndexes] count] == 1;
+	}
 	return NO;
 }
 

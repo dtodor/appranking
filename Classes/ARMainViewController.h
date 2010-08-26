@@ -37,9 +37,11 @@
 
 @interface ARMainViewController : NSViewController <NSOutlineViewDelegate> {
 
+	NSUInteger totalNumberOfDownloads;
 	NSMutableArray *runningQueries;
 	NSMutableArray *pendingQueries;
 	NSMutableArray *applicationsTree;
+	NSMutableArray *treeSelection;
 	
 	NSOutlineView *sidebar;
 	NSToolbarItem *statusToolBarItem;
@@ -47,11 +49,14 @@
 }
 
 @property (readonly, retain) NSArray *applicationsTree;
+@property (retain) NSMutableArray *treeSelection;
 @property (retain) IBOutlet NSOutlineView *sidebar;
 @property (retain) IBOutlet NSToolbarItem *statusToolBarItem;
 @property (retain) IBOutlet ARStatusViewController *statusViewController;
 
 - (void)reloadApplications;
-- (IBAction)start:(id)sender;
+- (IBAction)refresh:(NSToolbarItem *)sender;
+- (IBAction)stop:(NSToolbarItem *)sender;
+- (IBAction)info:(NSToolbarItem *)sender;
 
 @end

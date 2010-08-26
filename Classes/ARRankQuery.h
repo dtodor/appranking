@@ -40,30 +40,32 @@ typedef enum {
 	UnableToParseFeed
 } RankQueryErrorCodes;
 
-@protocol RankQueryDelegate;
+@protocol ARRankQueryDelegate;
 
 @interface ARRankQuery : NSObject {
 	NSURLConnection *connection;
 	NSMutableData *receivedData;
-	id<RankQueryDelegate> delegate;
+	id<ARRankQueryDelegate> delegate;
 
 	NSString *country;
 	ARCategoryTuple *category;
 	NSMutableDictionary *ranks;
 	BOOL started;
+	BOOL canceled;
 }
 
 @property (readonly, copy) NSString *country;
 @property (readonly, copy) ARCategoryTuple *category;
-@property (assign) id<RankQueryDelegate> delegate;
+@property (assign) id<ARRankQueryDelegate> delegate;
 @property (readonly) NSDictionary *ranks;
 
 - (id)initWithCountry:(NSString *)aCountry category:(ARCategoryTuple *)aCategory applications:(NSArray *)apps;
 - (void)start;
+- (void)cancel;
 
 @end
 
-@protocol RankQueryDelegate
+@protocol ARRankQueryDelegate
 
 - (void)queryDidFinish:(ARRankQuery *)query;
 - (void)query:(ARRankQuery *)query didFailWithError:(NSError *)error;

@@ -33,45 +33,20 @@
 
 #import "ARTreeNode.h"
 
-@interface ARTreeNode()
-
-@property (assign) ARTreeNode *parent;
-@property (retain) NSArray *children;
-
-@end
-
 
 @implementation ARTreeNode
 
-@synthesize parent;
-@synthesize children;
 @synthesize name;
 @synthesize icon;
 @synthesize badge;
 @synthesize displaysBadge;
-@synthesize userObject;
-
-- (id)init {
-	self = [super init];
-	if (self != nil) {
-		self.children = [NSMutableArray array];
-	}
-	return self;
-}
+@synthesize category;
 
 - (void)dealloc {
-	self.userObject = nil;
+	self.category = nil;
 	self.icon = nil;
-	self.children = nil;
 	self.name = nil;
 	[super dealloc];
-}
-
-- (void)addChild:(ARTreeNode *)child {
-	if (child) {
-		[children addObject:child];
-		child.parent = self;
-	}
 }
 
 @end

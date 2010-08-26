@@ -32,25 +32,20 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "ARCategoryTuple.h"
 
-
-@interface ARTreeNode : NSObject {
-	NSMutableArray *children;
+@interface ARTreeNode : NSTreeNode {
 	NSString *name;
 	NSImage *icon;
 	NSUInteger badge;
 	BOOL displaysBadge;
-	id userObject;
+	ARCategoryTuple *category;
 }
 
-@property (readonly, assign) ARTreeNode *parent;
-@property (readonly, retain) NSArray *children;
 @property (copy) NSString *name;
 @property (retain) NSImage *icon;
 @property NSUInteger badge;
 @property BOOL displaysBadge;
-@property (retain) id userObject;
-
-- (void)addChild:(ARTreeNode *)child;
+@property (retain) ARCategoryTuple *category;
 
 @end
