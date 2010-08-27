@@ -5,4 +5,4 @@ This is a simple tool that scrapes the iTunes RSS feeds and retrieves the rankin
 
 ## Screenshots
 
-![](Resources/Screenshots/Screenshot.png "Version 0.5")
+![](tree/master/Resources/Screenshots/Screenshot.png "Version 0.5")
