@@ -37,7 +37,7 @@
 
 @implementation ARApplication
 
-@synthesize name, categories;
+@synthesize name, categories, icon;
 
 - (NSError *)errorForUnderlyingError:(NSError *)error {
 	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
@@ -116,6 +116,7 @@
 }
 
 - (void)dealloc {
+	self.icon = nil;
 	[name release];
 	[categories release];
 	[super dealloc];

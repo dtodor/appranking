@@ -200,9 +200,7 @@
 
 - (void)queryDidFinish:(ARRankQuery *)query {
 	[statusViewController.secondaryLabel setStringValue:[NSString stringWithFormat:@"Finished processing %@ [%@]", query.country, query.category]];
-	NSEnumerator *appNames = [query.ranks keyEnumerator];
-	NSString *appName = nil;
-	while (appName = [appNames nextObject]) {
+	for (NSString *appName in query.ranks) {
 		id value = [query.ranks objectForKey:appName];
 		if ([value isKindOfClass:[NSNumber class]]) {
 			ARTreeNode *node = [self nodeForCategory:query.category application:appName];
@@ -216,6 +214,29 @@
 			NSLog(@"[ARRankQuery] %@ (%@) - %d", query.country, query.category, [value intValue]);
 		}
 	}
+	
+	ARConfiguration *config = [ARConfiguration sharedARConfiguration];
+	for (NSString *appName in query.icons) {
+		NSString *iconUrl = [query.icons objectForKey:appName];
+		
+		NSArray *apps = [config.applications objectForKey:query.category];
+		for (ARApplication *app in apps) {
+			if ([app.name isEqualToString:appName] && !app.icon) {
+				
+				NSImage *icon = [[NSImage alloc] initWithContentsOfURL:[NSURL URLWithString:iconUrl]];
+				if (icon) {
+					app.icon = icon;
+					[icon release];
+					
+					ARTreeNode *node = [self nodeForCategory:query.category application:appName];
+					node.icon = icon;
+				}
+				
+				break;
+			}
+		}
+	}
+
 	[self processQuery:query];
 }
 

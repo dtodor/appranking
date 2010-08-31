@@ -46,7 +46,7 @@
 					<object class="NSTextField" id="601574078">
 						<reference key="NSNextResponder" ref="1005"/>
 						<int key="NSvFlags">266</int>
-						<string key="NSFrame">{{17, 21}, {446, 13}}</string>
+						<string key="NSFrame">{{17, 20}, {446, 13}}</string>
 						<reference key="NSSuperview" ref="1005"/>
 						<bool key="NSViewIsLayerTreeHost">YES</bool>
 						<int key="NSViewLayerContentsRedrawPolicy">2</int>
@@ -84,7 +84,7 @@
 					<object class="NSCustomView" id="131410749">
 						<reference key="NSNextResponder" ref="1005"/>
 						<int key="NSvFlags">266</int>
-						<string key="NSFrame">{{20, 10}, {440, 10}}</string>
+						<string key="NSFrame">{{20, 11}, {440, 8}}</string>
 						<reference key="NSSuperview" ref="1005"/>
 						<bool key="NSViewIsLayerTreeHost">YES</bool>
 						<int key="NSViewLayerContentsRedrawPolicy">2</int>

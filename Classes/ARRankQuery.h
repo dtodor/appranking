@@ -50,6 +50,7 @@ typedef enum {
 	NSString *country;
 	ARCategoryTuple *category;
 	NSMutableDictionary *ranks;
+	NSMutableDictionary *icons;
 	BOOL started;
 	BOOL canceled;
 }
@@ -58,6 +59,7 @@ typedef enum {
 @property (readonly, copy) ARCategoryTuple *category;
 @property (assign) id<ARRankQueryDelegate> delegate;
 @property (readonly) NSDictionary *ranks;
+@property (readonly) NSDictionary *icons;
 
 - (id)initWithCountry:(NSString *)aCountry category:(ARCategoryTuple *)aCategory applications:(NSArray *)apps;
 - (void)start;

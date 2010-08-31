@@ -43,7 +43,7 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 
 @implementation ARRankQuery
 
-@synthesize country, category, delegate, ranks;
+@synthesize country, category, delegate, ranks, icons;
 
 - (id)initWithCountry:(NSString *)aCountry category:(ARCategoryTuple *)aCategory applications:(NSArray *)apps {
 	self = [super init];
@@ -56,6 +56,7 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 			self = nil;
 		} else {
 			ranks = [[NSMutableDictionary alloc] initWithCapacity:[apps count]];
+			icons = [[NSMutableDictionary alloc] initWithCapacity:[apps count]];
 			for (ARApplication *app in apps) {
 				[ranks setObject:[NSNull null] forKey:app.name];
 			}
@@ -80,6 +81,7 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 }
 
 - (void)dealloc {
+	[icons release];
 	[ranks release];
 	[receivedData release];
 	[connection release];
@@ -151,12 +153,24 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 			}
 			return NO;
 		}
+		
 		NSArray *apps = [ranks allKeys];
 		for (NSString *appName in apps) {
 			if ([label isEqualToString:appName]) {
 				NSNumber *rank = [NSNumber numberWithInt:i+1];
 				found++;
 				[ranks setObject:rank forKey:appName];
+				
+				NSArray *images = [entry arrayForKey:@"im:image" error:NULL];
+				if (images && [images count] > 0) {
+					NSDictionary *image = [images dictionaryAtIndex:0 error:NULL];
+					if (image) {
+						NSString *imageUrl = [image stringForKey:@"label" error:NULL];
+						if (imageUrl) {
+							[icons setObject:imageUrl forKey:appName];
+						}
+					}
+				}
 			}
 		}
 		if (found == [ranks count]) {

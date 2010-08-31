@@ -38,10 +38,12 @@
 @interface ARApplication : NSObject {
 	NSString *name;
 	NSMutableSet *categories;
+	NSImage *icon;
 }
 
 @property (readonly) NSString *name;
 @property (readonly) NSSet *categories;
+@property (retain) NSImage *icon;
 
 - (id)initWithDictionary:(NSDictionary *)dictionary error:(NSError **)error;
 
