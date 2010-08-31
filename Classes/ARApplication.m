@@ -32,94 +32,63 @@
  */
 
 #import "ARApplication.h"
-#import "SBJSON+Additions.h"
 
 
 @implementation ARApplication
 
-@synthesize name, categories, icon;
+@dynamic appStoreId, name, categories, iconData;
+@synthesize iconImage;
 
-- (NSError *)errorForUnderlyingError:(NSError *)error {
-	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-	[userInfo setObject:@"Unable to create application from dictionary" forKey:NSLocalizedDescriptionKey];
-	if (error) {
-		[userInfo setObject:error forKey:NSUnderlyingErrorKey];
+- (void)awakeFromFetch {
+	if (self.iconData) {
+		self.iconImage = [[[NSImage alloc] initWithData:self.iconData] autorelease];
 	}
-	return [NSError errorWithDomain:@"ApplicationErrorDomain" code:0 userInfo:userInfo];
 }
 
-- (id)initWithDictionary:(NSDictionary *)dictionary error:(NSError **)error {
-	self = [super init];
-	if (self) {
-		NSError *underlyingError = nil;
+- (NSImage *)iconImage {
+	return iconImage;
+}
 
-		NSString *appName = [dictionary stringForKey:@"name" error:&underlyingError];
-		if (underlyingError) {
-			if (error) {
-				*error = [self errorForUnderlyingError:underlyingError];
-			}
-			[self release];
-			self = nil;
-			return self;
+- (void)setIconImage:(NSImage *)image {
+	if (iconImage != image) {
+		[self willChangeValueForKey:@"iconImage"];
+		[iconImage release];
+		iconImage = [image retain];
+		if (iconImage) {
+			self.iconData = [NSBitmapImageRep representationOfImageRepsInArray:[iconImage representations] 
+																	 usingType:NSJPEGFileType
+																	properties:nil];
+		} else {
+			self.iconData = nil;
 		}
-		if (!appName) {
-			if (error) {
-				*error = [self errorForUnderlyingError:underlyingError];
-			}
-			[self release];
-			self = nil;
-			return self;
-		}
-		name = [appName copy];
-		NSArray *tuples = [dictionary arrayForKey:@"tuples" error:&underlyingError];
-		if (underlyingError) {
-			if (error) {
-				*error = [self errorForUnderlyingError:underlyingError];
-			}
-			[self release];
-			self = nil;
-			return self;
-		}
-		if ([tuples count] == 0) {
-			if (error) {
-				*error = [self errorForUnderlyingError:underlyingError];
-			}
-			[self release];
-			self = nil;
-			return self;
-		}
-		categories = [NSMutableSet set];
-		for (int j=0; j<[tuples count]; j++) {
-			NSDictionary *tuple = [tuples dictionaryAtIndex:j error:&underlyingError];
-			if (underlyingError) {
-				if (error) {
-					*error = [self errorForUnderlyingError:underlyingError];
-				}
-				[self release];
-				self = nil;
-				return self;
-			}
-			ARCategoryTuple *categoryTuple = [[ARCategoryTuple alloc] initWithDictionary:tuple error:&underlyingError];
-			if (underlyingError) {
-				if (error) {
-					*error = [self errorForUnderlyingError:underlyingError];
-				}
-				[self release];
-				self = nil;
-				return self;
-			}
-			[categories addObject:categoryTuple];
-			[categoryTuple release];
-		}
+		[self didChangeValueForKey:@"iconImage"];
 	}
-	return self;
 }
 
 - (void)dealloc {
-	self.icon = nil;
-	[name release];
-	[categories release];
+	self.appStoreId = nil;
+	self.name = nil;
+	self.categories = nil;
+	self.iconData = nil;
+	self.iconImage = nil;
 	[super dealloc];
+}
+
+- (BOOL)validateCategories:(id *)value error:(NSError **)error {
+	if (*value == nil) {
+		return YES;
+	}
+	if ([*value count] == 0) {
+		if (error) {
+			*error = [NSError errorWithDomain:@"ARApplication" 
+										 code:0 
+									 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"At least one category should be specified"] 
+																		  forKey:NSLocalizedDescriptionKey]];
+		}
+		return NO;
+	} else {
+		return YES;
+	}
 }
 
 @end

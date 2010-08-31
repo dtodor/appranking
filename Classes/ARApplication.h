@@ -35,16 +35,15 @@
 #import "ARCategoryTuple.h"
 
 
-@interface ARApplication : NSObject {
-	NSString *name;
-	NSMutableSet *categories;
-	NSImage *icon;
+@interface ARApplication : NSManagedObject {
+	NSImage *iconImage;
 }
 
-@property (readonly) NSString *name;
-@property (readonly) NSSet *categories;
-@property (retain) NSImage *icon;
+@property (nonatomic, retain) NSNumber *appStoreId;
+@property (nonatomic, retain) NSString *name;
+@property (nonatomic, retain) NSSet *categories;
+@property (nonatomic, retain) NSData *iconData;
 
-- (id)initWithDictionary:(NSDictionary *)dictionary error:(NSError **)error;
+@property (nonatomic, retain) NSImage *iconImage;
 
 @end

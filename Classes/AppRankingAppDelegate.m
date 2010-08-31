@@ -33,6 +33,10 @@
 
 #import "AppRankingAppDelegate.h"
 #import "ARConfiguration.h"
+#import "ARStorageManager.h"
+#import "ARCategoryTuple.h"
+#import "ARApplication.h"
+#import "AREnumValueTransformer.h"
 
 
 @implementation AppRankingAppDelegate
@@ -40,7 +44,71 @@
 @synthesize window;
 @synthesize mainViewController;
 
++ (void)initialize {
+	if (self = [AppRankingAppDelegate class]) {
+		AREnumValueTransformer *categoryTypesTransformer = [[AREnumValueTransformer alloc] initWithValueNames:[ARCategoryTuple typeNames]];
+		[NSValueTransformer setValueTransformer:categoryTypesTransformer forName:@"ARCategoryTupleTypeValueTransformer"];
+		[categoryTypesTransformer release];
+	}
+}
+
+- (void)dealloc {
+	self.mainViewController = nil;
+    [window release];
+    [super dealloc];
+}
+
+- (void)deleteAllEntities:(NSString *)entityName inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
+	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:entityName inManagedObjectContext:managedObjectContext];
+    [fetchRequest setEntity:entity];
+    NSArray *items = [managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+    [fetchRequest release];
+	if (items) {
+		for (NSManagedObject *managedObject in items) {
+			[managedObjectContext deleteObject:managedObject];
+		}
+	}
+}
+
+- (void)resetTestData {
+	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
+
+	[self deleteAllEntities:@"ARApplication" inManagedObjectContext:storageManager.managedObjectContext];
+	[self deleteAllEntities:@"ARCategoryTuple" inManagedObjectContext:storageManager.managedObjectContext];
+	
+	{
+		ARCategoryTuple *tuple = [NSEntityDescription insertNewObjectForEntityForName:@"ARCategoryTuple" inManagedObjectContext:storageManager.managedObjectContext];
+		tuple.name = @"Education";
+		tuple.tupleType = Top_Free_Apps;
+		
+		ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:storageManager.managedObjectContext];
+		app.appStoreId = [NSNumber numberWithInt:378677412];
+		app.name = @"Spel It Rite 2";
+		app.categories = [NSSet setWithObject:tuple];
+	}
+	
+	
+	{
+		ARCategoryTuple *tuple = [NSEntityDescription insertNewObjectForEntityForName:@"ARCategoryTuple" inManagedObjectContext:storageManager.managedObjectContext];
+		tuple.name = @"Education";
+		tuple.tupleType = Top_Paid_Apps;
+		
+		ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:storageManager.managedObjectContext];
+		app.appStoreId = [NSNumber numberWithInt:335608149];
+		app.name = @"Call For Papers";
+		app.categories = [NSSet setWithObject:tuple];
+	}
+	
+	
+	NSError *error = nil;
+	if (![storageManager.managedObjectContext save:&error]) {
+		NSLog(@"Unable to persist object, error = %@", [error localizedDescription]);
+	}
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+
 	NSError *error = nil;
 	if (![[ARConfiguration sharedARConfiguration] loadConfiguration:&error]) {
 		[window presentError:error];
@@ -51,7 +119,65 @@
 	[mainView setFrame:frame];
 	[[window contentView] addSubview:mainView];
 	
+	// [self resetTestData];
+	
+	
+	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"ARApplication" 
+											  inManagedObjectContext:[ARStorageManager sharedARStorageManager].managedObjectContext];
+    [fetchRequest setEntity:entity];
+    NSArray *items = [[ARStorageManager sharedARStorageManager].managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+    [fetchRequest release];
+	if (items) {
+		for (ARApplication *app in items) {
+			NSLog(@"%@", app.name);
+		}
+	}
+	
+	
+	
 	[mainViewController reloadApplications];
+}
+
+/**
+ Implementation of the applicationShouldTerminate: method, used here to
+ handle the saving of changes in the application managed object context
+ before the application terminates.
+ */
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
+    NSError *error = nil;
+	if (![[ARStorageManager sharedARStorageManager] commitChanges:&error]) {
+		
+        // This error handling simply presents error information in a panel with an 
+        // "Ok" button, which does not include any attempt at error recovery (meaning, 
+        // attempting to fix the error.)  As a result, this implementation will 
+        // present the information to the user and then follow up with a panel asking 
+        // if the user wishes to "Quit Anyway", without saving the changes.
+		
+        // Typically, this process should be altered to include application-specific 
+        // recovery steps.  
+		
+        BOOL result = [sender presentError:error];
+        if (result) return NSTerminateCancel;
+		
+        NSString *question = NSLocalizedString(@"Could not save changes while quitting.  Quit anyway?", @"Quit without saves error question message");
+        NSString *info = NSLocalizedString(@"Quitting now will lose any changes you have made since the last successful save", @"Quit without saves error question info");
+        NSString *quitButton = NSLocalizedString(@"Quit anyway", @"Quit anyway button title");
+        NSString *cancelButton = NSLocalizedString(@"Cancel", @"Cancel button title");
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:question];
+        [alert setInformativeText:info];
+        [alert addButtonWithTitle:quitButton];
+        [alert addButtonWithTitle:cancelButton];
+		
+        NSInteger answer = [alert runModal];
+        [alert release];
+        alert = nil;
+        
+        if (answer == NSAlertAlternateReturn) return NSTerminateCancel;
+		
+    }
+    return NSTerminateNow;
 }
 
 @end

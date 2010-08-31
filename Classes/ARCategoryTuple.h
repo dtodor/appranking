@@ -34,26 +34,26 @@
 #import <Foundation/Foundation.h>
 
 typedef enum {
-	Top_Free_Apps,
-	Top_Paid_Apps,
-	Top_Grossing_Apps,
-	Top_Free_iPad_Apps,
-	Top_Paid_iPad_Apps,
-	Top_Grossing_iPad_Apps
+	Top_Free_Apps          = 0,
+	Top_Paid_Apps          = 1,
+	Top_Grossing_Apps      = 2,
+	Top_Free_iPad_Apps     = 3,
+	Top_Paid_iPad_Apps     = 4,
+	Top_Grossing_iPad_Apps = 5
 } CategoryTupleType;
 
-@interface ARCategoryTuple : NSObject<NSCopying> {
-	NSString *name;
-	CategoryTupleType type;
+@interface ARCategoryTuple : NSManagedObject {
 }
 
-@property (readonly) NSString *name;
-@property (readonly) CategoryTupleType type;
+@property (nonatomic, retain) NSString *name;
+@property (nonatomic, retain) NSNumber *type;
+@property (nonatomic, retain) NSSet *applications;
 
-- (id)initWithName:(NSString *)categoryName type:(CategoryTupleType)tupleType;
-- (id)initWithDictionary:(NSDictionary *)dictionary error:(NSError **)error;
+@property (nonatomic) CategoryTupleType tupleType;
 
 - (NSURL *)rankingURLForCountry:(NSString *)country;
 - (NSString *)typeName;
+
++ (NSArray *)typeNames;
 
 @end

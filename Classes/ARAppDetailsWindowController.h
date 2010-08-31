@@ -31,24 +31,27 @@
  *
  */
 
-#import "ARTreeNode.h"
+#import <Cocoa/Cocoa.h>
+#import "ARApplication.h"
 
 
-@implementation ARTreeNode
+typedef enum {
+	DidSaveChanges,
+	DidDiscardChanges
+} AppDetailsWindowControllerReturnCodes;
 
-@synthesize name;
-@synthesize icon;
-@synthesize badge;
-@synthesize displaysBadge;
-@synthesize category;
-@synthesize application;
 
-- (void)dealloc {
-	self.application = nil;
-	self.category = nil;
-	self.icon = nil;
-	self.name = nil;
-	[super dealloc];
+@interface ARAppDetailsWindowController : NSWindowController {
+	ARApplication *application;
+	NSMutableArray *tempCategories;
 }
+
+@property (nonatomic, retain) ARApplication *application;
+@property (nonatomic, retain) NSMutableArray *tempCategories;
+@property (nonatomic, readonly) NSArray *categoryNames;
+@property (nonatomic, readonly) NSArray *categoryTypeNames;
+
+- (IBAction)commitChanges:(NSButton *)sender;
+- (IBAction)discardChanges:(NSButton *)sender;
 
 @end

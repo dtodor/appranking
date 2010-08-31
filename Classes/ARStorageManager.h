@@ -31,24 +31,22 @@
  *
  */
 
-#import "ARTreeNode.h"
+#import <Cocoa/Cocoa.h>
 
 
-@implementation ARTreeNode
+@interface ARStorageManager : NSObject {
 
-@synthesize name;
-@synthesize icon;
-@synthesize badge;
-@synthesize displaysBadge;
-@synthesize category;
-@synthesize application;
-
-- (void)dealloc {
-	self.application = nil;
-	self.category = nil;
-	self.icon = nil;
-	self.name = nil;
-	[super dealloc];
+	NSPersistentStoreCoordinator *persistentStoreCoordinator;
+    NSManagedObjectModel *managedObjectModel;
+    NSManagedObjectContext *managedObjectContext;
 }
+
+@property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
+
++ (ARStorageManager *)sharedARStorageManager;
+
+- (BOOL)commitChanges:(NSError **)error;
 
 @end

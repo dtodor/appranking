@@ -39,13 +39,17 @@
 #import "ARApplication.h"
 #import "SidebarBadgeCell.h"
 #import "ARStatusView.h"
+#import "AppRankingAppDelegate.h"
+#import "ARStorageManager.h"
+#import "ARAppDetailsWindowController.h"
 
 
 @interface ARMainViewController() <ARRankQueryDelegate>
 
-@property (retain) NSMutableArray *runningQueries;
-@property (retain) NSMutableArray *pendingQueries;
-@property (retain) NSArray *applicationsTree;
+@property (nonatomic, retain) NSMutableArray *runningQueries;
+@property (nonatomic, retain) NSMutableArray *pendingQueries;
+@property (nonatomic, retain) NSArray *applicationsTree;
+@property (nonatomic, retain) ARAppDetailsWindowController *detailsViewController;
 
 @end
 
@@ -58,12 +62,16 @@
 @synthesize sidebar;
 @synthesize statusToolBarItem;
 @synthesize statusViewController;
-@synthesize treeSelection;
 @synthesize tableSortDescriptors;
+@synthesize detailsViewController;
+@synthesize treeController;
+@synthesize outlineViewSortDescriptors;
 
 - (void)dealloc {
+	self.treeController = nil;
+	self.detailsViewController = nil;
 	self.tableSortDescriptors = nil;
-	self.treeSelection = nil;
+	self.outlineViewSortDescriptors = nil;
 	self.statusViewController = nil;
 	self.sidebar = nil;
 	self.statusToolBarItem = nil;
@@ -78,28 +86,43 @@
 	[statusViewController.mainLabel setStringValue:@"Welcome"];
 	[statusViewController.secondaryLabel setHidden:YES];
 	[statusViewController setProgress:0.0];
+	
+	self.outlineViewSortDescriptors = [NSMutableArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
+	self.tableSortDescriptors = [NSMutableArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"rank" ascending:YES]];
 }
 
 - (void)reloadApplications {
-	NSDictionary *appsDict = [ARConfiguration sharedARConfiguration].applications;
+	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
+	
+	NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+	[fetchRequest setEntity:[NSEntityDescription entityForName:@"ARCategoryTuple" inManagedObjectContext:storageManager.managedObjectContext]];
+	
+	NSError *error = nil;
+	NSArray *categories = [storageManager.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+	if (!categories) {
+		NSLog(@"Unable to retrieve categories, error = %@", [error localizedDescription]);
+		[self presentError:error];
+		self.applicationsTree = nil;
+		return;
+	}
+	
 	NSMutableArray *array = [NSMutableArray array];
-	for (ARCategoryTuple *category in appsDict) {
+	for (ARCategoryTuple *category in categories) {
 		ARTreeNode *node = [ARTreeNode treeNodeWithRepresentedObject:nil];
 		node.category = category;
 		node.name = [NSString stringWithFormat:@"%@ (%@)", 
 					 [[category typeName] uppercaseString], 
 					 (category.name?[category.name uppercaseString]:@"ALL")];
-		NSArray *applications = [appsDict objectForKey:category];
-		for (ARApplication *application in applications) {
+		for (ARApplication *application in category.applications) {
 			ARTreeNode *child = [ARTreeNode treeNodeWithRepresentedObject:[NSMutableArray array]];
+			child.application = application;
 			child.name = application.name;
+			child.icon = application.iconImage;
 			[[node mutableChildNodes] addObject:child];
 		}
 		[array addObject:node];
 	}
-	self.tableSortDescriptors = [NSMutableArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"rank" ascending:YES]];
 	self.applicationsTree = array;
-	self.treeSelection = [NSMutableArray array];
 	
 	[sidebar expandItem:nil expandChildren:YES];
 }
@@ -123,8 +146,8 @@
 	NSUInteger count = 0;
 	ARConfiguration *config = [ARConfiguration sharedARConfiguration];
 	for (NSString *country in config.appStoreIds) {
-		for (ARCategoryTuple *tuple in config.applications) {
-			ARRankQuery *query = [[ARRankQuery alloc] initWithCountry:country category:tuple applications:[config.applications objectForKey:tuple]];
+		for (ARTreeNode *rootNode in self.applicationsTree) {
+			ARRankQuery *query = [[ARRankQuery alloc] initWithCountry:country category:rootNode.category];
 			if (query) {
 				query.delegate = self;
 				if (count < maxConcurrent) {
@@ -158,7 +181,43 @@
 	[statusViewController setProgress:0.0];
 }
 
+- (ARApplication *)selectedApplication {
+	ARTreeNode *applicationNode = [[self.treeController selectedObjects] objectAtIndex:0];
+	return applicationNode.application;
+}
+
 - (IBAction)info:(NSToolbarItem *)sender {
+	self.detailsViewController = [[ARAppDetailsWindowController alloc] initWithWindowNibName:@"AppDetailsWindow"];
+	self.detailsViewController.application = [self selectedApplication];
+ 	[NSApp beginSheet:[self.detailsViewController window] 
+	   modalForWindow:[NSApp mainWindow] 
+		modalDelegate:self 
+	   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:) 
+		  contextInfo:NULL];
+}
+
+- (IBAction)addApplication:(NSButton *)sender {
+	self.detailsViewController = [[ARAppDetailsWindowController alloc] initWithWindowNibName:@"AppDetailsWindow"];
+ 	[NSApp beginSheet:[self.detailsViewController window] 
+	   modalForWindow:[NSApp mainWindow] 
+		modalDelegate:self 
+	   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:) 
+		  contextInfo:NULL];
+}
+
+- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo {
+	self.detailsViewController = nil;
+	if (returnCode == DidSaveChanges) {
+		[self reloadApplications];
+	}
+}
+
+- (IBAction)sortByApplications:(NSMenuItem *)sender {
+	NSLog(@"'sort by applications' action");
+}
+
+- (IBAction)sortByCategories:(NSMenuItem *)sender {
+	NSLog(@"'sort by categories' action");
 }
 
 #pragma mark -
@@ -215,21 +274,20 @@
 		}
 	}
 	
-	ARConfiguration *config = [ARConfiguration sharedARConfiguration];
 	for (NSString *appName in query.icons) {
 		NSString *iconUrl = [query.icons objectForKey:appName];
 		
-		NSArray *apps = [config.applications objectForKey:query.category];
-		for (ARApplication *app in apps) {
-			if ([app.name isEqualToString:appName] && !app.icon) {
+		for (ARApplication *app in query.category.applications) {
+			if ([app.name isEqualToString:appName] && !app.iconImage) {
 				
 				NSImage *icon = [[NSImage alloc] initWithContentsOfURL:[NSURL URLWithString:iconUrl]];
 				if (icon) {
-					app.icon = icon;
+					app.iconImage = icon;
 					[icon release];
 					
 					ARTreeNode *node = [self nodeForCategory:query.category application:appName];
 					node.icon = icon;
+					[sidebar reloadItem:nil];
 				}
 				
 				break;
@@ -284,7 +342,7 @@
 	} else if ([[theItem itemIdentifier] isEqualToString:@"StopToolbarItem"]) {
 		return self.runningQueries != nil;
 	} else if ([[theItem itemIdentifier] isEqualToString:@"InfoToolbarItem"]) {
-		return [[sidebar selectedRowIndexes] count] == 1;
+		return [[sidebar selectedRowIndexes] count] == 1 && !self.runningQueries;
 	}
 	return NO;
 }

@@ -33,138 +33,47 @@
 
 #import "ARCategoryTuple.h"
 #import "ARConfiguration.h"
-#import "SBJSON+Additions.h"
+#import "ARConfiguration.h"
 
 
 static NSString * const kFeedURLTemplate_SelectedCategory = @"http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/%@/sf=%@/limit=300/genre=%@/json";
 static NSString * const kFeedURLTemplate_All = @"http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/%@/sf=%@/limit=300/json";
 
-static NSArray *typeNames;
-
-
-NSString * tupleTypeName(CategoryTupleType type) {
-	return [typeNames objectAtIndex:type];
-}
-
-NSString * tupleTypeUrlPart(CategoryTupleType type) {
-	NSString *typeName = tupleTypeName(type);
-	return [NSString stringWithFormat:@"%@applications", [[typeName stringByReplacingOccurrencesOfString:@" " withString:@""] lowercaseString]];
-}
 
 @implementation ARCategoryTuple
 
-@synthesize name, type;
-
-+ (void)initialize {
-	typeNames = [[NSArray alloc] initWithObjects:@"Top Free", @"Top Paid", 
-				 @"Top Grossing", @"Top Free iPad", @"Top Paid iPad", 
-				 @"Top Grossing iPad", nil];
-}
-
-- (id)initWithName:(NSString *)categoryName type:(CategoryTupleType)tupleType {
-	self = [super init];
-	if (self != nil) {
-		if (categoryName) {
-			assert([categoryName length] > 0);
-		}
-		name = [categoryName copy];
-		type = tupleType;
-	}
-	return self;
-}
-
-- (NSError *)errorForUnderlyingError:(NSError *)error {
-	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-	[userInfo setObject:@"Unable to create category from dictionary" forKey:NSLocalizedDescriptionKey];
-	if (error) {
-		[userInfo setObject:error forKey:NSUnderlyingErrorKey];
-	}
-	return [NSError errorWithDomain:@"CategoryTupleErrorDomain" code:0 userInfo:userInfo];
-}
-
-- (id)initWithDictionary:(NSDictionary *)dictionary error:(NSError **)error {
-	self = [super init];
-	if (self != nil) {
-		NSError *underlyingError = nil;
-		
-		NSString *category = [dictionary stringForKey:@"category" error:&underlyingError];
-		if (underlyingError) {
-			if (error) {
-				*error = [self errorForUnderlyingError:underlyingError];
-			}
-			[self release];
-			self = nil;
-			return self;
-		}
-		name = [category copy];
-		NSString *typeStr = [dictionary stringForKey:@"type" error:&underlyingError];
-		if (underlyingError) {
-			if (error) {
-				*error = [self errorForUnderlyingError:underlyingError];
-			}
-			[self release];
-			self = nil;
-			return self;
-		}
-		if (![typeNames containsObject:typeStr]) {
-			if (error) {
-				*error = [self errorForUnderlyingError:underlyingError];
-			}
-			[self release];
-			self = nil;
-			return self;
-		}
-		type = [typeNames indexOfObject:typeStr];
-	}
-	return self;
-}
+@dynamic name, type, applications;
 
 - (void)dealloc {
-	[name release];
+	self.name = nil;
+	self.type = nil;
+	self.applications = nil;
 	[super dealloc];
 }
 
-- (id)copyWithZone:(NSZone *)zone {
-	return [self retain];
+- (CategoryTupleType)tupleType {
+	return (CategoryTupleType)[self.type intValue];
+}
+
+- (void)setTupleType:(CategoryTupleType)type_ {
+	self.type = [NSNumber numberWithInt:type_];
 }
 
 - (NSString *)description {
-	return [NSString stringWithFormat:@"%@ (%@)", (name?name:@"All"), tupleTypeName(type)];
-}
-
-- (BOOL)isEqual:(id)object {
-	if (object == self)
-        return YES;
-    if (!object || ![object isKindOfClass:[self class]])
-        return NO;
-	
-	ARCategoryTuple *ref = (ARCategoryTuple *)object;
-	return [name isEqualToString:ref.name] && type == ref.type;
-}
-
-- (NSUInteger)hash {
-	int prime = 31;
-	int result = 1;
-	result += prime * [name hash];
-	result += prime * type;
-	return result;
+	return [NSString stringWithFormat:@"%@ (%@)", (self.name?self.name:@"All"), [self typeName]];
 }
 
 - (NSComparisonResult)compare:(ARCategoryTuple *)otherTuple {
 	NSComparisonResult result;
-	if (name && !otherTuple.name) {
+	if (self.name && !otherTuple.name) {
 		result = NSOrderedDescending;
-	} else if (!name && otherTuple.name) {
+	} else if (!self.name && otherTuple.name) {
 		result = NSOrderedAscending;
 	} else {
-		result = [name compare:otherTuple.name];
+		result = [self.name compare:otherTuple.name];
 	}
 	if (result == NSOrderedSame) {
-		if (type < otherTuple.type) {
-			result = NSOrderedAscending;
-		} else if (type > otherTuple.type) {
-			result = NSOrderedDescending;
-		}
+		result = [self.type compare:otherTuple.type];
 	}
 	return result;
 
@@ -176,28 +85,57 @@ NSString * tupleTypeUrlPart(CategoryTupleType type) {
 	if (!storeId) {
 		return nil;
 	}
-	if (name) {
-		NSString *ganreId = [config.genres objectForKey:name];
+
+	NSString *typeName = [self typeName];
+	NSString *urlPart = [NSString stringWithFormat:@"%@applications", [[typeName stringByReplacingOccurrencesOfString:@" " withString:@""] lowercaseString]];
+
+	if (self.name) {
+		NSString *ganreId = [config.genres objectForKey:self.name];
 		if (!ganreId) {
 			return nil;
 		}
-		return [NSURL URLWithString:[NSString stringWithFormat:kFeedURLTemplate_SelectedCategory, tupleTypeUrlPart(type), storeId, ganreId]];
+		return [NSURL URLWithString:[NSString stringWithFormat:kFeedURLTemplate_SelectedCategory, urlPart, storeId, ganreId]];
 	} else {
-		return [NSURL URLWithString:[NSString stringWithFormat:kFeedURLTemplate_All, tupleTypeUrlPart(type), storeId]];
+		return [NSURL URLWithString:[NSString stringWithFormat:kFeedURLTemplate_All, urlPart, storeId]];
 	}
-}
-			   
-- (id)proxyForJson {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-	[dict setObject:[NSNumber numberWithInt:type] forKey:@"type"];
-	if (name) {
-		[dict setObject:name forKey:@"name"];
-	}
-	return dict;
 }
 
 - (NSString *)typeName {
-	return tupleTypeName(type);
+	if (self.type) {
+		return [[ARCategoryTuple typeNames] objectAtIndex:[self.type intValue]];
+	} else {
+		return nil;
+	}
+}
+
++ (NSArray *)typeNames {
+	static NSArray *typeNames = nil;
+	static dispatch_once_t once;
+	dispatch_once(&once, ^{
+		typeNames = [[NSArray alloc] initWithObjects:@"Top Free", @"Top Paid", 
+					 @"Top Grossing", @"Top Free iPad", @"Top Paid iPad", 
+					 @"Top Grossing iPad", nil];
+	});
+	return typeNames;
+}
+
+- (BOOL)validateName:(id *)value error:(NSError **)error {
+	if (*value == nil) {
+		return YES;
+	}
+	NSString *nameStr = *value;
+	ARConfiguration *config = [ARConfiguration sharedARConfiguration];
+	if (![config.genres objectForKey:nameStr]) {
+		if (error) {
+			*error = [NSError errorWithDomain:@"ARCategoryTuple" 
+										 code:0 
+									 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"'%@' is not a valid category", nameStr] 
+																		  forKey:NSLocalizedDescriptionKey]];
+		}
+		return NO;
+	} else {
+		return YES;
+	}
 }
 
 @end

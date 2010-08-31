@@ -45,19 +45,19 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 
 @synthesize country, category, delegate, ranks, icons;
 
-- (id)initWithCountry:(NSString *)aCountry category:(ARCategoryTuple *)aCategory applications:(NSArray *)apps {
+- (id)initWithCountry:(NSString *)aCountry category:(ARCategoryTuple *)aCategory {
 	self = [super init];
 	if (self != nil) {
-		assert([apps count] > 0);
+		assert(aCategory);
 		assert(aCountry);
 		NSURL *url = [aCategory rankingURLForCountry:aCountry];
 		if (!url) {
 			[self release];
 			self = nil;
 		} else {
-			ranks = [[NSMutableDictionary alloc] initWithCapacity:[apps count]];
-			icons = [[NSMutableDictionary alloc] initWithCapacity:[apps count]];
-			for (ARApplication *app in apps) {
+			ranks = [[NSMutableDictionary alloc] initWithCapacity:[aCategory.applications count]];
+			icons = [[NSMutableDictionary alloc] initWithCapacity:[aCategory.applications count]];
+			for (ARApplication *app in aCategory.applications) {
 				[ranks setObject:[NSNull null] forKey:app.name];
 			}
 			country = [aCountry copy];
@@ -163,7 +163,7 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 				
 				NSArray *images = [entry arrayForKey:@"im:image" error:NULL];
 				if (images && [images count] > 0) {
-					NSDictionary *image = [images dictionaryAtIndex:0 error:NULL];
+					NSDictionary *image = [images dictionaryAtIndex:([images count]-1) error:NULL];
 					if (image) {
 						NSString *imageUrl = [image stringForKey:@"label" error:NULL];
 						if (imageUrl) {

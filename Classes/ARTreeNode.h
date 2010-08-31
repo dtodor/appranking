@@ -33,6 +33,8 @@
 
 #import <Cocoa/Cocoa.h>
 #import "ARCategoryTuple.h"
+#import "ARApplication.h"
+
 
 @interface ARTreeNode : NSTreeNode {
 	NSString *name;
@@ -40,12 +42,14 @@
 	NSUInteger badge;
 	BOOL displaysBadge;
 	ARCategoryTuple *category;
+	ARApplication *application;
 }
 
-@property (copy) NSString *name;
-@property (retain) NSImage *icon;
-@property NSUInteger badge;
-@property BOOL displaysBadge;
-@property (retain) ARCategoryTuple *category;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, retain) NSImage *icon;
+@property (nonatomic) NSUInteger badge;
+@property (nonatomic) BOOL displaysBadge;
+@property (nonatomic, retain) ARCategoryTuple *category;
+@property (nonatomic, retain) ARApplication *application;
 
 @end
