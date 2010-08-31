@@ -61,7 +61,7 @@ typedef enum {
 @property (readonly) NSDictionary *ranks;
 @property (readonly) NSDictionary *icons;
 
-- (id)initWithCountry:(NSString *)aCountry category:(ARCategoryTuple *)aCategory applications:(NSArray *)apps;
+- (id)initWithCountry:(NSString *)aCountry category:(ARCategoryTuple *)aCategory;
 - (void)start;
 - (void)cancel;
 

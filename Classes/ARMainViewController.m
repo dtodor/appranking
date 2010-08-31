@@ -39,6 +39,8 @@
 #import "ARApplication.h"
 #import "SidebarBadgeCell.h"
 #import "ARStatusView.h"
+#import "AppRankingAppDelegate.h"
+#import "ARStorageManager.h"
 
 
 @interface ARMainViewController() <ARRankQueryDelegate>
@@ -81,18 +83,31 @@
 }
 
 - (void)reloadApplications {
-	NSDictionary *appsDict = [ARConfiguration sharedARConfiguration].applications;
+	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
+	
+	NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+	[fetchRequest setEntity:[NSEntityDescription entityForName:@"ARCategoryTuple" inManagedObjectContext:storageManager.managedObjectContext]];
+	
+	NSError *error = nil;
+	NSArray *categories = [storageManager.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+	if (!categories) {
+		NSLog(@"Unable to retrieve categories, error = %@", [error localizedDescription]);
+		[self presentError:error];
+		self.applicationsTree = nil;
+		return;
+	}
+	
 	NSMutableArray *array = [NSMutableArray array];
-	for (ARCategoryTuple *category in appsDict) {
+	for (ARCategoryTuple *category in categories) {
 		ARTreeNode *node = [ARTreeNode treeNodeWithRepresentedObject:nil];
 		node.category = category;
 		node.name = [NSString stringWithFormat:@"%@ (%@)", 
 					 [[category typeName] uppercaseString], 
 					 (category.name?[category.name uppercaseString]:@"ALL")];
-		NSArray *applications = [appsDict objectForKey:category];
-		for (ARApplication *application in applications) {
+		for (ARApplication *application in category.applications) {
 			ARTreeNode *child = [ARTreeNode treeNodeWithRepresentedObject:[NSMutableArray array]];
 			child.name = application.name;
+			child.icon = application.iconImage;
 			[[node mutableChildNodes] addObject:child];
 		}
 		[array addObject:node];
@@ -123,8 +138,8 @@
 	NSUInteger count = 0;
 	ARConfiguration *config = [ARConfiguration sharedARConfiguration];
 	for (NSString *country in config.appStoreIds) {
-		for (ARCategoryTuple *tuple in config.applications) {
-			ARRankQuery *query = [[ARRankQuery alloc] initWithCountry:country category:tuple applications:[config.applications objectForKey:tuple]];
+		for (ARTreeNode *rootNode in self.applicationsTree) {
+			ARRankQuery *query = [[ARRankQuery alloc] initWithCountry:country category:rootNode.category];
 			if (query) {
 				query.delegate = self;
 				if (count < maxConcurrent) {
@@ -215,17 +230,15 @@
 		}
 	}
 	
-	ARConfiguration *config = [ARConfiguration sharedARConfiguration];
 	for (NSString *appName in query.icons) {
 		NSString *iconUrl = [query.icons objectForKey:appName];
 		
-		NSArray *apps = [config.applications objectForKey:query.category];
-		for (ARApplication *app in apps) {
-			if ([app.name isEqualToString:appName] && !app.icon) {
+		for (ARApplication *app in query.category.applications) {
+			if ([app.name isEqualToString:appName] && !app.iconImage) {
 				
 				NSImage *icon = [[NSImage alloc] initWithContentsOfURL:[NSURL URLWithString:iconUrl]];
 				if (icon) {
-					app.icon = icon;
+					app.iconImage = icon;
 					[icon release];
 					
 					ARTreeNode *node = [self nodeForCategory:query.category application:appName];

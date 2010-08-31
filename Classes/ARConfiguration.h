@@ -46,14 +46,10 @@ typedef enum {
 
 	// NSString -> NSString
 	NSDictionary *genres;
-	
-	// ARCategoryTuple -> NSArray<ARApplication>
-	NSDictionary *applications;
 }
 
 @property (readonly) NSDictionary *appStoreIds;
 @property (readonly) NSDictionary *genres;
-@property (readonly) NSDictionary *applications;
 
 + (ARConfiguration *)sharedARConfiguration;
 

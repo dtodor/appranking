@@ -31,29 +31,22 @@
  *
  */
 
-#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 
-typedef enum {
-	Top_Free_Apps          = 0,
-	Top_Paid_Apps          = 1,
-	Top_Grossing_Apps      = 2,
-	Top_Free_iPad_Apps     = 3,
-	Top_Paid_iPad_Apps     = 4,
-	Top_Grossing_iPad_Apps = 5
-} CategoryTupleType;
 
-@interface ARCategoryTuple : NSManagedObject {
+@interface ARStorageManager : NSObject {
+
+	NSPersistentStoreCoordinator *persistentStoreCoordinator;
+    NSManagedObjectModel *managedObjectModel;
+    NSManagedObjectContext *managedObjectContext;
 }
 
-@property (nonatomic, retain) NSString *name;
-@property (nonatomic, retain) NSNumber *type;
-@property (nonatomic, retain) NSSet *applications;
+@property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
 
-@property (nonatomic) CategoryTupleType tupleType;
++ (ARStorageManager *)sharedARStorageManager;
 
-- (NSURL *)rankingURLForCountry:(NSString *)country;
-- (NSString *)typeName;
-
-+ (NSArray *)typeNames;
+- (BOOL)commitChanges:(NSError **)error;
 
 @end

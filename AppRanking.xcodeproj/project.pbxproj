@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A19B625122D115600924F72 /* AppRanking.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 1A19B624122D115600924F72 /* AppRanking.xcdatamodel */; };
+		1A19B62A122D191B00924F72 /* ARStorageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A19B629122D191B00924F72 /* ARStorageManager.m */; };
 		1A2D2D181223B7580074AE7F /* AppRankingAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D011223B7580074AE7F /* AppRankingAppDelegate.m */; };
 		1A2D2D191223B7580074AE7F /* ARApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D031223B7580074AE7F /* ARApplication.m */; };
 		1A2D2D1A1223B7580074AE7F /* ARCategoryTuple.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D051223B7580074AE7F /* ARCategoryTuple.m */; };
@@ -19,7 +21,6 @@
 		1A2D2D211223B7580074AE7F /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D151223B7580074AE7F /* SBJsonWriter.m */; };
 		1A2D2D221223B7580074AE7F /* SBJSON+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D171223B7580074AE7F /* SBJSON+Additions.m */; };
 		1A2D2D271223B77A0074AE7F /* app-store-ids.json in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D2D231223B77A0074AE7F /* app-store-ids.json */; };
-		1A2D2D281223B77A0074AE7F /* applications.json in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D2D241223B77A0074AE7F /* applications.json */; };
 		1A2D2D291223B77A0074AE7F /* genres.json in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D2D251223B77A0074AE7F /* genres.json */; };
 		1A2D2EBD122560460074AE7F /* ARMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2EBC122560460074AE7F /* ARMainViewController.m */; };
 		1A45D9B3122640D500A1DF36 /* BWToolkitFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A45D9B1122640D500A1DF36 /* BWToolkitFramework.framework */; };
@@ -67,6 +68,9 @@
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		1A19B624122D115600924F72 /* AppRanking.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = AppRanking.xcdatamodel; sourceTree = "<group>"; };
+		1A19B628122D191B00924F72 /* ARStorageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARStorageManager.h; sourceTree = "<group>"; };
+		1A19B629122D191B00924F72 /* ARStorageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARStorageManager.m; sourceTree = "<group>"; };
 		1A2D2D001223B7580074AE7F /* AppRankingAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppRankingAppDelegate.h; sourceTree = "<group>"; };
 		1A2D2D011223B7580074AE7F /* AppRankingAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppRankingAppDelegate.m; sourceTree = "<group>"; };
 		1A2D2D021223B7580074AE7F /* ARApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARApplication.h; sourceTree = "<group>"; };
@@ -91,7 +95,6 @@
 		1A2D2D161223B7580074AE7F /* SBJSON+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SBJSON+Additions.h"; sourceTree = "<group>"; };
 		1A2D2D171223B7580074AE7F /* SBJSON+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SBJSON+Additions.m"; sourceTree = "<group>"; };
 		1A2D2D231223B77A0074AE7F /* app-store-ids.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "app-store-ids.json"; path = "Resources/app-store-ids.json"; sourceTree = "<group>"; };
-		1A2D2D241223B77A0074AE7F /* applications.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = applications.json; path = Resources/applications.json; sourceTree = "<group>"; };
 		1A2D2D251223B77A0074AE7F /* genres.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = genres.json; path = Resources/genres.json; sourceTree = "<group>"; };
 		1A2D2EB412255D630074AE7F /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainView.xib; sourceTree = "<group>"; };
 		1A2D2EBB122560460074AE7F /* ARMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARMainViewController.h; sourceTree = "<group>"; };
@@ -171,6 +174,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1A19B623122D110300924F72 /* CoreData Model */ = {
+			isa = PBXGroup;
+			children = (
+				1A19B624122D115600924F72 /* AppRanking.xcdatamodel */,
+			);
+			name = "CoreData Model";
+			sourceTree = "<group>";
+		};
 		1A2D2CFF1223B7580074AE7F /* Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -195,6 +206,8 @@
 				1A5A3CFB1225965A00F08485 /* ARStatusView.m */,
 				1A5A3E511225B91A00F08485 /* ARStatusViewController.h */,
 				1A5A3E521225B91A00F08485 /* ARStatusViewController.m */,
+				1A19B628122D191B00924F72 /* ARStorageManager.h */,
+				1A19B629122D191B00924F72 /* ARStorageManager.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -244,6 +257,7 @@
 		29B97314FDCFA39411CA2CEA /* AppRanking */ = {
 			isa = PBXGroup;
 			children = (
+				1A19B623122D110300924F72 /* CoreData Model */,
 				1A2D2CFF1223B7580074AE7F /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -269,7 +283,6 @@
 				1A45D9F41226430400A1DF36 /* dsa_pub.pem */,
 				1A5A3EC91225C16E00F08485 /* Images */,
 				1A2D2D231223B77A0074AE7F /* app-store-ids.json */,
-				1A2D2D241223B77A0074AE7F /* applications.json */,
 				1A2D2D251223B77A0074AE7F /* genres.json */,
 				8D1107310486CEB800E47090 /* AppRanking-Info.plist */,
 				1A5A3C881225775F00F08485 /* MainView.xib */,
@@ -337,7 +350,6 @@
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				1A2D2D271223B77A0074AE7F /* app-store-ids.json in Resources */,
-				1A2D2D281223B77A0074AE7F /* applications.json in Resources */,
 				1A2D2D291223B77A0074AE7F /* genres.json in Resources */,
 				1A5A3C891225775F00F08485 /* MainView.xib in Resources */,
 				1A5A3EBC1225C14A00F08485 /* StatusView.xib in Resources */,
@@ -377,6 +389,8 @@
 				1A5A3C6C122568B800F08485 /* ARTreeNode.m in Sources */,
 				1A5A3CFC1225965A00F08485 /* ARStatusView.m in Sources */,
 				1A5A3E531225B91A00F08485 /* ARStatusViewController.m in Sources */,
+				1A19B625122D115600924F72 /* AppRanking.xcdatamodel in Sources */,
+				1A19B62A122D191B00924F72 /* ARStorageManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
