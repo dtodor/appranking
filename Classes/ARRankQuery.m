@@ -163,7 +163,7 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 				
 				NSArray *images = [entry arrayForKey:@"im:image" error:NULL];
 				if (images && [images count] > 0) {
-					NSDictionary *image = [images dictionaryAtIndex:0 error:NULL];
+					NSDictionary *image = [images dictionaryAtIndex:([images count]-1) error:NULL];
 					if (image) {
 						NSString *imageUrl = [image stringForKey:@"label" error:NULL];
 						if (imageUrl) {

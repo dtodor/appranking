@@ -41,8 +41,10 @@
 @synthesize badge;
 @synthesize displaysBadge;
 @synthesize category;
+@synthesize application;
 
 - (void)dealloc {
+	self.application = nil;
 	self.category = nil;
 	self.icon = nil;
 	self.name = nil;

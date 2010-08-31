@@ -33,6 +33,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "ARStatusViewController.h"
+#import "ARAppDetailsWindowController.h"
 
 
 @interface ARMainViewController : NSViewController <NSOutlineViewDelegate> {
@@ -43,15 +44,18 @@
 	NSMutableArray *applicationsTree;
 	NSMutableArray *treeSelection;
 	NSMutableArray *tableSortDescriptors;
+	NSMutableArray *outlineViewSortDescriptors;
 	
 	NSOutlineView *sidebar;
 	NSToolbarItem *statusToolBarItem;
 	ARStatusViewController *statusViewController;
+	ARAppDetailsWindowController *detailsViewController;
 }
 
 @property (readonly, retain) NSArray *applicationsTree;
 @property (retain) NSMutableArray *treeSelection;
 @property (retain) NSMutableArray *tableSortDescriptors;
+@property (retain) NSMutableArray *outlineViewSortDescriptors;
 @property (retain) IBOutlet NSOutlineView *sidebar;
 @property (retain) IBOutlet NSToolbarItem *statusToolBarItem;
 @property (retain) IBOutlet ARStatusViewController *statusViewController;
@@ -60,5 +64,9 @@
 - (IBAction)refresh:(NSToolbarItem *)sender;
 - (IBAction)stop:(NSToolbarItem *)sender;
 - (IBAction)info:(NSToolbarItem *)sender;
+
+- (IBAction)addApplication:(NSButton *)sender;
+- (IBAction)sortByApplications:(NSMenuItem *)sender;
+- (IBAction)sortByCategories:(NSMenuItem *)sender;
 
 @end

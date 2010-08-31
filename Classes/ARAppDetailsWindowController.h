@@ -32,24 +32,22 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "ARCategoryTuple.h"
 #import "ARApplication.h"
 
 
-@interface ARTreeNode : NSTreeNode {
-	NSString *name;
-	NSImage *icon;
-	NSUInteger badge;
-	BOOL displaysBadge;
-	ARCategoryTuple *category;
+typedef enum {
+	DidSaveChanges,
+	DidDiscardChanges
+} AppDetailsWindowControllerReturnCodes;
+
+
+@interface ARAppDetailsWindowController : NSWindowController {
 	ARApplication *application;
 }
 
-@property (copy) NSString *name;
-@property (retain) NSImage *icon;
-@property NSUInteger badge;
-@property BOOL displaysBadge;
-@property (retain) ARCategoryTuple *category;
-@property (retain) ARApplication *application;
+@property (nonatomic, retain) ARApplication *application;
+
+- (IBAction)commitChanges:(NSButton *)sender;
+- (IBAction)discardChanges:(NSButton *)sender;
 
 @end

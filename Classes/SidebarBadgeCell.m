@@ -76,6 +76,8 @@
 		iconRect.size.width = TSBADGECELL_ICON_SIZE;
 		[_icon drawInRect:iconRect fromRect:NSZeroRect
                 operation:NSCompositeSourceOver fraction:1.0];
+		
+		[_icon setFlipped:NO];
 	
 		// Draw Rect
 		NSRect labelRect = cellFrame;

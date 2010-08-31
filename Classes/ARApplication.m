@@ -51,12 +51,17 @@
 
 - (void)setIconImage:(NSImage *)image {
 	if (iconImage != image) {
+		[self willChangeValueForKey:@"iconImage"];
 		[iconImage release];
 		iconImage = [image retain];
-		
-		self.iconData = [NSBitmapImageRep representationOfImageRepsInArray:[iconImage representations] 
-																 usingType:NSJPEGFileType
-																properties:nil];
+		if (iconImage) {
+			self.iconData = [NSBitmapImageRep representationOfImageRepsInArray:[iconImage representations] 
+																	 usingType:NSJPEGFileType
+																	properties:nil];
+		} else {
+			self.iconData = nil;
+		}
+		[self didChangeValueForKey:@"iconImage"];
 	}
 }
 

@@ -79,6 +79,7 @@
 		app.categories = [NSSet setWithObject:tuple];
 	}
 	
+	
 	{
 		ARCategoryTuple *tuple = [NSEntityDescription insertNewObjectForEntityForName:@"ARCategoryTuple" inManagedObjectContext:storageManager.managedObjectContext];
 		tuple.name = @"Education";
@@ -89,6 +90,7 @@
 		app.name = @"Call For Papers";
 		app.categories = [NSSet setWithObject:tuple];
 	}
+	
 	
 	NSError *error = nil;
 	if (![storageManager.managedObjectContext save:&error]) {
@@ -108,7 +110,7 @@
 	[mainView setFrame:frame];
 	[[window contentView] addSubview:mainView];
 	
-	[self resetTestData];
+	// [self resetTestData];
 	
 	[mainViewController reloadApplications];
 }

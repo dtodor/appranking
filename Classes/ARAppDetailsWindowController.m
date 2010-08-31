@@ -31,25 +31,52 @@
  *
  */
 
-#import <Cocoa/Cocoa.h>
-#import "ARCategoryTuple.h"
-#import "ARApplication.h"
+#import "ARAppDetailsWindowController.h"
+#import "ARStorageManager.h"
 
 
-@interface ARTreeNode : NSTreeNode {
-	NSString *name;
-	NSImage *icon;
-	NSUInteger badge;
-	BOOL displaysBadge;
-	ARCategoryTuple *category;
-	ARApplication *application;
+@implementation ARAppDetailsWindowController
+
+@synthesize application;
+
+- (void)windowDidLoad {
+	[super windowDidLoad];
+	
+	[self addObserver:self forKeyPath:@"application" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
-@property (copy) NSString *name;
-@property (retain) NSImage *icon;
-@property NSUInteger badge;
-@property BOOL displaysBadge;
-@property (retain) ARCategoryTuple *category;
-@property (retain) ARApplication *application;
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+	if (!self.application) {
+		ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
+		self.application = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" 
+														 inManagedObjectContext:storageManager.managedObjectContext];
+	}
+}
+
+- (void)dealloc {
+	[self removeObserver:self forKeyPath:@"application"];
+	self.application = nil;
+	[super dealloc];
+}
+
+- (IBAction)commitChanges:(NSButton *)sender {
+	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
+	NSError *error = nil;
+	if (![storageManager.managedObjectContext save:&error]) {
+		NSLog(@"Unable to save app info, error = %@", [error localizedDescription]);
+		[self presentError:error];
+	}
+	NSWindow *sheet = [self window];
+	[NSApp endSheet:sheet returnCode:DidSaveChanges];
+	[sheet orderOut:nil];
+}
+
+- (IBAction)discardChanges:(NSButton *)sender {
+	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
+	[storageManager.managedObjectContext rollback];
+	NSWindow *sheet = [self window];
+	[NSApp endSheet:sheet returnCode:DidSaveChanges];
+	[sheet orderOut:nil];
+}
 
 @end

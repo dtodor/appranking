@@ -21,7 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="27"/>
+			<integer value="14"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -290,13 +290,13 @@
 													</object>
 													<bool key="NSMenuItemRespectAlignment">YES</bool>
 													<object class="NSMenu" key="NSMenu" id="125749008">
-														<string key="NSTitle">OtherViews</string>
+														<string key="NSTitle">DisplayOptions</string>
 														<object class="NSMutableArray" key="NSMenuItems">
 															<bool key="EncodedWithXMLCoder">YES</bool>
 															<reference ref="539732335"/>
 															<object class="NSMenuItem" id="84586999">
 																<reference key="NSMenu" ref="125749008"/>
-																<string key="NSTitle">Item 2</string>
+																<string key="NSTitle">Sort by applications</string>
 																<string key="NSKeyEquiv"/>
 																<int key="NSKeyEquivModMask">1048576</int>
 																<int key="NSMnemonicLoc">2147483647</int>
@@ -307,7 +307,7 @@
 															</object>
 															<object class="NSMenuItem" id="253834883">
 																<reference key="NSMenu" ref="125749008"/>
-																<string key="NSTitle">Item 3</string>
+																<string key="NSTitle">Sort by categories</string>
 																<string key="NSKeyEquiv"/>
 																<int key="NSKeyEquivModMask">1048576</int>
 																<int key="NSMnemonicLoc">2147483647</int>
@@ -861,7 +861,7 @@
 						<string key="label">selectionIndexPaths: treeSelection</string>
 						<reference key="source" ref="57600838"/>
 						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector">
+						<object class="NSNibBindingConnector" key="connector" id="676004441">
 							<reference key="NSSource" ref="57600838"/>
 							<reference key="NSDestination" ref="1001"/>
 							<string key="NSLabel">selectionIndexPaths: treeSelection</string>
@@ -961,6 +961,87 @@
 						</object>
 					</object>
 					<int key="connectionID">145</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: runningQueries</string>
+						<reference key="source" ref="256181742"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="256181742"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: runningQueries</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">runningQueries</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSIsNil</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">148</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">enabled: runningQueries</string>
+						<reference key="source" ref="566359551"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="566359551"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">enabled: runningQueries</string>
+							<string key="NSBinding">enabled</string>
+							<string key="NSKeyPath">runningQueries</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSIsNil</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">151</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sortByApplications:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="84586999"/>
+					</object>
+					<int key="connectionID">152</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sortByCategories:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="253834883"/>
+					</object>
+					<int key="connectionID">153</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">addApplication:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="256181742"/>
+					</object>
+					<int key="connectionID">158</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">sortDescriptors: outlineViewSortDescriptors</string>
+						<reference key="source" ref="57600838"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="57600838"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">sortDescriptors: outlineViewSortDescriptors</string>
+							<string key="NSBinding">sortDescriptors</string>
+							<string key="NSKeyPath">outlineViewSortDescriptors</string>
+							<reference key="NSPreviousConnector" ref="676004441"/>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">160</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1352,7 +1433,7 @@
 					<string>com.brandonwalkin.BWToolkit</string>
 					<string>com.brandonwalkin.BWToolkit</string>
 					<string>com.brandonwalkin.BWToolkit</string>
-					<string>{{160, 176}, {714, 538}}</string>
+					<string>{{162, 218}, {714, 538}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1380,7 +1461,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">145</int>
+			<int key="maxID">160</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1392,14 +1473,20 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>addApplication:</string>
 							<string>info:</string>
 							<string>refresh:</string>
+							<string>sortByApplications:</string>
+							<string>sortByCategories:</string>
 							<string>stop:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>NSButton</string>
 							<string>NSToolbarItem</string>
 							<string>NSToolbarItem</string>
+							<string>NSMenuItem</string>
+							<string>NSMenuItem</string>
 							<string>NSToolbarItem</string>
 						</object>
 					</object>
@@ -1407,12 +1494,19 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>addApplication:</string>
 							<string>info:</string>
 							<string>refresh:</string>
+							<string>sortByApplications:</string>
+							<string>sortByCategories:</string>
 							<string>stop:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBActionInfo">
+								<string key="name">addApplication:</string>
+								<string key="candidateClassName">NSButton</string>
+							</object>
 							<object class="IBActionInfo">
 								<string key="name">info:</string>
 								<string key="candidateClassName">NSToolbarItem</string>
@@ -1420,6 +1514,14 @@
 							<object class="IBActionInfo">
 								<string key="name">refresh:</string>
 								<string key="candidateClassName">NSToolbarItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">sortByApplications:</string>
+								<string key="candidateClassName">NSMenuItem</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">sortByCategories:</string>
+								<string key="candidateClassName">NSMenuItem</string>
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">stop:</string>
