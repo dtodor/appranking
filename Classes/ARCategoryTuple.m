@@ -33,6 +33,7 @@
 
 #import "ARCategoryTuple.h"
 #import "ARConfiguration.h"
+#import "ARConfiguration.h"
 
 
 static NSString * const kFeedURLTemplate_SelectedCategory = @"http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/%@/sf=%@/limit=300/genre=%@/json";
@@ -116,6 +117,25 @@ static NSString * const kFeedURLTemplate_All = @"http://ax.itunes.apple.com/WebO
 					 @"Top Grossing iPad", nil];
 	});
 	return typeNames;
+}
+
+- (BOOL)validateName:(id *)value error:(NSError **)error {
+	if (*value == nil) {
+		return YES;
+	}
+	NSString *nameStr = *value;
+	ARConfiguration *config = [ARConfiguration sharedARConfiguration];
+	if (![config.genres objectForKey:nameStr]) {
+		if (error) {
+			*error = [NSError errorWithDomain:@"ARCategoryTuple" 
+										 code:0 
+									 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"'%@' is not a valid category", nameStr] 
+																		  forKey:NSLocalizedDescriptionKey]];
+		}
+		return NO;
+	} else {
+		return YES;
+	}
 }
 
 @end

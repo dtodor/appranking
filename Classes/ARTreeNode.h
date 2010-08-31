@@ -45,11 +45,11 @@
 	ARApplication *application;
 }
 
-@property (copy) NSString *name;
-@property (retain) NSImage *icon;
-@property NSUInteger badge;
-@property BOOL displaysBadge;
-@property (retain) ARCategoryTuple *category;
-@property (retain) ARApplication *application;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, retain) NSImage *icon;
+@property (nonatomic) NSUInteger badge;
+@property (nonatomic) BOOL displaysBadge;
+@property (nonatomic, retain) ARCategoryTuple *category;
+@property (nonatomic, retain) ARApplication *application;
 
 @end

@@ -46,10 +46,10 @@
 
 @interface ARMainViewController() <ARRankQueryDelegate>
 
-@property (retain) NSMutableArray *runningQueries;
-@property (retain) NSMutableArray *pendingQueries;
-@property (retain) NSArray *applicationsTree;
-@property (retain) ARAppDetailsWindowController *detailsViewController;
+@property (nonatomic, retain) NSMutableArray *runningQueries;
+@property (nonatomic, retain) NSMutableArray *pendingQueries;
+@property (nonatomic, retain) NSArray *applicationsTree;
+@property (nonatomic, retain) ARAppDetailsWindowController *detailsViewController;
 
 @end
 
@@ -62,16 +62,16 @@
 @synthesize sidebar;
 @synthesize statusToolBarItem;
 @synthesize statusViewController;
-@synthesize treeSelection;
 @synthesize tableSortDescriptors;
-@synthesize outlineViewSortDescriptors;
 @synthesize detailsViewController;
+@synthesize treeController;
+@synthesize outlineViewSortDescriptors;
 
 - (void)dealloc {
+	self.treeController = nil;
 	self.detailsViewController = nil;
 	self.tableSortDescriptors = nil;
 	self.outlineViewSortDescriptors = nil;
-	self.treeSelection = nil;
 	self.statusViewController = nil;
 	self.sidebar = nil;
 	self.statusToolBarItem = nil;
@@ -123,7 +123,6 @@
 		[array addObject:node];
 	}
 	self.applicationsTree = array;
-	self.treeSelection = [NSMutableArray array];
 	
 	[sidebar expandItem:nil expandChildren:YES];
 }
@@ -183,9 +182,7 @@
 }
 
 - (ARApplication *)selectedApplication {
-	NSIndexPath *selection = [self.treeSelection lastObject];
-	ARTreeNode *categoryNode = [self.applicationsTree objectAtIndex:[selection indexAtPosition:0]];
-	ARTreeNode *applicationNode = [[categoryNode childNodes] objectAtIndex:[selection indexAtPosition:1]];
+	ARTreeNode *applicationNode = [[self.treeController selectedObjects] objectAtIndex:0];
 	return applicationNode.application;
 }
 
@@ -210,6 +207,9 @@
 
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo {
 	self.detailsViewController = nil;
+	if (returnCode == DidSaveChanges) {
+		[self reloadApplications];
+	}
 }
 
 - (IBAction)sortByApplications:(NSMenuItem *)sender {
@@ -287,6 +287,7 @@
 					
 					ARTreeNode *node = [self nodeForCategory:query.category application:appName];
 					node.icon = icon;
+					[sidebar reloadItem:nil];
 				}
 				
 				break;

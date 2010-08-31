@@ -43,9 +43,13 @@ typedef enum {
 
 @interface ARAppDetailsWindowController : NSWindowController {
 	ARApplication *application;
+	NSMutableArray *tempCategories;
 }
 
 @property (nonatomic, retain) ARApplication *application;
+@property (nonatomic, retain) NSMutableArray *tempCategories;
+@property (nonatomic, readonly) NSArray *categoryNames;
+@property (nonatomic, readonly) NSArray *categoryTypeNames;
 
 - (IBAction)commitChanges:(NSButton *)sender;
 - (IBAction)discardChanges:(NSButton *)sender;

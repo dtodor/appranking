@@ -36,12 +36,21 @@
 #import "ARStorageManager.h"
 #import "ARCategoryTuple.h"
 #import "ARApplication.h"
+#import "AREnumValueTransformer.h"
 
 
 @implementation AppRankingAppDelegate
 
 @synthesize window;
 @synthesize mainViewController;
+
++ (void)initialize {
+	if (self = [AppRankingAppDelegate class]) {
+		AREnumValueTransformer *categoryTypesTransformer = [[AREnumValueTransformer alloc] initWithValueNames:[ARCategoryTuple typeNames]];
+		[NSValueTransformer setValueTransformer:categoryTypesTransformer forName:@"ARCategoryTupleTypeValueTransformer"];
+		[categoryTypesTransformer release];
+	}
+}
 
 - (void)dealloc {
 	self.mainViewController = nil;
@@ -111,6 +120,21 @@
 	[[window contentView] addSubview:mainView];
 	
 	// [self resetTestData];
+	
+	
+	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"ARApplication" 
+											  inManagedObjectContext:[ARStorageManager sharedARStorageManager].managedObjectContext];
+    [fetchRequest setEntity:entity];
+    NSArray *items = [[ARStorageManager sharedARStorageManager].managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+    [fetchRequest release];
+	if (items) {
+		for (ARApplication *app in items) {
+			NSLog(@"%@", app.name);
+		}
+	}
+	
+	
 	
 	[mainViewController reloadApplications];
 }

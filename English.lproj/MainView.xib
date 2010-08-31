@@ -21,7 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="14"/>
+			<integer value="76"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -141,7 +141,6 @@
 																</object>
 																<int key="NSResizingMask">3</int>
 																<bool key="NSIsResizeable">YES</bool>
-																<bool key="NSIsEditable">YES</bool>
 																<reference key="NSTableView" ref="569108080"/>
 															</object>
 														</object>
@@ -166,13 +165,13 @@
 															</object>
 														</object>
 														<double key="NSRowHeight">20</double>
-														<int key="NSTvFlags">-767557632</int>
+														<int key="NSTvFlags">-1035993088</int>
 														<reference key="NSDelegate"/>
 														<reference key="NSDataSource"/>
 														<int key="NSColumnAutoresizingStyle">4</int>
 														<int key="NSDraggingSourceMaskForLocal">15</int>
 														<int key="NSDraggingSourceMaskForNonLocal">0</int>
-														<bool key="NSAllowsTypeSelect">YES</bool>
+														<bool key="NSAllowsTypeSelect">NO</bool>
 														<int key="NSTableViewSelectionHighlightStyle">1</int>
 														<int key="NSTableViewDraggingDestinationStyle">1</int>
 														<float key="NSOutlineViewIndentationPerLevelKey">14</float>
@@ -759,7 +758,6 @@
 				</object>
 				<string key="NSObjectClassName">ARTreeNode</string>
 				<object class="_NSManagedProxy" key="_NSManagedProxy"/>
-				<bool key="NSAvoidsEmptySelection">YES</bool>
 				<bool key="NSPreservesSelection">YES</bool>
 				<bool key="NSSelectsInsertedObjects">YES</bool>
 				<string key="NSTreeContentChildrenKey">childNodes</string>
@@ -855,22 +853,6 @@
 						</object>
 					</object>
 					<int key="connectionID">116</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">selectionIndexPaths: treeSelection</string>
-						<reference key="source" ref="57600838"/>
-						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector" id="676004441">
-							<reference key="NSSource" ref="57600838"/>
-							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">selectionIndexPaths: treeSelection</string>
-							<string key="NSBinding">selectionIndexPaths</string>
-							<string key="NSKeyPath">treeSelection</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">127</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -1027,6 +1009,14 @@
 					<int key="connectionID">158</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">treeController</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="57600838"/>
+					</object>
+					<int key="connectionID">161</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">sortDescriptors: outlineViewSortDescriptors</string>
 						<reference key="source" ref="57600838"/>
@@ -1037,11 +1027,10 @@
 							<string key="NSLabel">sortDescriptors: outlineViewSortDescriptors</string>
 							<string key="NSBinding">sortDescriptors</string>
 							<string key="NSKeyPath">outlineViewSortDescriptors</string>
-							<reference key="NSPreviousConnector" ref="676004441"/>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
-					<int key="connectionID">160</int>
+					<int key="connectionID">162</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1461,7 +1450,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">160</int>
+			<int key="maxID">162</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1536,12 +1525,14 @@
 							<string>sidebar</string>
 							<string>statusToolBarItem</string>
 							<string>statusViewController</string>
+							<string>treeController</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSOutlineView</string>
 							<string>NSToolbarItem</string>
 							<string>ARStatusViewController</string>
+							<string>NSTreeController</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -1551,6 +1542,7 @@
 							<string>sidebar</string>
 							<string>statusToolBarItem</string>
 							<string>statusViewController</string>
+							<string>treeController</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1565,6 +1557,10 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">statusViewController</string>
 								<string key="candidateClassName">ARStatusViewController</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">treeController</string>
+								<string key="candidateClassName">NSTreeController</string>
 							</object>
 						</object>
 					</object>

@@ -42,9 +42,9 @@
 	double progressPercent;
 }
 
-@property (retain) IBOutlet NSTextField *mainLabel;
-@property (retain) IBOutlet NSTextField *secondaryLabel;
-@property (retain) IBOutlet NSView *progressBar;
+@property (nonatomic, retain) IBOutlet NSTextField *mainLabel;
+@property (nonatomic, retain) IBOutlet NSTextField *secondaryLabel;
+@property (nonatomic, retain) IBOutlet NSView *progressBar;
 
 - (void)setProgress:(double)percent;
 

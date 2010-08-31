@@ -50,15 +50,17 @@
 	NSToolbarItem *statusToolBarItem;
 	ARStatusViewController *statusViewController;
 	ARAppDetailsWindowController *detailsViewController;
+	
+	NSTreeController *treeController;
 }
 
-@property (readonly, retain) NSArray *applicationsTree;
-@property (retain) NSMutableArray *treeSelection;
-@property (retain) NSMutableArray *tableSortDescriptors;
-@property (retain) NSMutableArray *outlineViewSortDescriptors;
-@property (retain) IBOutlet NSOutlineView *sidebar;
-@property (retain) IBOutlet NSToolbarItem *statusToolBarItem;
-@property (retain) IBOutlet ARStatusViewController *statusViewController;
+@property (nonatomic, readonly, retain) NSArray *applicationsTree;
+@property (nonatomic, retain) NSMutableArray *tableSortDescriptors;
+@property (nonatomic, retain) NSMutableArray *outlineViewSortDescriptors;
+@property (nonatomic, retain) IBOutlet NSOutlineView *sidebar;
+@property (nonatomic, retain) IBOutlet NSToolbarItem *statusToolBarItem;
+@property (nonatomic, retain) IBOutlet ARStatusViewController *statusViewController;
+@property (nonatomic, retain) IBOutlet NSTreeController *treeController;
 
 - (void)reloadApplications;
 - (IBAction)refresh:(NSToolbarItem *)sender;

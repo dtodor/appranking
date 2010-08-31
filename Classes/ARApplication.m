@@ -74,4 +74,21 @@
 	[super dealloc];
 }
 
+- (BOOL)validateCategories:(id *)value error:(NSError **)error {
+	if (*value == nil) {
+		return YES;
+	}
+	if ([*value count] == 0) {
+		if (error) {
+			*error = [NSError errorWithDomain:@"ARApplication" 
+										 code:0 
+									 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"At least one category should be specified"] 
+																		  forKey:NSLocalizedDescriptionKey]];
+		}
+		return NO;
+	} else {
+		return YES;
+	}
+}
+
 @end
