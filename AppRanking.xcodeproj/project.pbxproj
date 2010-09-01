@@ -45,6 +45,7 @@
 		1A5A3EC71225C16500F08485 /* status-view-left.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A5A3EC11225C16500F08485 /* status-view-left.png */; };
 		1A5A3EC81225C16500F08485 /* status-view-right.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A5A3EC21225C16500F08485 /* status-view-right.png */; };
 		1A70CC2D1226D43F0031E8CF /* stop.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A70CC2C1226D43F0031E8CF /* stop.icns */; };
+		1AB276D9122E548D006CFC8F /* AppDetailsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1ABE9A6B1227198D00065E5D /* AppDetailsWindow.xib */; };
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -224,6 +225,7 @@
 		1A19B80E122D4BED00924F72 /* Main View */ = {
 			isa = PBXGroup;
 			children = (
+				1A19B80D122D4BC600924F72 /* Status Toolbar Item */,
 				1A2D2D001223B7580074AE7F /* AppRankingAppDelegate.h */,
 				1A2D2D011223B7580074AE7F /* AppRankingAppDelegate.m */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
@@ -253,7 +255,6 @@
 			children = (
 				1A19B80B122D4B8900924F72 /* Model */,
 				1A19B80E122D4BED00924F72 /* Main View */,
-				1A19B80D122D4BC600924F72 /* Status Toolbar Item */,
 				1A19B80F122D4C0700924F72 /* AppDetails View */,
 				1A5A3C6D122568C800F08485 /* Third Party */,
 				1A2D2D161223B7580074AE7F /* SBJSON+Additions.h */,
@@ -393,20 +394,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
-				1A2D2D271223B77A0074AE7F /* app-store-ids.json in Resources */,
-				1A2D2D291223B77A0074AE7F /* genres.json in Resources */,
 				1A5A3C891225775F00F08485 /* MainView.xib in Resources */,
 				1A5A3EBC1225C14A00F08485 /* StatusView.xib in Resources */,
+				1AB276D9122E548D006CFC8F /* AppDetailsWindow.xib in Resources */,
+				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
+				1A2D2D271223B77A0074AE7F /* app-store-ids.json in Resources */,
+				1A2D2D291223B77A0074AE7F /* genres.json in Resources */,
 				1A5A3EC31225C16500F08485 /* icon.icns in Resources */,
 				1A5A3EC41225C16500F08485 /* info.icns in Resources */,
+				1A70CC2D1226D43F0031E8CF /* stop.icns in Resources */,
 				1A5A3EC51225C16500F08485 /* refresh.icns in Resources */,
 				1A5A3EC61225C16500F08485 /* status-view-center.png in Resources */,
 				1A5A3EC71225C16500F08485 /* status-view-left.png in Resources */,
 				1A5A3EC81225C16500F08485 /* status-view-right.png in Resources */,
 				1A45D9F51226430400A1DF36 /* dsa_pub.pem in Resources */,
-				1A70CC2D1226D43F0031E8CF /* stop.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

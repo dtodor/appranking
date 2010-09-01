@@ -192,7 +192,7 @@
  	[NSApp beginSheet:[self.detailsViewController window] 
 	   modalForWindow:[NSApp mainWindow] 
 		modalDelegate:self 
-	   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:) 
+	   didEndSelector:@selector(editAppSheetDidEnd:returnCode:contextInfo:) 
 		  contextInfo:NULL];
 }
 
@@ -201,17 +201,66 @@
  	[NSApp beginSheet:[self.detailsViewController window] 
 	   modalForWindow:[NSApp mainWindow] 
 		modalDelegate:self 
-	   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:) 
+	   didEndSelector:@selector(editAppSheetDidEnd:returnCode:contextInfo:) 
 		  contextInfo:NULL];
 }
 
-- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo {
+- (void)tryDeletingUnusedCategories {
+	NSManagedObjectContext *managedObjectContext = [ARStorageManager sharedARStorageManager].managedObjectContext;
+	NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+	[fetchRequest setEntity:[NSEntityDescription entityForName:@"ARCategoryTuple" inManagedObjectContext:managedObjectContext]];
+	[fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"applications[SIZE] = 0"]];
+	NSError *error = nil;
+	NSArray *categories = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
+	if (categories) {
+		for (ARCategoryTuple *category in categories) {
+			[managedObjectContext deleteObject:category];
+		}
+		if (![managedObjectContext save:&error]) {
+			NSLog(@"Unable to delete unsued categories, error = %@", [error localizedDescription]);
+		}
+	} else {
+		NSLog(@"Unable to retrieve unused categories, error = %@", [error localizedDescription]);
+	}
+}
+
+- (void)editAppSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo {
 	self.detailsViewController = nil;
 	if (returnCode == DidSaveChanges) {
+		[self tryDeletingUnusedCategories];
 		[self reloadApplications];
 	}
 }
 
+- (IBAction)removeApplication:(NSButton *)sender {
+	ARApplication *application = [self selectedApplication];
+	NSAlert *alert = [NSAlert alertWithMessageText:@"Delete Confirmation" 
+									 defaultButton:@"Yes" 
+								   alternateButton:@"No" 
+									   otherButton:nil 
+						 informativeTextWithFormat:@"Are you sure you want to delete the application '%@'?", application.name];
+	[alert setAlertStyle:NSInformationalAlertStyle];
+	[alert beginSheetModalForWindow:[[self view] window] 
+					  modalDelegate:self 
+					 didEndSelector:@selector(deleteConfirmationSheetDidEnd:returnCode:contextInfo:) 
+						contextInfo:NULL];
+}
+
+- (void)deleteConfirmationSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo {
+	if (returnCode == NSAlertDefaultReturn) {
+		ARApplication *application = [self selectedApplication];
+		NSManagedObjectContext *managedObjectContext = [ARStorageManager sharedARStorageManager].managedObjectContext;
+		[managedObjectContext deleteObject:application];
+		NSError *error = nil;
+		if (![managedObjectContext save:&error]) {
+			[self presentError:error];
+		} else {
+			[self tryDeletingUnusedCategories];
+			[self reloadApplications];
+		}
+	}
+}
+	 
 - (IBAction)sortByApplications:(NSMenuItem *)sender {
 	NSLog(@"'sort by applications' action");
 }

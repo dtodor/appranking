@@ -68,6 +68,7 @@
 - (IBAction)info:(NSToolbarItem *)sender;
 
 - (IBAction)addApplication:(NSButton *)sender;
+- (IBAction)removeApplication:(NSButton *)sender;
 - (IBAction)sortByApplications:(NSMenuItem *)sender;
 - (IBAction)sortByCategories:(NSMenuItem *)sender;
 

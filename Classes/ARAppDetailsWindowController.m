@@ -116,19 +116,6 @@
 	return YES;
 }
 
-- (void)tryDeletingUnusedCategories {
-	NSManagedObjectContext *managedObjectContext = [ARStorageManager sharedARStorageManager].managedObjectContext;
-	NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
-	[fetchRequest setEntity:[NSEntityDescription entityForName:@"ARCategoryTuple" inManagedObjectContext:managedObjectContext]];
-	[fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"applications[SIZE] = 0"]];
-	NSArray *categories = [managedObjectContext executeFetchRequest:fetchRequest error:nil];
-	if (categories) {
-		for (ARCategoryTuple *category in categories) {
-			[managedObjectContext deleteObject:category];
-		}
-	}
-}
-
 - (BOOL)replaceCategories:(NSError **)error {
 	NSManagedObjectContext *managedObjectContext = [ARStorageManager sharedARStorageManager].managedObjectContext;
 	NSMutableSet *newCategories = [NSMutableSet set];
@@ -146,7 +133,6 @@
 	}
 	
 	self.application.categories = newCategories;
-	[self tryDeletingUnusedCategories];
 	
 	return YES;
 }
