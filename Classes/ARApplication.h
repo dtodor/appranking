@@ -43,6 +43,7 @@
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSSet *categories;
 @property (nonatomic, retain) NSData *iconData;
+@property (nonatomic, retain) NSSet *rankEntries;
 
 @property (nonatomic, retain) NSImage *iconImage;
 

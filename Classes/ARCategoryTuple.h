@@ -48,6 +48,7 @@ typedef enum {
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSNumber *type;
 @property (nonatomic, retain) NSSet *applications;
+@property (nonatomic, retain) NSSet *rankEntries;
 
 @property (nonatomic) CategoryTupleType tupleType;
 

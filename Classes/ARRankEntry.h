@@ -31,65 +31,19 @@
  *
  */
 
+#import <Cocoa/Cocoa.h>
 #import "ARApplication.h"
+#import "ARCategoryTuple.h"
 
 
-@implementation ARApplication
+@interface ARRankEntry : NSManagedObject {
 
-@dynamic appStoreId, name, categories, iconData, rankEntries;
-@synthesize iconImage;
-
-- (void)awakeFromFetch {
-	if (self.iconData) {
-		self.iconImage = [[[NSImage alloc] initWithData:self.iconData] autorelease];
-	}
 }
 
-- (NSImage *)iconImage {
-	return iconImage;
-}
-
-- (void)setIconImage:(NSImage *)image {
-	if (iconImage != image) {
-		[self willChangeValueForKey:@"iconImage"];
-		[iconImage release];
-		iconImage = [image retain];
-		if (iconImage) {
-			self.iconData = [NSBitmapImageRep representationOfImageRepsInArray:[iconImage representations] 
-																	 usingType:NSJPEGFileType
-																	properties:nil];
-		} else {
-			self.iconData = nil;
-		}
-		[self didChangeValueForKey:@"iconImage"];
-	}
-}
-
-- (void)dealloc {
-	self.rankEntries = nil;
-	self.appStoreId = nil;
-	self.name = nil;
-	self.categories = nil;
-	self.iconData = nil;
-	self.iconImage = nil;
-	[super dealloc];
-}
-
-- (BOOL)validateCategories:(id *)value error:(NSError **)error {
-	if (*value == nil) {
-		return YES;
-	}
-	if ([*value count] == 0) {
-		if (error) {
-			*error = [NSError errorWithDomain:@"ARApplication" 
-										 code:0 
-									 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"At least one category should be specified"] 
-																		  forKey:NSLocalizedDescriptionKey]];
-		}
-		return NO;
-	} else {
-		return YES;
-	}
-}
+@property (nonatomic, retain) ARApplication *application;
+@property (nonatomic, retain) ARCategoryTuple *category;
+@property (nonatomic, retain) NSString *country;
+@property (nonatomic, retain) NSNumber *rank;
+@property (nonatomic, retain) NSDate *timestamp;
 
 @end

@@ -37,6 +37,7 @@
 #import "ARCategoryTuple.h"
 #import "ARApplication.h"
 #import "AREnumValueTransformer.h"
+#import "ARRankEntry.h"
 
 
 @implementation AppRankingAppDelegate
@@ -88,7 +89,6 @@
 		app.categories = [NSSet setWithObject:tuple];
 	}
 	
-	
 	{
 		ARCategoryTuple *tuple = [NSEntityDescription insertNewObjectForEntityForName:@"ARCategoryTuple" inManagedObjectContext:storageManager.managedObjectContext];
 		tuple.name = @"Education";
@@ -99,7 +99,6 @@
 		app.name = @"Call For Papers";
 		app.categories = [NSSet setWithObject:tuple];
 	}
-	
 	
 	NSError *error = nil;
 	if (![storageManager.managedObjectContext save:&error]) {
@@ -119,22 +118,36 @@
 	[mainView setFrame:frame];
 	[[window contentView] addSubview:mainView];
 	
-	// [self resetTestData];
 	
-	
-	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"ARApplication" 
-											  inManagedObjectContext:[ARStorageManager sharedARStorageManager].managedObjectContext];
-    [fetchRequest setEntity:entity];
-    NSArray *items = [[ARStorageManager sharedARStorageManager].managedObjectContext executeFetchRequest:fetchRequest error:NULL];
-    [fetchRequest release];
-	if (items) {
-		for (ARApplication *app in items) {
-			NSLog(@"%@", app.name);
+	{
+		// [self resetTestData];
+
+		ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
+		BOOL deleteRankEntries = YES;
+		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+		NSEntityDescription *entity = [NSEntityDescription entityForName:@"ARApplication" 
+												  inManagedObjectContext:storageManager.managedObjectContext];
+		[fetchRequest setEntity:entity];
+		NSArray *items = [storageManager.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+		[fetchRequest release];
+		if (items) {
+			for (ARApplication *app in items) {
+				NSLog(@"%@", app.name);
+				for (ARRankEntry *entry in app.rankEntries) {
+					NSLog(@"\t{%@, %@} - %d", entry.country, entry.category, [entry.rank intValue]);
+					if (deleteRankEntries) {
+						[storageManager.managedObjectContext deleteObject:entry];
+					}
+				}
+			}
+		}
+		if (deleteRankEntries) {
+			NSError *error = nil;
+			if (![storageManager.managedObjectContext save:&error]) {
+				NSLog(@"Unable to deleterank entries, error = %@", [error localizedDescription]);
+			}
 		}
 	}
-	
-	
 	
 	[mainViewController reloadApplications];
 }

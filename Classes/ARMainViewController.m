@@ -42,6 +42,7 @@
 #import "AppRankingAppDelegate.h"
 #import "ARStorageManager.h"
 #import "ARAppDetailsWindowController.h"
+#import "ARRankEntry.h"
 
 
 @interface ARMainViewController() <ARRankQueryDelegate>
@@ -50,6 +51,7 @@
 @property (nonatomic, retain) NSMutableArray *pendingQueries;
 @property (nonatomic, retain) NSArray *applicationsTree;
 @property (nonatomic, retain) ARAppDetailsWindowController *detailsViewController;
+@property (nonatomic, retain) NSDate *refreshStartDate;
 
 @end
 
@@ -66,8 +68,10 @@
 @synthesize detailsViewController;
 @synthesize treeController;
 @synthesize outlineViewSortDescriptors;
+@synthesize refreshStartDate;
 
 - (void)dealloc {
+	self.refreshStartDate = nil;
 	self.treeController = nil;
 	self.detailsViewController = nil;
 	self.tableSortDescriptors = nil;
@@ -134,6 +138,7 @@
 	if (self.runningQueries) {
 		return;
 	}
+	self.refreshStartDate = [NSDate date];
 	[statusViewController.mainLabel setStringValue:@"Processing RSS feeds ..."];
 	[statusViewController.secondaryLabel setStringValue:@""];
 	[statusViewController.secondaryLabel setHidden:NO];
@@ -175,10 +180,14 @@
 	}
 	self.runningQueries = nil;
 	self.pendingQueries = nil;
+	self.refreshStartDate = nil;
 	
 	[statusViewController.mainLabel setStringValue:@"Done"];
 	[statusViewController.secondaryLabel setHidden:YES];
 	[statusViewController setProgress:0.0];
+	
+	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
+	[storageManager.managedObjectContext rollback];
 }
 
 - (ARApplication *)selectedApplication {
@@ -277,18 +286,25 @@
 	NSUInteger count = [runningQueries count] + [pendingQueries count];
 	double percent = ((double)totalNumberOfDownloads-count)/totalNumberOfDownloads;
 	[statusViewController setProgress:percent];
-	if ([runningQueries count] == 0) {
-		self.runningQueries = nil;
-		self.pendingQueries = nil;
-		[statusViewController.mainLabel setStringValue:@"Done"];
-		[statusViewController.secondaryLabel setHidden:YES];
-		[statusViewController setProgress:0.0];
-	}
 	if ([pendingQueries count] > 0) {
 		ARRankQuery *query = [pendingQueries lastObject];
 		[pendingQueries removeLastObject];
 		[runningQueries addObject:query];
 		[query start];
+	}
+	if ([runningQueries count] == 0) {
+		// Finished
+		self.runningQueries = nil;
+		self.pendingQueries = nil;
+		[statusViewController.mainLabel setStringValue:@"Done"];
+		[statusViewController.secondaryLabel setHidden:YES];
+		[statusViewController setProgress:0.0];
+		
+		ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
+		NSError *error = nil;
+		if (![storageManager.managedObjectContext save:&error]) {
+			[self presentError:error];
+		}
 	}
 }
 
@@ -306,20 +322,42 @@
 	return nil;
 }
 
+- (void)insertRankEntryForApplication:(ARApplication *)app category:(ARCategoryTuple *)category country:(NSString *)country rank:(NSNumber *)rank {
+	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
+	ARRankEntry *entry = [NSEntityDescription insertNewObjectForEntityForName:@"ARRankEntry" inManagedObjectContext:storageManager.managedObjectContext];
+	entry.application = app;
+	entry.category = category;
+	entry.country = country;
+	entry.rank = rank;
+	entry.timestamp = self.refreshStartDate;
+	
+	NSError *error = nil;
+	if (![storageManager.managedObjectContext save:&error]) {
+		[self presentError:error];
+	}
+}
+
 - (void)queryDidFinish:(ARRankQuery *)query {
 	[statusViewController.secondaryLabel setStringValue:[NSString stringWithFormat:@"Finished processing %@ [%@]", query.country, query.category]];
 	for (NSString *appName in query.ranks) {
 		id value = [query.ranks objectForKey:appName];
 		if ([value isKindOfClass:[NSNumber class]]) {
-			ARTreeNode *node = [self nodeForCategory:query.category application:appName];
-			if (node) {
-				NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:value, @"rank", query.country, @"country", nil];
-				NSMutableArray *entries = [node representedObject];
-				[node willChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:[entries count]] forKey:@"representedObject"];
-				[entries addObject:entry];
-				[node didChange:NSKeyValueChangeInsertion valuesAtIndexes:[NSIndexSet indexSetWithIndex:[entries count]-1] forKey:@"representedObject"];
-			}
 			NSLog(@"[ARRankQuery] %@ (%@) - %d", query.country, query.category, [value intValue]);
+			ARTreeNode *applicationNode = [self nodeForCategory:query.category application:appName];
+			assert(applicationNode);
+			NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:value, @"rank", query.country, @"country", nil];
+			NSMutableArray *entries = [applicationNode representedObject];
+			[applicationNode willChange:NSKeyValueChangeInsertion 
+						valuesAtIndexes:[NSIndexSet indexSetWithIndex:[entries count]] 
+								 forKey:@"representedObject"];
+			
+			[entries addObject:entry];
+			
+			[applicationNode didChange:NSKeyValueChangeInsertion 
+					   valuesAtIndexes:[NSIndexSet indexSetWithIndex:[entries count]-1] 
+								forKey:@"representedObject"];
+			
+			[self insertRankEntryForApplication:applicationNode.application category:query.category country:query.country rank:value];
 		}
 	}
 	

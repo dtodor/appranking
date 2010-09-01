@@ -31,65 +31,24 @@
  *
  */
 
-#import "ARApplication.h"
+#import "ARRankEntry.h"
 
 
-@implementation ARApplication
+@implementation ARRankEntry
 
-@dynamic appStoreId, name, categories, iconData, rankEntries;
-@synthesize iconImage;
-
-- (void)awakeFromFetch {
-	if (self.iconData) {
-		self.iconImage = [[[NSImage alloc] initWithData:self.iconData] autorelease];
-	}
-}
-
-- (NSImage *)iconImage {
-	return iconImage;
-}
-
-- (void)setIconImage:(NSImage *)image {
-	if (iconImage != image) {
-		[self willChangeValueForKey:@"iconImage"];
-		[iconImage release];
-		iconImage = [image retain];
-		if (iconImage) {
-			self.iconData = [NSBitmapImageRep representationOfImageRepsInArray:[iconImage representations] 
-																	 usingType:NSJPEGFileType
-																	properties:nil];
-		} else {
-			self.iconData = nil;
-		}
-		[self didChangeValueForKey:@"iconImage"];
-	}
-}
+@dynamic application;
+@dynamic category;
+@dynamic country;
+@dynamic rank;
+@dynamic timestamp;
 
 - (void)dealloc {
-	self.rankEntries = nil;
-	self.appStoreId = nil;
-	self.name = nil;
-	self.categories = nil;
-	self.iconData = nil;
-	self.iconImage = nil;
+	self.application = nil;
+	self.category = nil;
+	self.country = nil;
+	self.rank = nil;
+	self.timestamp = nil;
 	[super dealloc];
-}
-
-- (BOOL)validateCategories:(id *)value error:(NSError **)error {
-	if (*value == nil) {
-		return YES;
-	}
-	if ([*value count] == 0) {
-		if (error) {
-			*error = [NSError errorWithDomain:@"ARApplication" 
-										 code:0 
-									 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"At least one category should be specified"] 
-																		  forKey:NSLocalizedDescriptionKey]];
-		}
-		return NO;
-	} else {
-		return YES;
-	}
 }
 
 @end

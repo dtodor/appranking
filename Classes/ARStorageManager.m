@@ -91,10 +91,13 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
     
     NSURL *url = [NSURL fileURLWithPath:[applicationSupportDirectory stringByAppendingPathComponent: @"storedata"]];
     persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: mom];
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+							 [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
+							 [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
     if (![persistentStoreCoordinator addPersistentStoreWithType:NSXMLStoreType 
 												  configuration:nil 
 															URL:url 
-														options:nil 
+														options:options 
 														  error:&error]){
         [[NSApplication sharedApplication] presentError:error];
         [persistentStoreCoordinator release], persistentStoreCoordinator = nil;

@@ -52,6 +52,7 @@
 	ARAppDetailsWindowController *detailsViewController;
 	
 	NSTreeController *treeController;
+	NSDate *refreshStartDate;
 }
 
 @property (nonatomic, readonly, retain) NSArray *applicationsTree;
