@@ -32,29 +32,18 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "ARApplication.h"
-#import "ARCategoryTuple.h"
 
 
-@interface ARStorageManager : NSObject {
-
-	NSPersistentStoreCoordinator *persistentStoreCoordinator;
-    NSManagedObjectModel *managedObjectModel;
-    NSManagedObjectContext *managedObjectContext;
+@interface ARColor : NSObject {
+	NSUInteger red;
+	NSUInteger green;
+	NSUInteger blue;
 }
 
-@property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
+- (NSString *)hexValue;
+- (NSColor *)colorValue;
 
-+ (ARStorageManager *)sharedARStorageManager;
-
-- (BOOL)commitChanges:(NSError **)error;
-- (void)tryDeletingUnusedCategories;
-- (NSArray *)rankedCountriesForApplication:(ARApplication *)app inCategory:(ARCategoryTuple *)category error:(NSError **)error;
-- (NSArray *)rankEntriesForApplication:(ARApplication *)app 
-							inCategory:(ARCategoryTuple *)category 
-							 countries:(NSArray *)countries 
-								 error:(NSError **)error;
++ (ARColor *)randomColor;
++ (ARColor *)colorForCountry:(NSString *)country;
 
 @end

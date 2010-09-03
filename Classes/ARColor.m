@@ -31,30 +31,52 @@
  *
  */
 
-#import <Cocoa/Cocoa.h>
-#import "ARApplication.h"
-#import "ARCategoryTuple.h"
+#import "ARColor.h"
 
 
-@interface ARStorageManager : NSObject {
+@implementation ARColor
 
-	NSPersistentStoreCoordinator *persistentStoreCoordinator;
-    NSManagedObjectModel *managedObjectModel;
-    NSManagedObjectContext *managedObjectContext;
+#define RANDOM (arc4random()%256)
+
+- (id)init {
+	self = [super init];
+	if (self != nil) {
+		red = RANDOM;
+		green = RANDOM;
+		blue = RANDOM;
+	}
+	return self;
 }
 
-@property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
+- (NSString *)hexValue {
+	return [NSString stringWithFormat:@"%.2X%.2X%.2X", red, green, blue];
+}
 
-+ (ARStorageManager *)sharedARStorageManager;
+- (NSColor *)colorValue {
+	return [NSColor colorWithDeviceRed:((CGFloat)red)/255 
+								 green:((CGFloat)green)/255 
+								  blue:((CGFloat)blue)/255
+								 alpha:1.0];
+}
 
-- (BOOL)commitChanges:(NSError **)error;
-- (void)tryDeletingUnusedCategories;
-- (NSArray *)rankedCountriesForApplication:(ARApplication *)app inCategory:(ARCategoryTuple *)category error:(NSError **)error;
-- (NSArray *)rankEntriesForApplication:(ARApplication *)app 
-							inCategory:(ARCategoryTuple *)category 
-							 countries:(NSArray *)countries 
-								 error:(NSError **)error;
++ (ARColor *)randomColor {
+	return [[[ARColor alloc] init] autorelease];
+}
+
++ (ARColor *)colorForCountry:(NSString *)country {
+	static NSMutableDictionary *cache;
+	static dispatch_once_t once;
+	dispatch_once(&once, ^{
+		cache = [[NSMutableDictionary alloc] init];
+	});
+	assert(country);
+	
+	ARColor *color = [cache objectForKey:country];
+	if (!color) {
+		color = [[self class] randomColor];
+		[cache setObject:color forKey:country];
+	}
+	return color;
+}
 
 @end

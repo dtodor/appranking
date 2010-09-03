@@ -36,25 +36,19 @@
 #import "ARCategoryTuple.h"
 
 
-@interface ARStorageManager : NSObject {
-
-	NSPersistentStoreCoordinator *persistentStoreCoordinator;
-    NSManagedObjectModel *managedObjectModel;
-    NSManagedObjectContext *managedObjectContext;
+@interface ARChartViewController : NSViewController {
+	
+	NSArray *allCountries;
+	NSArray *chartCountries;
+	ARApplication *application;
+	ARCategoryTuple *category;
+	NSImage *chartImage;
 }
 
-@property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
-
-+ (ARStorageManager *)sharedARStorageManager;
-
-- (BOOL)commitChanges:(NSError **)error;
-- (void)tryDeletingUnusedCategories;
-- (NSArray *)rankedCountriesForApplication:(ARApplication *)app inCategory:(ARCategoryTuple *)category error:(NSError **)error;
-- (NSArray *)rankEntriesForApplication:(ARApplication *)app 
-							inCategory:(ARCategoryTuple *)category 
-							 countries:(NSArray *)countries 
-								 error:(NSError **)error;
+@property (nonatomic, readonly, retain) NSArray *chartCountries;
+@property (nonatomic, retain) NSArray *allCountries;
+@property (nonatomic, retain) ARApplication *application;
+@property (nonatomic, retain) ARCategoryTuple *category;
+@property (nonatomic, readonly, retain) NSImage *chartImage;
 
 @end

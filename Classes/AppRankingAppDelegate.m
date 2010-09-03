@@ -38,6 +38,7 @@
 #import "ARApplication.h"
 #import "AREnumValueTransformer.h"
 #import "ARRankEntry.h"
+#import "ARStorageManager+Testing.h"
 
 
 @implementation AppRankingAppDelegate
@@ -59,53 +60,6 @@
     [super dealloc];
 }
 
-- (void)deleteAllEntities:(NSString *)entityName inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
-	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:entityName inManagedObjectContext:managedObjectContext];
-    [fetchRequest setEntity:entity];
-    NSArray *items = [managedObjectContext executeFetchRequest:fetchRequest error:NULL];
-    [fetchRequest release];
-	if (items) {
-		for (NSManagedObject *managedObject in items) {
-			[managedObjectContext deleteObject:managedObject];
-		}
-	}
-}
-
-- (void)resetTestData {
-	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
-
-	[self deleteAllEntities:@"ARApplication" inManagedObjectContext:storageManager.managedObjectContext];
-	[self deleteAllEntities:@"ARCategoryTuple" inManagedObjectContext:storageManager.managedObjectContext];
-	
-	{
-		ARCategoryTuple *tuple = [NSEntityDescription insertNewObjectForEntityForName:@"ARCategoryTuple" inManagedObjectContext:storageManager.managedObjectContext];
-		tuple.name = @"Education";
-		tuple.tupleType = Top_Free_Apps;
-		
-		ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:storageManager.managedObjectContext];
-		app.appStoreId = [NSNumber numberWithInt:378677412];
-		app.name = @"Spel It Rite 2";
-		app.categories = [NSSet setWithObject:tuple];
-	}
-	
-	{
-		ARCategoryTuple *tuple = [NSEntityDescription insertNewObjectForEntityForName:@"ARCategoryTuple" inManagedObjectContext:storageManager.managedObjectContext];
-		tuple.name = @"Education";
-		tuple.tupleType = Top_Paid_Apps;
-		
-		ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:storageManager.managedObjectContext];
-		app.appStoreId = [NSNumber numberWithInt:335608149];
-		app.name = @"Call For Papers";
-		app.categories = [NSSet setWithObject:tuple];
-	}
-	
-	NSError *error = nil;
-	if (![storageManager.managedObjectContext save:&error]) {
-		NSLog(@"Unable to persist object, error = %@", [error localizedDescription]);
-	}
-}
-
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 
 	NSError *error = nil;
@@ -120,33 +74,9 @@
 	
 	
 	{
-		// [self resetTestData];
-
 		ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
-		BOOL deleteRankEntries = YES;
-		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-		NSEntityDescription *entity = [NSEntityDescription entityForName:@"ARApplication" 
-												  inManagedObjectContext:storageManager.managedObjectContext];
-		[fetchRequest setEntity:entity];
-		NSArray *items = [storageManager.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
-		[fetchRequest release];
-		if (items) {
-			for (ARApplication *app in items) {
-				NSLog(@"%@", app.name);
-				for (ARRankEntry *entry in app.rankEntries) {
-					NSLog(@"\t{%@, %@} - %d", entry.country, entry.category, [entry.rank intValue]);
-					if (deleteRankEntries) {
-						[storageManager.managedObjectContext deleteObject:entry];
-					}
-				}
-			}
-		}
-		if (deleteRankEntries) {
-			NSError *error = nil;
-			if (![storageManager.managedObjectContext save:&error]) {
-				NSLog(@"Unable to deleterank entries, error = %@", [error localizedDescription]);
-			}
-		}
+		[storageManager resetTestData];
+		[storageManager generateRandomRankingsDeletingExistent:YES];
 	}
 	
 	[mainViewController reloadApplications];

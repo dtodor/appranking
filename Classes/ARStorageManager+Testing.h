@@ -32,29 +32,11 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "ARApplication.h"
-#import "ARCategoryTuple.h"
+#import "ARStorageManager.h"
 
+@interface ARStorageManager(Testing)
 
-@interface ARStorageManager : NSObject {
-
-	NSPersistentStoreCoordinator *persistentStoreCoordinator;
-    NSManagedObjectModel *managedObjectModel;
-    NSManagedObjectContext *managedObjectContext;
-}
-
-@property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
-
-+ (ARStorageManager *)sharedARStorageManager;
-
-- (BOOL)commitChanges:(NSError **)error;
-- (void)tryDeletingUnusedCategories;
-- (NSArray *)rankedCountriesForApplication:(ARApplication *)app inCategory:(ARCategoryTuple *)category error:(NSError **)error;
-- (NSArray *)rankEntriesForApplication:(ARApplication *)app 
-							inCategory:(ARCategoryTuple *)category 
-							 countries:(NSArray *)countries 
-								 error:(NSError **)error;
+- (void)resetTestData;
+- (void)generateRandomRankingsDeletingExistent:(BOOL)deleteExistent;
 
 @end

@@ -34,6 +34,7 @@
 #import <Cocoa/Cocoa.h>
 #import "ARStatusViewController.h"
 #import "ARAppDetailsWindowController.h"
+#import "ARChartViewController.h"
 
 
 @interface ARMainViewController : NSViewController <NSOutlineViewDelegate> {
@@ -53,6 +54,9 @@
 	
 	NSTreeController *treeController;
 	NSDate *refreshStartDate;
+	
+	ARChartViewController *chartViewController;
+	NSSplitView *mainContentSplitView;
 }
 
 @property (nonatomic, readonly, retain) NSArray *applicationsTree;
@@ -62,6 +66,8 @@
 @property (nonatomic, retain) IBOutlet NSToolbarItem *statusToolBarItem;
 @property (nonatomic, retain) IBOutlet ARStatusViewController *statusViewController;
 @property (nonatomic, retain) IBOutlet NSTreeController *treeController;
+@property (nonatomic, retain) IBOutlet ARChartViewController *chartViewController;
+@property (nonatomic, retain) IBOutlet NSSplitView *mainContentSplitView;
 
 - (void)reloadApplications;
 - (IBAction)refresh:(NSToolbarItem *)sender;

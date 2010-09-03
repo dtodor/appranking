@@ -94,7 +94,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
 							 [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
 							 [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
-    if (![persistentStoreCoordinator addPersistentStoreWithType:NSXMLStoreType 
+    if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType 
 												  configuration:nil 
 															URL:url 
 														options:options 
@@ -128,6 +128,9 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
     return managedObjectContext;
 }
 
+#pragma mark -
+#pragma mark Public interface
+
 - (BOOL)commitChanges:(NSError **)error {
 	if (!managedObjectContext) return YES;
 	
@@ -139,6 +142,67 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
     if (![managedObjectContext hasChanges]) return YES;
 	
     return [managedObjectContext save:error];
+}
+
+- (void)tryDeletingUnusedCategories {
+	NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+	[fetchRequest setEntity:[NSEntityDescription entityForName:@"ARCategoryTuple" inManagedObjectContext:self.managedObjectContext]];
+	[fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"applications[SIZE] = 0"]];
+	NSError *error = nil;
+	NSArray *categories = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+	if (categories) {
+		for (ARCategoryTuple *category in categories) {
+			[self.managedObjectContext deleteObject:category];
+		}
+		if (![self.managedObjectContext save:&error]) {
+			NSLog(@"Unable to delete unsued categories, error = %@", [error localizedDescription]);
+		}
+	} else {
+		NSLog(@"Unable to retrieve unused categories, error = %@", [error localizedDescription]);
+	}
+}
+
+- (NSArray *)rankedCountriesForApplication:(ARApplication *)app inCategory:(ARCategoryTuple *)category error:(NSError **)error {
+	assert(app);
+	assert(category);
+	NSEntityDescription *entity = [NSEntityDescription entityForName:@"ARRankEntry" inManagedObjectContext:self.managedObjectContext];
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
+	[request setEntity:entity];
+	NSDictionary *entityDict = [entity attributesByName];
+	NSAttributeDescription *countryAttribute = [entityDict objectForKey:@"country"];
+	[request setPropertiesToFetch:[NSArray arrayWithObject:countryAttribute]];
+	[request setReturnsDistinctResults:YES];
+	[request setResultType:NSDictionaryResultType];
+	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"country" ascending:YES];
+	[request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+	[request setPredicate:[NSPredicate predicateWithFormat:@"application = %@ and category = %@", app, category]];
+	NSArray *objects = [self.managedObjectContext executeFetchRequest:request error:error];
+	[request release];
+	if (objects) {
+		return [objects valueForKeyPath:@"country"];
+	} else {
+		return nil;
+	}
+}
+
+- (NSArray *)rankEntriesForApplication:(ARApplication *)app 
+							inCategory:(ARCategoryTuple *)category 
+							 countries:(NSArray *)countries 
+								 error:(NSError **)error {
+	
+	assert(app);
+	assert(category);
+	assert([countries count] > 0);
+	
+	NSEntityDescription *entity = [NSEntityDescription entityForName:@"ARRankEntry" inManagedObjectContext:self.managedObjectContext];
+	NSFetchRequest *request = [[NSFetchRequest alloc] init];
+	[request setEntity:entity];
+	[request setPredicate:[NSPredicate predicateWithFormat:@"application = %@ and category = %@ and country in %@", app, category, countries]];
+	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:YES];
+	[request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+	NSArray *objects = [self.managedObjectContext executeFetchRequest:request error:error];
+	[request release];
+	return objects;
 }
 
 @end

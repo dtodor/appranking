@@ -43,9 +43,14 @@
 		1A5A3EC61225C16500F08485 /* status-view-center.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A5A3EC01225C16500F08485 /* status-view-center.png */; };
 		1A5A3EC71225C16500F08485 /* status-view-left.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A5A3EC11225C16500F08485 /* status-view-left.png */; };
 		1A5A3EC81225C16500F08485 /* status-view-right.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A5A3EC21225C16500F08485 /* status-view-right.png */; };
+		1A6633731230F9A000D623D3 /* ARStorageManager+Testing.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6633721230F9A000D623D3 /* ARStorageManager+Testing.m */; };
+		1A66341212310AD500D623D3 /* ARColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A66341112310AD500D623D3 /* ARColor.m */; };
 		1A70CC2D1226D43F0031E8CF /* stop.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A70CC2C1226D43F0031E8CF /* stop.icns */; };
 		1AB276D9122E548D006CFC8F /* AppDetailsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1ABE9A6B1227198D00065E5D /* AppDetailsWindow.xib */; };
 		1AB27706122E8185006CFC8F /* ARRankEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB27705122E8185006CFC8F /* ARRankEntry.m */; };
+		1ACEBF36122FDD1C007D5C1A /* ARChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACEBF35122FDD1C007D5C1A /* ARChart.m */; };
+		1ACEC0E7123031DC007D5C1A /* ARChartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACEC0E6123031DC007D5C1A /* ARChartViewController.m */; };
+		1ACEC0EF12303291007D5C1A /* ChartView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1ACEC0EE12303291007D5C1A /* ChartView.xib */; };
 		1ADAFD15122E881F007A2396 /* AppRanking.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1ADAFD14122E881F007A2396 /* AppRanking.xcdatamodeld */; };
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
@@ -128,11 +133,20 @@
 		1A5A3EC01225C16500F08485 /* status-view-center.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "status-view-center.png"; path = "Resources/Images/status-view-center.png"; sourceTree = "<group>"; };
 		1A5A3EC11225C16500F08485 /* status-view-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "status-view-left.png"; path = "Resources/Images/status-view-left.png"; sourceTree = "<group>"; };
 		1A5A3EC21225C16500F08485 /* status-view-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "status-view-right.png"; path = "Resources/Images/status-view-right.png"; sourceTree = "<group>"; };
+		1A6633711230F9A000D623D3 /* ARStorageManager+Testing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ARStorageManager+Testing.h"; sourceTree = "<group>"; };
+		1A6633721230F9A000D623D3 /* ARStorageManager+Testing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ARStorageManager+Testing.m"; sourceTree = "<group>"; };
+		1A66341012310AD500D623D3 /* ARColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARColor.h; sourceTree = "<group>"; };
+		1A66341112310AD500D623D3 /* ARColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARColor.m; sourceTree = "<group>"; };
 		1A70CC2C1226D43F0031E8CF /* stop.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = stop.icns; path = Resources/Images/stop.icns; sourceTree = "<group>"; };
 		1AB27704122E8185006CFC8F /* ARRankEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARRankEntry.h; sourceTree = "<group>"; };
 		1AB27705122E8185006CFC8F /* ARRankEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARRankEntry.m; sourceTree = "<group>"; };
 		1ABE9A6B1227198D00065E5D /* AppDetailsWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = AppDetailsWindow.xib; path = ../AppDetailsWindow.xib; sourceTree = "<group>"; };
 		1AC5B1FC1221B80F00999BCF /* SynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynthesizeSingleton.h; sourceTree = "<group>"; };
+		1ACEBF34122FDD1C007D5C1A /* ARChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARChart.h; sourceTree = "<group>"; };
+		1ACEBF35122FDD1C007D5C1A /* ARChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARChart.m; sourceTree = "<group>"; };
+		1ACEC0E5123031DC007D5C1A /* ARChartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARChartViewController.h; sourceTree = "<group>"; };
+		1ACEC0E6123031DC007D5C1A /* ARChartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARChartViewController.m; sourceTree = "<group>"; };
+		1ACEC0EC12303288007D5C1A /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/ChartView.xib; sourceTree = SOURCE_ROOT; };
 		1ADAFD54122E8C24007A2396 /* AppRanking-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "AppRanking-2.xcdatamodel"; sourceTree = "<group>"; };
 		1DDD58150DA1D0A300B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		256AC3F00F4B6AF500CF3369 /* AppRanking_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppRanking_Prefix.pch; sourceTree = "<group>"; };
@@ -187,12 +201,12 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1A19B623122D110300924F72 /* CoreData Model */ = {
+		1A19B623122D110300924F72 /* Core Data Model */ = {
 			isa = PBXGroup;
 			children = (
 				1ADAFD14122E881F007A2396 /* AppRanking.xcdatamodeld */,
 			);
-			name = "CoreData Model";
+			name = "Core Data Model";
 			sourceTree = "<group>";
 		};
 		1A19B80B122D4B8900924F72 /* Model */ = {
@@ -210,6 +224,8 @@
 				1A2D2D091223B7580074AE7F /* ARRankQuery.m */,
 				1A19B628122D191B00924F72 /* ARStorageManager.h */,
 				1A19B629122D191B00924F72 /* ARStorageManager.m */,
+				1A6633711230F9A000D623D3 /* ARStorageManager+Testing.h */,
+				1A6633721230F9A000D623D3 /* ARStorageManager+Testing.m */,
 				1AB27704122E8185006CFC8F /* ARRankEntry.h */,
 				1AB27705122E8185006CFC8F /* ARRankEntry.m */,
 			);
@@ -231,6 +247,7 @@
 		1A19B80E122D4BED00924F72 /* Main View */ = {
 			isa = PBXGroup;
 			children = (
+				1ACEC0E4123031C4007D5C1A /* Charting */,
 				1A19B80D122D4BC600924F72 /* Status Toolbar Item */,
 				1A2D2D001223B7580074AE7F /* AppRankingAppDelegate.h */,
 				1A2D2D011223B7580074AE7F /* AppRankingAppDelegate.m */,
@@ -311,10 +328,24 @@
 			name = Images;
 			sourceTree = "<group>";
 		};
+		1ACEC0E4123031C4007D5C1A /* Charting */ = {
+			isa = PBXGroup;
+			children = (
+				1ACEBF34122FDD1C007D5C1A /* ARChart.h */,
+				1ACEBF35122FDD1C007D5C1A /* ARChart.m */,
+				1ACEC0E5123031DC007D5C1A /* ARChartViewController.h */,
+				1ACEC0E6123031DC007D5C1A /* ARChartViewController.m */,
+				1ACEC0EE12303291007D5C1A /* ChartView.xib */,
+				1A66341012310AD500D623D3 /* ARColor.h */,
+				1A66341112310AD500D623D3 /* ARColor.m */,
+			);
+			name = Charting;
+			sourceTree = "<group>";
+		};
 		29B97314FDCFA39411CA2CEA /* AppRanking */ = {
 			isa = PBXGroup;
 			children = (
-				1A19B623122D110300924F72 /* CoreData Model */,
+				1A19B623122D110300924F72 /* Core Data Model */,
 				1A2D2CFF1223B7580074AE7F /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -415,6 +446,7 @@
 				1A5A3EC71225C16500F08485 /* status-view-left.png in Resources */,
 				1A5A3EC81225C16500F08485 /* status-view-right.png in Resources */,
 				1A45D9F51226430400A1DF36 /* dsa_pub.pem in Resources */,
+				1ACEC0EF12303291007D5C1A /* ChartView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,6 +480,10 @@
 				1A19B8B2122D62E100924F72 /* AREnumValueTransformer.m in Sources */,
 				1A19B8D6122D6AEE00924F72 /* ARTempCategoryTuple.m in Sources */,
 				1AB27706122E8185006CFC8F /* ARRankEntry.m in Sources */,
+				1ACEBF36122FDD1C007D5C1A /* ARChart.m in Sources */,
+				1ACEC0E7123031DC007D5C1A /* ARChartViewController.m in Sources */,
+				1A6633731230F9A000D623D3 /* ARStorageManager+Testing.m in Sources */,
+				1A66341212310AD500D623D3 /* ARColor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -478,6 +514,14 @@
 			);
 			name = StatusView.xib;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		1ACEC0EE12303291007D5C1A /* ChartView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1ACEC0EC12303288007D5C1A /* English */,
+			);
+			name = ChartView.xib;
 			sourceTree = "<group>";
 		};
 		1DDD58140DA1D0A300B32029 /* MainMenu.xib */ = {

@@ -47,9 +47,9 @@
 
 @interface ARMainViewController() <ARRankQueryDelegate>
 
+@property (nonatomic, retain) NSArray *applicationsTree;
 @property (nonatomic, retain) NSMutableArray *runningQueries;
 @property (nonatomic, retain) NSMutableArray *pendingQueries;
-@property (nonatomic, retain) NSArray *applicationsTree;
 @property (nonatomic, retain) ARAppDetailsWindowController *detailsViewController;
 @property (nonatomic, retain) NSDate *refreshStartDate;
 
@@ -58,9 +58,9 @@
 
 @implementation ARMainViewController
 
+@synthesize applicationsTree;
 @synthesize runningQueries;
 @synthesize pendingQueries;
-@synthesize applicationsTree;
 @synthesize sidebar;
 @synthesize statusToolBarItem;
 @synthesize statusViewController;
@@ -69,8 +69,13 @@
 @synthesize treeController;
 @synthesize outlineViewSortDescriptors;
 @synthesize refreshStartDate;
+@synthesize chartViewController;
+@synthesize mainContentSplitView;
 
 - (void)dealloc {
+	self.mainContentSplitView = nil;
+	self.chartViewController = nil;
+	self.applicationsTree = nil;
 	self.refreshStartDate = nil;
 	self.treeController = nil;
 	self.detailsViewController = nil;
@@ -79,7 +84,6 @@
 	self.statusViewController = nil;
 	self.sidebar = nil;
 	self.statusToolBarItem = nil;
-	self.applicationsTree = nil;
 	self.runningQueries = nil;
 	self.pendingQueries = nil;
 	[super dealloc];
@@ -93,6 +97,9 @@
 	
 	self.outlineViewSortDescriptors = [NSMutableArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
 	self.tableSortDescriptors = [NSMutableArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"rank" ascending:YES]];
+	
+	NSView *chartPlaceholder = [[mainContentSplitView subviews] objectAtIndex:1];
+	[mainContentSplitView replaceSubview:chartPlaceholder with:chartViewController.view];
 }
 
 - (void)reloadApplications {
@@ -119,6 +126,7 @@
 					 (category.name?[category.name uppercaseString]:@"ALL")];
 		for (ARApplication *application in category.applications) {
 			ARTreeNode *child = [ARTreeNode treeNodeWithRepresentedObject:[NSMutableArray array]];
+			child.category = category;
 			child.application = application;
 			child.name = application.name;
 			child.icon = application.iconImage;
@@ -214,29 +222,10 @@
 		  contextInfo:NULL];
 }
 
-- (void)tryDeletingUnusedCategories {
-	NSManagedObjectContext *managedObjectContext = [ARStorageManager sharedARStorageManager].managedObjectContext;
-	NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
-	[fetchRequest setEntity:[NSEntityDescription entityForName:@"ARCategoryTuple" inManagedObjectContext:managedObjectContext]];
-	[fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"applications[SIZE] = 0"]];
-	NSError *error = nil;
-	NSArray *categories = [managedObjectContext executeFetchRequest:fetchRequest error:&error];
-	if (categories) {
-		for (ARCategoryTuple *category in categories) {
-			[managedObjectContext deleteObject:category];
-		}
-		if (![managedObjectContext save:&error]) {
-			NSLog(@"Unable to delete unsued categories, error = %@", [error localizedDescription]);
-		}
-	} else {
-		NSLog(@"Unable to retrieve unused categories, error = %@", [error localizedDescription]);
-	}
-}
-
 - (void)editAppSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo {
 	self.detailsViewController = nil;
 	if (returnCode == DidSaveChanges) {
-		[self tryDeletingUnusedCategories];
+		[[ARStorageManager sharedARStorageManager] tryDeletingUnusedCategories];
 		[self reloadApplications];
 	}
 }
@@ -264,7 +253,7 @@
 		if (![managedObjectContext save:&error]) {
 			[self presentError:error];
 		} else {
-			[self tryDeletingUnusedCategories];
+			[[ARStorageManager sharedARStorageManager] tryDeletingUnusedCategories];
 			[self reloadApplications];
 		}
 	}
@@ -322,6 +311,7 @@
 	return nil;
 }
 
+// TODO move in ARStorageManager
 - (void)insertRankEntryForApplication:(ARApplication *)app category:(ARCategoryTuple *)category country:(NSString *)country rank:(NSNumber *)rank {
 	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
 	ARRankEntry *entry = [NSEntityDescription insertNewObjectForEntityForName:@"ARRankEntry" inManagedObjectContext:storageManager.managedObjectContext];
@@ -418,6 +408,24 @@
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView_ shouldSelectItem:(id)item {
 	return [outlineView_ parentForItem:item] != nil;
+}
+
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification {
+	NSArray *selectedObjects = [self.treeController selectedObjects];
+	if ([selectedObjects count] == 1) {
+		ARTreeNode *selection = [selectedObjects objectAtIndex:0];
+		NSError *error = nil;
+		NSArray *countries = [[ARStorageManager sharedARStorageManager] rankedCountriesForApplication:selection.application 
+																	  inCategory:selection.category 
+																		   error:&error];
+		if (!countries) {
+			[self presentError:error];
+		} else {
+			chartViewController.application = selection.application;
+			chartViewController.category = selection.category;
+			chartViewController.allCountries = countries;
+		}
+	}
 }
 
 #pragma mark -
