@@ -35,9 +35,10 @@
 
 
 @interface ARColor : NSObject {
-	NSUInteger red;
-	NSUInteger green;
-	NSUInteger blue;
+
+	CGFloat red;
+	CGFloat green;
+	CGFloat blue;
 }
 
 - (NSString *)hexValue;

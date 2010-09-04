@@ -31,22 +31,34 @@
  *
  */
 
-#import <Cocoa/Cocoa.h>
+#import "ARBoolValueTransformer.h"
 
 
-@interface ARChart : NSObject {
-	NSDate *startDate;
-	NSDate *endDate;
-	NSMutableDictionary *postParameters;
+@implementation ARBoolValueTransformer
+
+- (id)initWithEvaluationBlock:(EvalBlock)evaluationBlock {
+	if (self = [super init]) {
+		assert(evaluationBlock);
+		evalBlock = [evaluationBlock copy];
+	}
+	return self;
 }
 
-@property (nonatomic, readonly, retain) NSDate *startDate;
-@property (nonatomic, readonly, retain) NSDate *endDate;
+- (void)dealloc {
+	[evalBlock release];
+	[super dealloc];
+}
 
-- (id)initWithEntries:(NSArray *)entries sorted:(BOOL)sorted;
-+ (id)chartForEntries:(NSArray *)entries sorted:(BOOL)sorted;
++ (Class)transformedValueClass {
+    return [NSNumber class];
+}
 
-- (NSURLRequest *)URLRequest;
-- (NSImage *)image;
++ (BOOL)allowsReverseTransformation {
+    return NO;
+}
+
+- (id)transformedValue:(id)value {
+	return [NSNumber numberWithBool:evalBlock(value)];
+}
 
 @end

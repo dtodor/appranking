@@ -40,14 +40,14 @@
 
 @property (nonatomic, retain) NSDate *startDate;
 @property (nonatomic, retain) NSDate *endDate;
-@property (nonatomic, retain) NSMutableString *url;
+@property (nonatomic, retain) NSMutableDictionary *postParameters;
 
 @end
 
 
 @implementation ARChart
 
-@synthesize startDate, endDate, url;
+@synthesize startDate, endDate, postParameters;
 
 + (NSDateFormatter *)dateFormatter {
 	static NSDateFormatter *dateFormatter = nil;
@@ -61,10 +61,35 @@
 }
 
 - (void)dealloc {
-	self.url = nil;
+	self.postParameters = nil;
 	self.startDate = nil;
 	self.endDate = nil;
 	[super dealloc];
+}
+
+// Same as simple encoding, but for extended encoding.
+static NSString * const EXTENDED_MAP = @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.";
+
+NSString *extendedEncode(double value, double maxValue) {
+	static NSUInteger EXTENDED_MAP_LENGTH;
+	static dispatch_once_t once;
+	dispatch_once(&once, ^{
+		EXTENDED_MAP_LENGTH = [EXTENDED_MAP length];
+	});
+	
+	NSString *encodedValue;
+	double scaledVal = floor(EXTENDED_MAP_LENGTH * EXTENDED_MAP_LENGTH * value / maxValue);
+	if(scaledVal > (EXTENDED_MAP_LENGTH * EXTENDED_MAP_LENGTH) - 1) {
+		encodedValue = @"..";
+	} else if (scaledVal < 0) {
+		encodedValue = @"__";
+	} else {
+		// Calculate first and second digits and add them to the output.
+		double quotient = floor(scaledVal / EXTENDED_MAP_LENGTH);
+		double remainder = scaledVal - EXTENDED_MAP_LENGTH * quotient;
+		encodedValue = [NSString stringWithFormat:@"%C%C", [EXTENDED_MAP characterAtIndex:quotient], [EXTENDED_MAP characterAtIndex:remainder]];
+	}
+	return encodedValue;
 }
 
 + (id)chartForEntries:(NSArray *)entries sorted:(BOOL)sorted {
@@ -83,7 +108,7 @@
 		[data addObject:entry];
 	}
 	
-	NSMutableString *data = [NSMutableString string];
+	NSMutableString *data = [NSMutableString stringWithFormat:@"e:"];
 	NSMutableString *labels = [NSMutableString string];
 	NSMutableString *lineSizes = [NSMutableString string];
 	NSMutableString *colors = [NSMutableString string];
@@ -95,25 +120,20 @@
 		NSMutableString *x = [NSMutableString string];
 		NSMutableString *y = [NSMutableString string];
 		
-		NSUInteger entryIndex = 0;
 		for (ARRankEntry *entry in entriesForCountry) {
-			NSTimeInterval normTime = ([entry.timestamp timeIntervalSinceDate:self.startDate]/timeSpan)*100;
-			static double maxValue = 300;
-			double value = ([entry.rank doubleValue]/maxValue)*100;
-			[x appendFormat:@"%.2f", normTime];
-			[y appendFormat:@"%.2f", value];
-			if (entryIndex++ < [entriesForCountry count]-1) {
-				[x appendString:@","];
-				[y appendString:@","];
-			}
+			NSString *timeValue = extendedEncode([entry.timestamp timeIntervalSinceDate:self.startDate], timeSpan);
+			NSString *rankValue = extendedEncode([entry.rank doubleValue], 300.0);
+			[x appendString:timeValue];
+			[y appendString:rankValue];
 		}
-		[data appendFormat:@"%@|%@", x, y];
+		
+		[data appendFormat:@"%@,%@", x, y];
 		[labels appendString:country];
 		[lineSizes appendString:@"2"];
 		[colors appendString:[[ARColor colorForCountry:country] hexValue]];
 		[markers appendFormat:@"o,FF0000,%d,-1,4", countryIndex];
 		if (countryIndex++ < [country2entries count]-1) {
-			[data appendString:@"|"];
+			[data appendString:@","];
 			[labels appendString:@"|"];
 			[lineSizes appendString:@"|"];
 			[colors appendString:@","];
@@ -121,11 +141,11 @@
 		}
 	}
 	
-	[url appendString:[NSString stringWithFormat:@"&chd=t:%@", data]]; // Data, e.g. 0,30,100|10,20,30|0,40,100|90,80,70
-	[url appendString:[NSString stringWithFormat:@"&chdl=%@", labels]]; // Series labels, e.g. Germany|United States
-	[url appendString:[NSString stringWithFormat:@"&chls=%@", lineSizes]]; // e.g. 2|2
-	[url appendString:[NSString stringWithFormat:@"&chco=%@", colors]]; // Series colors, e.g. 000000,0000FF
-	[url appendString:[NSString stringWithFormat:@"&chm=%@", markers]]; // Markers, e.g. o,FF0000,0,-1,4|o,FF0000,1,-1,4
+	[postParameters setObject:data forKey:@"chd"];
+	[postParameters setObject:labels forKey:@"chdl"];
+	[postParameters setObject:lineSizes forKey:@"chls"];
+	[postParameters setObject:colors forKey:@"chco"];
+	[postParameters setObject:markers forKey:@"chm"];
 }
 
 - (id)initWithEntries:(NSArray *)entries sorted:(BOOL)sorted {
@@ -146,26 +166,51 @@
 		assert(endDate);
 		assert([startDate isLessThan:endDate]);
 		
-		self.url = [NSMutableString string];
-		[url appendString:@"http://chart.apis.google.com/chart?"];
-		[url appendString:[NSString stringWithFormat:@"chxl=0:|%@|%@|1:|300|270|240|210|180|150|120|90|60|30|1|", 
-						   [[ARChart dateFormatter] stringFromDate:self.startDate],
-						   [[ARChart dateFormatter] stringFromDate:self.endDate]]]; // Axis labels		
-		[url appendString:@"&chxp=0,10,90|1,300,270,240,210,180,150,120,90,60,30,1"];
-		[url appendString:@"&chxr=1,300,0"];
-		[url appendString:@"&chxt=x,y"];
-		[url appendString:@"&chs=700x420"];
-		[url appendString:@"&cht=lxy"];
-		[url appendString:@"&chg=0,10,4,8"]; // Grid
-		[url appendString:@"&chma=40,20,20,30"]; // Margins
+		self.postParameters = [NSMutableDictionary dictionary];
+		NSDate *midPoint = [NSDate dateWithTimeInterval:[self.endDate timeIntervalSinceDate:self.startDate]/2 sinceDate:self.startDate];
+		NSString *labels = [NSString stringWithFormat:@"0:|%@|%@|%@|1:|300|270|240|210|180|150|120|90|60|30|1|", 
+							[[ARChart dateFormatter] stringFromDate:self.startDate],
+							[[ARChart dateFormatter] stringFromDate:midPoint],
+							[[ARChart dateFormatter] stringFromDate:self.endDate]];
+		[postParameters setObject:labels forKey:@"chxl"];
+		[postParameters setObject:@"0,10,50,90|1,300,270,240,210,180,150,120,90,60,30,1" forKey:@"chxp"];
+		[postParameters setObject:@"1,300,0" forKey:@"chxr"];
+		[postParameters setObject:@"x,y" forKey:@"chxt"];
+		[postParameters setObject:@"700x420" forKey:@"chs"];
+		[postParameters setObject:@"lxy" forKey:@"cht"];
+		[postParameters setObject:@"0,10,4,8" forKey:@"chg"]; // Grid
+		[postParameters setObject:@"40,20,20,30" forKey:@"chma"]; // Margins
 
 		[self processSortedEntries:sortedEntries];
 	}
 	return self;
 }
 
-- (NSURL *)URL {
-	return [NSURL URLWithString:[self.url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+- (NSURLRequest *)URLRequest {
+	NSURL *url = [NSURL URLWithString:@"http://chart.apis.google.com/chart"];
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+	[request setHTTPMethod:@"POST"];
+	NSMutableString *postData = [NSMutableString string];
+	NSUInteger count = 0;
+	for (NSString *param in self.postParameters) {
+		[postData appendFormat:@"%@=%@", param, [self.postParameters objectForKey:param]];
+		if (count++ < [postParameters count]-1) {
+			[postData appendString:@"&"];
+		}
+	}
+	[request setHTTPBody:[postData dataUsingEncoding:NSUTF8StringEncoding]];
+	return request;
+}
+
+- (NSImage *)image {
+	NSError *error = nil;
+	NSData *imageData = [NSURLConnection sendSynchronousRequest:[self URLRequest] returningResponse:NULL error:&error];
+	if (imageData) {
+		return [[[NSImage alloc] initWithData:imageData] autorelease];
+	} else {
+		NSLog(@"Unable to retrieve chart image, error = %@", [error localizedDescription]);
+	}
+	return nil;
 }
 
 @end

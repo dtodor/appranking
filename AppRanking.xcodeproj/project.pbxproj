@@ -11,6 +11,8 @@
 		1A19B6E5122D313300924F72 /* ARAppDetailsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A19B6E4122D313300924F72 /* ARAppDetailsWindowController.m */; };
 		1A19B8B2122D62E100924F72 /* AREnumValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A19B8B1122D62E100924F72 /* AREnumValueTransformer.m */; };
 		1A19B8D6122D6AEE00924F72 /* ARTempCategoryTuple.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A19B8D5122D6AEE00924F72 /* ARTempCategoryTuple.m */; };
+		1A1CE65A123279D0006FACB9 /* ARBoolValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1CE659123279D0006FACB9 /* ARBoolValueTransformer.m */; };
+		1A1CE79E12329291006FACB9 /* zoom-cursor.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A1CE79D12329291006FACB9 /* zoom-cursor.png */; };
 		1A2D2D181223B7580074AE7F /* AppRankingAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D011223B7580074AE7F /* AppRankingAppDelegate.m */; };
 		1A2D2D191223B7580074AE7F /* ARApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D031223B7580074AE7F /* ARApplication.m */; };
 		1A2D2D1A1223B7580074AE7F /* ARCategoryTuple.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D051223B7580074AE7F /* ARCategoryTuple.m */; };
@@ -46,6 +48,7 @@
 		1A6633731230F9A000D623D3 /* ARStorageManager+Testing.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6633721230F9A000D623D3 /* ARStorageManager+Testing.m */; };
 		1A66341212310AD500D623D3 /* ARColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A66341112310AD500D623D3 /* ARColor.m */; };
 		1A70CC2D1226D43F0031E8CF /* stop.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A70CC2C1226D43F0031E8CF /* stop.icns */; };
+		1A79EDAB1231525F007C5AC8 /* ARChartImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79EDAA1231525F007C5AC8 /* ARChartImageView.m */; };
 		1AB276D9122E548D006CFC8F /* AppDetailsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1ABE9A6B1227198D00065E5D /* AppDetailsWindow.xib */; };
 		1AB27706122E8185006CFC8F /* ARRankEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB27705122E8185006CFC8F /* ARRankEntry.m */; };
 		1ACEBF36122FDD1C007D5C1A /* ARChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACEBF35122FDD1C007D5C1A /* ARChart.m */; };
@@ -86,6 +89,9 @@
 		1A19B8B1122D62E100924F72 /* AREnumValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AREnumValueTransformer.m; sourceTree = "<group>"; };
 		1A19B8D4122D6AEE00924F72 /* ARTempCategoryTuple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARTempCategoryTuple.h; sourceTree = "<group>"; };
 		1A19B8D5122D6AEE00924F72 /* ARTempCategoryTuple.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARTempCategoryTuple.m; sourceTree = "<group>"; };
+		1A1CE658123279D0006FACB9 /* ARBoolValueTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARBoolValueTransformer.h; sourceTree = "<group>"; };
+		1A1CE659123279D0006FACB9 /* ARBoolValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARBoolValueTransformer.m; sourceTree = "<group>"; };
+		1A1CE79D12329291006FACB9 /* zoom-cursor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "zoom-cursor.png"; path = "Resources/Images/zoom-cursor.png"; sourceTree = "<group>"; };
 		1A2D2D001223B7580074AE7F /* AppRankingAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppRankingAppDelegate.h; sourceTree = "<group>"; };
 		1A2D2D011223B7580074AE7F /* AppRankingAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppRankingAppDelegate.m; sourceTree = "<group>"; };
 		1A2D2D021223B7580074AE7F /* ARApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARApplication.h; sourceTree = "<group>"; };
@@ -138,6 +144,8 @@
 		1A66341012310AD500D623D3 /* ARColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARColor.h; sourceTree = "<group>"; };
 		1A66341112310AD500D623D3 /* ARColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARColor.m; sourceTree = "<group>"; };
 		1A70CC2C1226D43F0031E8CF /* stop.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = stop.icns; path = Resources/Images/stop.icns; sourceTree = "<group>"; };
+		1A79EDA91231525F007C5AC8 /* ARChartImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARChartImageView.h; sourceTree = "<group>"; };
+		1A79EDAA1231525F007C5AC8 /* ARChartImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARChartImageView.m; sourceTree = "<group>"; };
 		1AB27704122E8185006CFC8F /* ARRankEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARRankEntry.h; sourceTree = "<group>"; };
 		1AB27705122E8185006CFC8F /* ARRankEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARRankEntry.m; sourceTree = "<group>"; };
 		1ABE9A6B1227198D00065E5D /* AppDetailsWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = AppDetailsWindow.xib; path = ../AppDetailsWindow.xib; sourceTree = "<group>"; };
@@ -262,8 +270,6 @@
 		1A19B80F122D4C0700924F72 /* AppDetails View */ = {
 			isa = PBXGroup;
 			children = (
-				1A19B8B0122D62E100924F72 /* AREnumValueTransformer.h */,
-				1A19B8B1122D62E100924F72 /* AREnumValueTransformer.m */,
 				1A19B6E3122D313300924F72 /* ARAppDetailsWindowController.h */,
 				1A19B6E4122D313300924F72 /* ARAppDetailsWindowController.m */,
 				1ABE9A6B1227198D00065E5D /* AppDetailsWindow.xib */,
@@ -273,15 +279,27 @@
 			name = "AppDetails View";
 			sourceTree = "<group>";
 		};
+		1A1CE64812327914006FACB9 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				1A2D2D161223B7580074AE7F /* SBJSON+Additions.h */,
+				1A2D2D171223B7580074AE7F /* SBJSON+Additions.m */,
+				1A19B8B0122D62E100924F72 /* AREnumValueTransformer.h */,
+				1A19B8B1122D62E100924F72 /* AREnumValueTransformer.m */,
+				1A1CE658123279D0006FACB9 /* ARBoolValueTransformer.h */,
+				1A1CE659123279D0006FACB9 /* ARBoolValueTransformer.m */,
+			);
+			name = Helper;
+			sourceTree = "<group>";
+		};
 		1A2D2CFF1223B7580074AE7F /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1A1CE64812327914006FACB9 /* Helper */,
 				1A19B80B122D4B8900924F72 /* Model */,
 				1A19B80E122D4BED00924F72 /* Main View */,
 				1A19B80F122D4C0700924F72 /* AppDetails View */,
 				1A5A3C6D122568C800F08485 /* Third Party */,
-				1A2D2D161223B7580074AE7F /* SBJSON+Additions.h */,
-				1A2D2D171223B7580074AE7F /* SBJSON+Additions.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -317,6 +335,7 @@
 		1A5A3EC91225C16E00F08485 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				1A1CE79D12329291006FACB9 /* zoom-cursor.png */,
 				1A70CC2C1226D43F0031E8CF /* stop.icns */,
 				1A5A3EBD1225C16500F08485 /* icon.icns */,
 				1A5A3EBE1225C16500F08485 /* info.icns */,
@@ -338,6 +357,8 @@
 				1ACEC0EE12303291007D5C1A /* ChartView.xib */,
 				1A66341012310AD500D623D3 /* ARColor.h */,
 				1A66341112310AD500D623D3 /* ARColor.m */,
+				1A79EDA91231525F007C5AC8 /* ARChartImageView.h */,
+				1A79EDAA1231525F007C5AC8 /* ARChartImageView.m */,
 			);
 			name = Charting;
 			sourceTree = "<group>";
@@ -416,7 +437,11 @@
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "AppRanking" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* AppRanking */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -447,6 +472,7 @@
 				1A5A3EC81225C16500F08485 /* status-view-right.png in Resources */,
 				1A45D9F51226430400A1DF36 /* dsa_pub.pem in Resources */,
 				1ACEC0EF12303291007D5C1A /* ChartView.xib in Resources */,
+				1A1CE79E12329291006FACB9 /* zoom-cursor.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -484,6 +510,8 @@
 				1ACEC0E7123031DC007D5C1A /* ARChartViewController.m in Sources */,
 				1A6633731230F9A000D623D3 /* ARStorageManager+Testing.m in Sources */,
 				1A66341212310AD500D623D3 /* ARColor.m in Sources */,
+				1A79EDAB1231525F007C5AC8 /* ARChartImageView.m in Sources */,
+				1A1CE65A123279D0006FACB9 /* ARBoolValueTransformer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -580,11 +608,12 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
@@ -594,10 +623,11 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
 			};

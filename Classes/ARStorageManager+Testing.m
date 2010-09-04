@@ -100,7 +100,7 @@
 }
 
 - (void)generateRandomRankingsDeletingExistent:(BOOL)deleteExistent {
-	static NSUInteger numberOfEntriesPerCategory = 25;
+	static NSUInteger numberOfEntriesPerCategory = 500;
 	static NSUInteger numberOfCountries = 4;
 	
 	if (deleteExistent) {
@@ -121,7 +121,7 @@
 	for (ARApplication *app in apps) {
 		for (ARCategoryTuple *category in app.categories) {
 			NSMutableArray *countries = [NSMutableArray array];
-			while ([countries count] < numberOfEntriesPerCategory || [countries count] == [allCountries count]) {
+			while ([countries count] < numberOfCountries || [countries count] == [allCountries count]) {
 				NSString *country = [allCountries objectAtIndex:arc4random()%[allCountries count]];
 				if (![countries containsObject:country]) {
 					[countries addObject:country];

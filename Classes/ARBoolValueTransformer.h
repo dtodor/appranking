@@ -34,19 +34,12 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface ARChart : NSObject {
-	NSDate *startDate;
-	NSDate *endDate;
-	NSMutableDictionary *postParameters;
+typedef BOOL (^EvalBlock)(id value);
+
+@interface ARBoolValueTransformer : NSValueTransformer {
+	EvalBlock evalBlock;
 }
 
-@property (nonatomic, readonly, retain) NSDate *startDate;
-@property (nonatomic, readonly, retain) NSDate *endDate;
-
-- (id)initWithEntries:(NSArray *)entries sorted:(BOOL)sorted;
-+ (id)chartForEntries:(NSArray *)entries sorted:(BOOL)sorted;
-
-- (NSURLRequest *)URLRequest;
-- (NSImage *)image;
+- (id)initWithEvaluationBlock:(EvalBlock)evaluationBlock;
 
 @end

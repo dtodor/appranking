@@ -76,7 +76,7 @@
 	NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
 	[fetchRequest setEntity:[NSEntityDescription entityForName:@"ARCategoryTuple" inManagedObjectContext:managedObjectContext]];
 	
-	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name = %@ and type = %d", self.name, [self.type intValue]];
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ and type == %d", self.name, [self.type intValue]];
 	[fetchRequest setPredicate:predicate];
 	[fetchRequest setFetchLimit:1];
 	

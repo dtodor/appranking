@@ -34,29 +34,39 @@
 #import "ARColor.h"
 
 
+/*
+ * Random color generation done using a method presented by Martin Ankerl:
+ * http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
+ */
+
 @implementation ARColor
 
-#define RANDOM (arc4random()%256)
+#define MAX_RANDOM 0x100000000
+#define RANDOM ((double)(arc4random()%(MAX_RANDOM+1))/MAX_RANDOM)
+#define GOLDEN_RATIO_CONJUGATE 0.618033988749895
 
 - (id)init {
 	self = [super init];
 	if (self != nil) {
-		red = RANDOM;
-		green = RANDOM;
-		blue = RANDOM;
+		static CGFloat h;
+		static dispatch_once_t once;
+		dispatch_once(&once, ^{
+			h = RANDOM;
+		});
+		h += GOLDEN_RATIO_CONJUGATE;
+		if (h > 1) h -= 1;
+		NSColor *color = [NSColor colorWithDeviceHue:h saturation:0.75 brightness:0.85 alpha:1.0];
+		[color getRed:&red green:&green blue:&blue alpha:NULL];
 	}
 	return self;
 }
 
 - (NSString *)hexValue {
-	return [NSString stringWithFormat:@"%.2X%.2X%.2X", red, green, blue];
+	return [NSString stringWithFormat:@"%.2X%.2X%.2X", (int)(red*255), (int)(green*255), (int)(blue*255)];
 }
 
 - (NSColor *)colorValue {
-	return [NSColor colorWithDeviceRed:((CGFloat)red)/255 
-								 green:((CGFloat)green)/255 
-								  blue:((CGFloat)blue)/255
-								 alpha:1.0];
+	return [NSColor colorWithDeviceRed:red green:green blue:blue alpha:1.0];
 }
 
 + (ARColor *)randomColor {

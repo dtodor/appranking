@@ -54,7 +54,9 @@
 - (NSArray *)rankedCountriesForApplication:(ARApplication *)app inCategory:(ARCategoryTuple *)category error:(NSError **)error;
 - (NSArray *)rankEntriesForApplication:(ARApplication *)app 
 							inCategory:(ARCategoryTuple *)category 
-							 countries:(NSArray *)countries 
+							 countries:(NSArray *)countries
+								  from:(NSDate *)from
+								 until:(NSDate *)until
 								 error:(NSError **)error;
 
 @end

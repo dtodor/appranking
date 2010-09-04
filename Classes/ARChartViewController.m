@@ -41,7 +41,7 @@
 @interface ARChartViewController()
 
 @property (nonatomic, retain) NSArray *chartCountries;
-@property (nonatomic, retain) NSImage *chartImage;
+@property (nonatomic, retain) NSArray *timeFrameChoices;
 
 @end
 
@@ -52,54 +52,102 @@
 @synthesize allCountries;
 @synthesize application;
 @synthesize category;
-@synthesize chartImage;
+@synthesize chartImageView;
+@synthesize timeFrameChoices;
+@synthesize selectedTimeFrame;
+@synthesize fromDate;
+@synthesize untilDate;
 
 - (void)dealloc {
-	self.chartImage = nil;
+	[self removeObserver:self forKeyPath:@"allCountries"];
+	[self removeObserver:self forKeyPath:@"selectedTimeFrame"];
+	
+	self.fromDate = nil;
+	self.untilDate = nil;
+	self.selectedTimeFrame = nil;
+	self.timeFrameChoices = nil;
+	self.chartImageView = nil;
 	self.application = nil;
 	self.category = nil;
-	[self removeObserver:self forKeyPath:@"allCountries"];
 	self.allCountries = nil;
 	self.chartCountries = nil;
 	[super dealloc];
 }
 
+#define HOUR 3600
+#define DAY 24*HOUR
+
 - (void)awakeFromNib {
+	[self addObserver:self forKeyPath:@"selectedTimeFrame" options:NSKeyValueObservingOptionNew context:NULL];
 	[self addObserver:self forKeyPath:@"allCountries" options:NSKeyValueObservingOptionNew context:NULL];
+
+	self.timeFrameChoices = [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:7*DAY], @"value", @"Last 7 days", @"name", nil],
+							 [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:30*DAY], @"value", @"Last 30 days", @"name", nil],
+							 [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:90*DAY], @"value", @"Last 90 days", @"name", nil],
+							 [NSDictionary dictionaryWithObjectsAndKeys:[NSNull null], @"value", @"Custom", @"name", nil],
+							 nil];
+	self.selectedTimeFrame = [[timeFrameChoices objectAtIndex:0] objectForKey:@"value"];
+}
+
+- (void)updateCountriesData {
+	NSMutableArray *countriesForChart = [NSMutableArray array];
+	if (allCountries) {
+		[allCountries enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
+			NSDictionary *countryData = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:NO], @"value", object, @"title", nil];
+			[countryData addObserver:self forKeyPath:@"value" options:NSKeyValueObservingOptionNew context:NULL];
+			[countriesForChart addObject:countryData];
+		}];
+	}
+	self.chartCountries = countriesForChart;
+	self.chartImageView.image = nil;
+}
+
+- (void)updateTimeSpan {
+	if ([selectedTimeFrame isKindOfClass:[NSNumber class]]) {
+		self.fromDate = [NSDate dateWithTimeIntervalSinceNow:-[selectedTimeFrame doubleValue]];
+		self.untilDate = [NSDate date];
+	}
+}
+
+- (void)reloadChart {
+	NSMutableArray *countries = [NSMutableArray array];
+	for (NSDictionary *data in chartCountries) {
+		if ([[data objectForKey:@"value"] boolValue]) {
+			[countries addObject:[data objectForKey:@"title"]];
+		}
+	}
+	if ([countries count] > 0) {
+		NSError *error = nil;
+		NSArray *entries = [[ARStorageManager sharedARStorageManager] rankEntriesForApplication:application 
+																					 inCategory:category 
+																					  countries:countries 
+																						   from:self.fromDate
+																						  until:self.untilDate
+																						  error:&error];
+		if (!entries) {
+			[self presentError:error];
+		} else {
+			NSLog(@"Retrieved %d entries", [entries count]);
+			if ([entries count] > 1) {
+				ARChart *chart = [ARChart chartForEntries:entries sorted:YES];
+				self.chartImageView.image = [chart image];
+			} else {
+				self.chartImageView.image = nil;
+			}
+		}
+	} else {
+		self.chartImageView.image = nil;
+	}
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 	if ([keyPath isEqualToString:@"allCountries"]) {
-		NSMutableArray *countriesForChart = [NSMutableArray array];
-		if (allCountries) {
-			[allCountries enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
-				NSDictionary *countryData = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:NO], @"value", object, @"title", nil];
-				[countryData addObserver:self forKeyPath:@"value" options:NSKeyValueObservingOptionNew context:NULL];
-				[countriesForChart addObject:countryData];
-			}];
-		}
-		self.chartCountries = countriesForChart;
+		[self updateCountriesData];
+	} else if ([keyPath isEqualToString:@"selectedTimeFrame"]) {
+		[self updateTimeSpan];
 	} else {
 		NSLog(@"Country selection has changed");
-		NSMutableArray *countries = [NSMutableArray array];
-		for (NSDictionary *data in chartCountries) {
-			if ([[data objectForKey:@"value"] boolValue]) {
-				[countries addObject:[data objectForKey:@"title"]];
-			}
-		}
-		if ([countries count] > 0) {
-			NSError *error = nil;
-			NSArray *entries = [[ARStorageManager sharedARStorageManager] rankEntriesForApplication:application inCategory:category countries:countries error:&error];
-			if (!entries) {
-				[self presentError:error];
-			} else {
-				NSLog(@"Retrieved %d entries", [entries count]);
-				ARChart *chart = [ARChart chartForEntries:entries sorted:YES];
-				self.chartImage = [[[NSImage alloc] initWithContentsOfURL:[chart URL]] autorelease];
-			}
-		} else {
-			self.chartImage = nil;
-		}
+		[self reloadChart];
 	}
 }
 

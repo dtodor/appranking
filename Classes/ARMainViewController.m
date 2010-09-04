@@ -99,7 +99,8 @@
 	self.tableSortDescriptors = [NSMutableArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"rank" ascending:YES]];
 	
 	NSView *chartPlaceholder = [[mainContentSplitView subviews] objectAtIndex:1];
-	[mainContentSplitView replaceSubview:chartPlaceholder with:chartViewController.view];
+	[chartViewController.view setFrame:[chartPlaceholder bounds]];
+	[chartPlaceholder addSubview:chartViewController.view];
 }
 
 - (void)reloadApplications {

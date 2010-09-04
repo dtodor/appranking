@@ -34,19 +34,11 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface ARChart : NSObject {
-	NSDate *startDate;
-	NSDate *endDate;
-	NSMutableDictionary *postParameters;
+@interface ARChartImageView : NSView<NSWindowDelegate> {
+	
+	NSImage *image;
 }
 
-@property (nonatomic, readonly, retain) NSDate *startDate;
-@property (nonatomic, readonly, retain) NSDate *endDate;
-
-- (id)initWithEntries:(NSArray *)entries sorted:(BOOL)sorted;
-+ (id)chartForEntries:(NSArray *)entries sorted:(BOOL)sorted;
-
-- (NSURLRequest *)URLRequest;
-- (NSImage *)image;
+@property (nonatomic, retain) NSImage *image;
 
 @end

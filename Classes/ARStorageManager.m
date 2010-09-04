@@ -147,7 +147,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
 - (void)tryDeletingUnusedCategories {
 	NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
 	[fetchRequest setEntity:[NSEntityDescription entityForName:@"ARCategoryTuple" inManagedObjectContext:self.managedObjectContext]];
-	[fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"applications[SIZE] = 0"]];
+	[fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"applications.@count == 0"]];
 	NSError *error = nil;
 	NSArray *categories = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
 	if (categories) {
@@ -175,7 +175,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
 	[request setResultType:NSDictionaryResultType];
 	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"country" ascending:YES];
 	[request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-	[request setPredicate:[NSPredicate predicateWithFormat:@"application = %@ and category = %@", app, category]];
+	[request setPredicate:[NSPredicate predicateWithFormat:@"application == %@ and category == %@", app, category]];
 	NSArray *objects = [self.managedObjectContext executeFetchRequest:request error:error];
 	[request release];
 	if (objects) {
@@ -188,16 +188,21 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
 - (NSArray *)rankEntriesForApplication:(ARApplication *)app 
 							inCategory:(ARCategoryTuple *)category 
 							 countries:(NSArray *)countries 
+								  from:(NSDate *)from
+								 until:(NSDate *)until
 								 error:(NSError **)error {
 	
 	assert(app);
 	assert(category);
 	assert([countries count] > 0);
+	assert(from);
+	assert(until);
 	
 	NSEntityDescription *entity = [NSEntityDescription entityForName:@"ARRankEntry" inManagedObjectContext:self.managedObjectContext];
 	NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	[request setEntity:entity];
-	[request setPredicate:[NSPredicate predicateWithFormat:@"application = %@ and category = %@ and country in %@", app, category, countries]];
+	[request setPredicate:[NSPredicate predicateWithFormat:@"application == %@ and category == %@ and country in %@ and timestamp >= %@ and timestamp <= %@", 
+						   app, category, countries, from, until]];
 	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:YES];
 	[request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 	NSArray *objects = [self.managedObjectContext executeFetchRequest:request error:error];

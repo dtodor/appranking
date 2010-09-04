@@ -39,6 +39,7 @@
 #import "AREnumValueTransformer.h"
 #import "ARRankEntry.h"
 #import "ARStorageManager+Testing.h"
+#import "ARBoolValueTransformer.h"
 
 
 @implementation AppRankingAppDelegate
@@ -48,9 +49,35 @@
 
 + (void)initialize {
 	if (self = [AppRankingAppDelegate class]) {
-		AREnumValueTransformer *categoryTypesTransformer = [[AREnumValueTransformer alloc] initWithValueNames:[ARCategoryTuple typeNames]];
-		[NSValueTransformer setValueTransformer:categoryTypesTransformer forName:@"ARCategoryTupleTypeValueTransformer"];
-		[categoryTypesTransformer release];
+		{
+			AREnumValueTransformer *categoryTypesTransformer = [[AREnumValueTransformer alloc] initWithValueNames:[ARCategoryTuple typeNames]];
+			[NSValueTransformer setValueTransformer:categoryTypesTransformer forName:@"ARCategoryTupleTypeValueTransformer"];
+			[categoryTypesTransformer release];
+		}
+		
+		EvalBlock isNilOrNSNull = ^(id value) {
+			if (!value) {
+				return YES;
+			}
+			if ([value isKindOfClass:[NSNull class]]) {
+				return YES;
+			}
+			return NO;
+		};
+		
+		{
+			ARBoolValueTransformer *isNilTransformer = [[ARBoolValueTransformer alloc] initWithEvaluationBlock:isNilOrNSNull];
+			[NSValueTransformer setValueTransformer:isNilTransformer forName:@"ARIsNilOrNSNull"];
+			[isNilTransformer release];
+		}
+
+		{
+			ARBoolValueTransformer *isNotNilTransformer = [[ARBoolValueTransformer alloc] initWithEvaluationBlock:^(id value) {
+				return (BOOL)!isNilOrNSNull(value);
+			}];
+			[NSValueTransformer setValueTransformer:isNotNilTransformer forName:@"ARIsNotNilOrNSNull"];
+			[isNotNilTransformer release];
+		}
 	}
 }
 
