@@ -73,7 +73,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
     NSManagedObjectModel *mom = [self managedObjectModel];
     if (!mom) {
         NSAssert(NO, @"Managed object model is nil");
-        NSLog(@"%@:%s No model to generate a store from", [self class], _cmd);
+        NSLog(@"%@:%@ No model to generate a store from", [self class], NSStringFromSelector(_cmd));
         return nil;
     }
 	
@@ -135,7 +135,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
 	if (!managedObjectContext) return YES;
 	
     if (![managedObjectContext commitEditing]) {
-        NSLog(@"%@:%s unable to commit editing to terminate", [self class], _cmd);
+        NSLog(@"%@:%@ unable to commit editing to terminate", [self class], NSStringFromSelector(_cmd));
         return NO;
     }
 	

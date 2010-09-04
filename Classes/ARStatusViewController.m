@@ -35,28 +35,6 @@
 #import <QuartzCore/QuartzCore.h>
 
 
-@interface NSColor(CGColor)
-
-- (CGColorRef)CGColor;
-
-@end
-
-
-@implementation NSColor(CGColor)
-
-- (CGColorRef)CGColor {
-    CGColorSpaceRef colorSpace = [[self colorSpace] CGColorSpace];
-    NSInteger componentCount = [self numberOfComponents];
-    CGFloat *components = (CGFloat *)calloc(componentCount, sizeof(CGFloat));
-    [self getComponents:components];
-    CGColorRef color = CGColorCreate(colorSpace, components);
-    free((void*)components);
-    return color;
-}
-
-@end
-
-
 @implementation ARStatusViewController
 
 @synthesize mainLabel;
@@ -77,13 +55,21 @@
 	}
 	layer.delegate = self;
 	layer.borderWidth = 1.0;
-	layer.borderColor = [[NSColor colorWithDeviceWhite:0.3 alpha:0.5] CGColor];
+
+	CGColorRef borderColor = CGColorCreateGenericGray(0.3, 0.5);
+	layer.borderColor = borderColor;
+	CGColorRelease(borderColor);
+	
 	layer.cornerRadius = 5;
 	layer.opacity = 0.0;
 	[layer setMasksToBounds:YES];
 	
 	CALayer *indicator = [CALayer layer];
-	indicator.backgroundColor = [[NSColor colorWithDeviceWhite:0.1 alpha:0.5] CGColor];
+	
+	CGColorRef bgColor = CGColorCreateGenericGray(0.1, 0.5);
+	indicator.backgroundColor = bgColor;
+	CGColorRelease(bgColor);
+	
 	indicator.bounds = CGRectMake(0, 0, 0, layer.bounds.size.height);
 	indicator.position = CGPointMake(0.0, 0.0);
 	indicator.anchorPoint = CGPointMake(0.0, 0.0);

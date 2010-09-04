@@ -48,7 +48,7 @@
 @synthesize mainViewController;
 
 + (void)initialize {
-	if (self = [AppRankingAppDelegate class]) {
+	if (self == [AppRankingAppDelegate class]) {
 		{
 			AREnumValueTransformer *categoryTypesTransformer = [[AREnumValueTransformer alloc] initWithValueNames:[ARCategoryTuple typeNames]];
 			[NSValueTransformer setValueTransformer:categoryTypesTransformer forName:@"ARCategoryTupleTypeValueTransformer"];

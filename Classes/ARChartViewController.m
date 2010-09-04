@@ -127,7 +127,6 @@
 		if (!entries) {
 			[self presentError:error];
 		} else {
-			NSLog(@"Retrieved %d entries", [entries count]);
 			if ([entries count] > 1) {
 				ARChart *chart = [ARChart chartForEntries:entries sorted:YES];
 				self.chartImageView.image = [chart image];

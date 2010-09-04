@@ -34,13 +34,22 @@
 #import "ARChartImageView.h"
 
 
+@interface ARChartImageView()
+
+@property (nonatomic, retain) NSWindow *zoomWindow; 
+
+@end
+
+
 @implementation ARChartImageView
 
 @synthesize image;
+@synthesize zoomWindow;
 
 - (void)dealloc {
 	[self removeObserver:self forKeyPath:@"image"];
 	self.image = nil;
+	self.zoomWindow = nil;
 	[super dealloc];
 }
 
@@ -137,25 +146,25 @@
 
 - (void)showChartImageInFullSize {
 	NSSize imageSize = [image size];
-	NSWindow *window = [[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, imageSize.width, imageSize.height) 
+	self.zoomWindow = [[[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, imageSize.width, imageSize.height) 
 												  styleMask:NSUtilityWindowMask|NSHUDWindowMask|NSResizableWindowMask|NSClosableWindowMask|NSTitledWindowMask 
 													backing:NSBackingStoreBuffered 
-													  defer:NO];
-	[window setTitle:@"Chart"];
+													  defer:NO] autorelease];
+	[zoomWindow setTitle:@"Chart"];
 	NSImageView *imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(10, 10, imageSize.width-20, imageSize.height-20)];
 	[imageView setImageScaling:NSImageScaleProportionallyUpOrDown];
 	[imageView setAutoresizingMask:NSViewMinXMargin|NSViewMaxXMargin|NSViewWidthSizable|NSViewMinYMargin|NSViewMaxYMargin|NSViewHeightSizable];
 	[imageView setImage:self.image];
-	[[window contentView] addSubview:imageView];
+	[[zoomWindow contentView] addSubview:imageView];
 	[imageView release];
-	[window setFrame:NSMakeRect(0, 0, imageSize.width, imageSize.height) display:NO];
-	[window setDelegate:self];
-	[window setFrameOrigin:NSMakePoint(imageSize.width/2, imageSize.height/2)];
-	[window makeKeyAndOrderFront:nil];
+	[zoomWindow setFrame:NSMakeRect(0, 0, imageSize.width, imageSize.height) display:NO];
+	[zoomWindow setDelegate:self];
+	[zoomWindow setFrameOrigin:NSMakePoint(imageSize.width/2, imageSize.height/2)];
+	[zoomWindow makeKeyAndOrderFront:nil];
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
-	[[notification object] release];
+	self.zoomWindow = nil;
 }
 
 - (void)mouseUp:(NSEvent *)theEvent {
