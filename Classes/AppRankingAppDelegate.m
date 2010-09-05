@@ -87,6 +87,10 @@
     [super dealloc];
 }
 
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)application {
+	return YES;
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 
 	NSError *error = nil;
