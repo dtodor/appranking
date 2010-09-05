@@ -126,7 +126,8 @@
 					 [[category typeName] uppercaseString], 
 					 (category.name?[category.name uppercaseString]:@"ALL")];
 		for (ARApplication *application in category.applications) {
-			ARTreeNode *child = [ARTreeNode treeNodeWithRepresentedObject:[NSMutableArray array]];
+			NSMutableArray *representedObject = [storageManager testRanksForApplication:application inCategory:category];
+			ARTreeNode *child = [ARTreeNode treeNodeWithRepresentedObject:representedObject];
 			child.category = category;
 			child.application = application;
 			child.name = application.name;
@@ -143,10 +144,28 @@
 #pragma mark -
 #pragma mark IBAction methods
 
+- (void)resetRanks:(ARTreeNode *)node {
+	NSMutableArray *ranks = [node representedObject];
+	if (ranks) {
+		NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [ranks count])];
+		[node willChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:@"representedObject"];
+		[ranks removeAllObjects];
+		[node didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"representedObject"];
+	}
+	for (ARTreeNode *child in [node childNodes]) {
+		[self resetRanks:child];
+	}
+}
+
 - (IBAction)refresh:(NSToolbarItem *)sender {
 	if (self.runningQueries) {
 		return;
 	}
+	
+	for (ARTreeNode *node in applicationsTree) {
+		[self resetRanks:node];
+	}
+	
 	self.refreshStartDate = [NSDate date];
 	[statusViewController.mainLabel setStringValue:@"Processing RSS feeds ..."];
 	[statusViewController.secondaryLabel setStringValue:@""];

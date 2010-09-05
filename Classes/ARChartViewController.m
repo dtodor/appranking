@@ -144,6 +144,7 @@
 		[self updateCountriesData];
 	} else if ([keyPath isEqualToString:@"selectedTimeFrame"]) {
 		[self updateTimeSpan];
+		[self reloadChart];
 	} else {
 		NSLog(@"Country selection has changed");
 		[self reloadChart];

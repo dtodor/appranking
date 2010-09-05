@@ -36,6 +36,7 @@
 #import "ARApplication.h"
 #import "ARRankEntry.h"
 #import "ARConfiguration.h"
+#import "ARStochasticRankGenerator.h"
 
 
 @implementation ARStorageManager(Testing)
@@ -53,6 +54,8 @@
 	}
 }
 
+#define TEST_APP_NAME @"Test App"
+
 - (void)resetTestData {
 	[self deleteAllEntities:@"ARApplication"];
 	[self deleteAllEntities:@"ARCategoryTuple"];
@@ -62,21 +65,39 @@
 		tuple.name = @"Education";
 		tuple.tupleType = Top_Free_Apps;
 		
-		ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:self.managedObjectContext];
-		app.appStoreId = [NSNumber numberWithInt:378677412];
-		app.name = @"Spel It Rite 2";
-		app.categories = [NSSet setWithObject:tuple];
+		{
+			ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:self.managedObjectContext];
+			app.appStoreId = [NSNumber numberWithInt:378677412];
+			app.name = @"Spel It Rite 2";
+			app.categories = [NSSet setWithObject:tuple];
+		}
+		
+		{
+			ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:self.managedObjectContext];
+			app.appStoreId = [NSNumber numberWithInt:304520426];
+			app.name = @"Spel It Rite";
+			app.categories = [NSSet setWithObject:tuple];
+		}
+		
+		{
+			ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:self.managedObjectContext];
+			app.appStoreId = [NSNumber numberWithInt:999999999];
+			app.name = TEST_APP_NAME;
+			app.categories = [NSSet setWithObject:tuple];
+		}
 	}
 	
 	{
 		ARCategoryTuple *tuple = [NSEntityDescription insertNewObjectForEntityForName:@"ARCategoryTuple" inManagedObjectContext:self.managedObjectContext];
 		tuple.name = @"Education";
 		tuple.tupleType = Top_Paid_Apps;
-		
-		ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:self.managedObjectContext];
-		app.appStoreId = [NSNumber numberWithInt:335608149];
-		app.name = @"Call For Papers";
-		app.categories = [NSSet setWithObject:tuple];
+
+		{
+			ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:self.managedObjectContext];
+			app.appStoreId = [NSNumber numberWithInt:305759482];
+			app.name = @"Spel It Rite Pro";
+			app.categories = [NSSet setWithObject:tuple];
+		}
 	}
 	
 	NSError *error = nil;
@@ -99,10 +120,11 @@
 	return apps;
 }
 
+#define HOUR 3600
+#define ENTRIES_PER_CATEGORY 500
+#define COUNTRIES 10
+
 - (void)generateRandomRankingsDeletingExistent:(BOOL)deleteExistent {
-	static NSUInteger numberOfEntriesPerCategory = 500;
-	static NSUInteger numberOfCountries = 4;
-	
 	if (deleteExistent) {
 		[self deleteAllEntities:@"ARRankEntry"];
 		NSError *error = nil;
@@ -112,7 +134,7 @@
 	}
 	
 	NSArray *allCountries = [[ARConfiguration sharedARConfiguration].appStoreIds allKeys];
-	NSDate *startDate = [NSDate date];
+	NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-HOUR*(int)(ENTRIES_PER_CATEGORY+1)];
 	NSArray *apps = [self applications];
 	if (!apps) {
 		return;
@@ -120,23 +142,31 @@
 	
 	for (ARApplication *app in apps) {
 		for (ARCategoryTuple *category in app.categories) {
+			NSAutoreleasePool *pool = [NSAutoreleasePool new];
+			
 			NSMutableArray *countries = [NSMutableArray array];
-			while ([countries count] < numberOfCountries || [countries count] == [allCountries count]) {
+			NSMutableDictionary *rankGenerators = [NSMutableDictionary dictionary];
+			while ([countries count] < COUNTRIES || [countries count] == [allCountries count]) {
 				NSString *country = [allCountries objectAtIndex:arc4random()%[allCountries count]];
 				if (![countries containsObject:country]) {
 					[countries addObject:country];
+					ARStochasticRankGenerator *rankGenerator = [[ARStochasticRankGenerator alloc] initWithMinRank:1 maxRank:300];
+					[rankGenerators setObject:rankGenerator forKey:country];
+					[rankGenerator release];
 				}
 			}
-
-			for (NSUInteger i=0; i<numberOfEntriesPerCategory; i++) {
+			for (NSUInteger i=0; i<ENTRIES_PER_CATEGORY; i++) {
 				ARRankEntry *entry = (ARRankEntry *)[NSEntityDescription insertNewObjectForEntityForName:@"ARRankEntry" 
 																				  inManagedObjectContext:self.managedObjectContext];
 				entry.application = app;
 				entry.category = category;
-				entry.country = [countries objectAtIndex:arc4random()%numberOfCountries];
-				entry.rank = [NSNumber numberWithInt:(arc4random()%300)+1];
-				entry.timestamp = [NSDate dateWithTimeInterval:i*3600 sinceDate:startDate];
+				entry.country = [countries objectAtIndex:arc4random()%COUNTRIES];
+				NSUInteger rank = [[rankGenerators objectForKey:entry.country] nextRankValue];
+				entry.rank = [NSNumber numberWithUnsignedInteger:rank];
+				entry.timestamp = [NSDate dateWithTimeInterval:i*HOUR sinceDate:startDate];
 			}
+			
+			[pool drain];
 		}
 	}
 	
@@ -144,6 +174,47 @@
 	if (![self.managedObjectContext save:&error]) {
 		NSLog(@"Unable to persist new random rank entries, error = %@", [error localizedDescription]);
 	}
+}
+
+- (NSMutableArray *)testRanksForApplication:(ARApplication *)app inCategory:(ARCategoryTuple *)category {
+	assert(app);
+	assert(category);
+
+	NSMutableArray *retValue = [NSMutableArray array];
+
+	if (![app.name isEqualToString:TEST_APP_NAME]) {
+		return retValue;
+	}
+	NSError *error = nil;
+	NSArray *countries = [self rankedCountriesForApplication:app inCategory:category error:&error];
+	if (!countries) {
+		NSLog(@"Unable to retrieve last ranks, error = %@", [error localizedDescription]);
+		return retValue;
+	}
+	
+	for (NSString *country in countries) {
+		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+		NSEntityDescription *entity = [NSEntityDescription entityForName:@"ARRankEntry" 
+												  inManagedObjectContext:self.managedObjectContext];
+		[fetchRequest setEntity:entity];
+		[fetchRequest setFetchLimit:1];
+		
+		NSDictionary *entityDict = [entity attributesByName];
+		[fetchRequest setPropertiesToFetch:[NSArray arrayWithObjects:[entityDict objectForKey:@"country"], [entityDict objectForKey:@"rank"], nil]];
+		[fetchRequest setResultType:NSDictionaryResultType];
+		NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO];
+		[fetchRequest setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+		[fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"application == %@ and category == %@ and country == %@", 
+									app, category, country]];
+		
+		NSArray *objects = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+		[fetchRequest release];
+		if (objects) {
+			[retValue addObjectsFromArray:objects];
+		}
+	}
+	
+	return retValue;
 }
 
 @end

@@ -47,6 +47,7 @@
 		1A5A3EC81225C16500F08485 /* status-view-right.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A5A3EC21225C16500F08485 /* status-view-right.png */; };
 		1A6633731230F9A000D623D3 /* ARStorageManager+Testing.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6633721230F9A000D623D3 /* ARStorageManager+Testing.m */; };
 		1A66341212310AD500D623D3 /* ARColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A66341112310AD500D623D3 /* ARColor.m */; };
+		1A6E08CF1233CE4600168560 /* ARStochasticRankGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6E08CE1233CE4600168560 /* ARStochasticRankGenerator.m */; };
 		1A70CC2D1226D43F0031E8CF /* stop.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A70CC2C1226D43F0031E8CF /* stop.icns */; };
 		1A79EDAB1231525F007C5AC8 /* ARChartImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79EDAA1231525F007C5AC8 /* ARChartImageView.m */; };
 		1AB276D9122E548D006CFC8F /* AppDetailsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1ABE9A6B1227198D00065E5D /* AppDetailsWindow.xib */; };
@@ -143,6 +144,8 @@
 		1A6633721230F9A000D623D3 /* ARStorageManager+Testing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ARStorageManager+Testing.m"; sourceTree = "<group>"; };
 		1A66341012310AD500D623D3 /* ARColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARColor.h; sourceTree = "<group>"; };
 		1A66341112310AD500D623D3 /* ARColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARColor.m; sourceTree = "<group>"; };
+		1A6E08CD1233CE4600168560 /* ARStochasticRankGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARStochasticRankGenerator.h; sourceTree = "<group>"; };
+		1A6E08CE1233CE4600168560 /* ARStochasticRankGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARStochasticRankGenerator.m; sourceTree = "<group>"; };
 		1A70CC2C1226D43F0031E8CF /* stop.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = stop.icns; path = Resources/Images/stop.icns; sourceTree = "<group>"; };
 		1A79EDA91231525F007C5AC8 /* ARChartImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARChartImageView.h; sourceTree = "<group>"; };
 		1A79EDAA1231525F007C5AC8 /* ARChartImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARChartImageView.m; sourceTree = "<group>"; };
@@ -220,6 +223,7 @@
 		1A19B80B122D4B8900924F72 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				1A6E08CC1233CE3200168560 /* Testing */,
 				1A5A3C69122568B800F08485 /* ARTreeNode.h */,
 				1A5A3C6A122568B800F08485 /* ARTreeNode.m */,
 				1A2D2D021223B7580074AE7F /* ARApplication.h */,
@@ -232,8 +236,6 @@
 				1A2D2D091223B7580074AE7F /* ARRankQuery.m */,
 				1A19B628122D191B00924F72 /* ARStorageManager.h */,
 				1A19B629122D191B00924F72 /* ARStorageManager.m */,
-				1A6633711230F9A000D623D3 /* ARStorageManager+Testing.h */,
-				1A6633721230F9A000D623D3 /* ARStorageManager+Testing.m */,
 				1AB27704122E8185006CFC8F /* ARRankEntry.h */,
 				1AB27705122E8185006CFC8F /* ARRankEntry.m */,
 			);
@@ -345,6 +347,17 @@
 				1A5A3EC21225C16500F08485 /* status-view-right.png */,
 			);
 			name = Images;
+			sourceTree = "<group>";
+		};
+		1A6E08CC1233CE3200168560 /* Testing */ = {
+			isa = PBXGroup;
+			children = (
+				1A6E08CD1233CE4600168560 /* ARStochasticRankGenerator.h */,
+				1A6E08CE1233CE4600168560 /* ARStochasticRankGenerator.m */,
+				1A6633711230F9A000D623D3 /* ARStorageManager+Testing.h */,
+				1A6633721230F9A000D623D3 /* ARStorageManager+Testing.m */,
+			);
+			name = Testing;
 			sourceTree = "<group>";
 		};
 		1ACEC0E4123031C4007D5C1A /* Charting */ = {
@@ -512,6 +525,7 @@
 				1A66341212310AD500D623D3 /* ARColor.m in Sources */,
 				1A79EDAB1231525F007C5AC8 /* ARChartImageView.m in Sources */,
 				1A1CE65A123279D0006FACB9 /* ARBoolValueTransformer.m in Sources */,
+				1A6E08CF1233CE4600168560 /* ARStochasticRankGenerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

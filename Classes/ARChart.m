@@ -131,7 +131,7 @@ NSString *extendedEncode(double value, double maxValue) {
 		[labels appendString:country];
 		[lineSizes appendString:@"2"];
 		[colors appendString:[[ARColor colorForCountry:country] hexValue]];
-		[markers appendFormat:@"o,FF0000,%d,-1,4", countryIndex];
+		[markers appendFormat:@"o,FF0000,%d,-1,2", countryIndex];
 		if (countryIndex++ < [country2entries count]-1) {
 			[data appendString:@","];
 			[labels appendString:@"|"];

@@ -32,15 +32,18 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "ARStorageManager.h"
-#import "ARApplication.h"
-#import "ARCategoryTuple.h"
 
 
-@interface ARStorageManager(Testing)
+@interface ARStochasticRankGenerator : NSObject {
 
-- (void)resetTestData;
-- (void)generateRandomRankingsDeletingExistent:(BOOL)deleteExistent;
-- (NSMutableArray *)testRanksForApplication:(ARApplication *)app inCategory:(ARCategoryTuple *)category;
+	double **transitionMatrix;
+	NSUInteger minRank;
+	NSUInteger maxRank;
+	NSUInteger currentValue;
+}
+
+- (id)initWithMinRank:(NSUInteger)min maxRank:(NSUInteger)max;
+
+- (NSUInteger)nextRankValue;
 
 @end
