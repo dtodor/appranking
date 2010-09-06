@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A198EE21234C7B60074DEB6 /* ARRSSFeedCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A198EE11234C7B60074DEB6 /* ARRSSFeedCache.m */; };
+		1A19901B1234EB040074DEB6 /* GTMNSData+zlib.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A19901A1234EB040074DEB6 /* GTMNSData+zlib.m */; };
+		1A19902A1234EBA00074DEB6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1990291234EBA00074DEB6 /* libz.dylib */; };
 		1A19B62A122D191B00924F72 /* ARStorageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A19B629122D191B00924F72 /* ARStorageManager.m */; };
 		1A19B6E5122D313300924F72 /* ARAppDetailsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A19B6E4122D313300924F72 /* ARAppDetailsWindowController.m */; };
 		1A19B8B2122D62E100924F72 /* AREnumValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A19B8B1122D62E100924F72 /* AREnumValueTransformer.m */; };
@@ -81,6 +84,12 @@
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		1A198EE01234C7B60074DEB6 /* ARRSSFeedCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARRSSFeedCache.h; sourceTree = "<group>"; };
+		1A198EE11234C7B60074DEB6 /* ARRSSFeedCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARRSSFeedCache.m; sourceTree = "<group>"; };
+		1A1990191234EB040074DEB6 /* GTMNSData+zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTMNSData+zlib.h"; sourceTree = "<group>"; };
+		1A19901A1234EB040074DEB6 /* GTMNSData+zlib.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSData+zlib.m"; sourceTree = "<group>"; };
+		1A19901E1234EB5E0074DEB6 /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
+		1A1990291234EBA00074DEB6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1A19B624122D115600924F72 /* AppRanking-1.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = "AppRanking-1.xcdatamodel"; sourceTree = "<group>"; };
 		1A19B628122D191B00924F72 /* ARStorageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARStorageManager.h; sourceTree = "<group>"; };
 		1A19B629122D191B00924F72 /* ARStorageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARStorageManager.m; sourceTree = "<group>"; };
@@ -177,6 +186,7 @@
 				1A5A3E591225BBB000F08485 /* QuartzCore.framework in Frameworks */,
 				1A45D9B3122640D500A1DF36 /* BWToolkitFramework.framework in Frameworks */,
 				1A45D9B4122640D500A1DF36 /* Sparkle.framework in Frameworks */,
+				1A19902A1234EBA00074DEB6 /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -186,6 +196,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1A1990291234EBA00074DEB6 /* libz.dylib */,
 				1A45D9B1122640D500A1DF36 /* BWToolkitFramework.framework */,
 				1A45D9B2122640D500A1DF36 /* Sparkle.framework */,
 				1A5A3E581225BBB000F08485 /* QuartzCore.framework */,
@@ -210,6 +221,16 @@
 				8D1107320486CEB800E47090 /* AppRanking.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		1A1990151234EADB0074DEB6 /* Google Toolbox For Mac */ = {
+			isa = PBXGroup;
+			children = (
+				1A19901E1234EB5E0074DEB6 /* GTMDefines.h */,
+				1A1990191234EB040074DEB6 /* GTMNSData+zlib.h */,
+				1A19901A1234EB040074DEB6 /* GTMNSData+zlib.m */,
+			);
+			name = "Google Toolbox For Mac";
 			sourceTree = "<group>";
 		};
 		1A19B623122D110300924F72 /* Core Data Model */ = {
@@ -238,6 +259,8 @@
 				1A19B629122D191B00924F72 /* ARStorageManager.m */,
 				1AB27704122E8185006CFC8F /* ARRankEntry.h */,
 				1AB27705122E8185006CFC8F /* ARRankEntry.m */,
+				1A198EE01234C7B60074DEB6 /* ARRSSFeedCache.h */,
+				1A198EE11234C7B60074DEB6 /* ARRSSFeedCache.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -327,6 +350,7 @@
 		1A5A3C6D122568C800F08485 /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
+				1A1990151234EADB0074DEB6 /* Google Toolbox For Mac */,
 				1A5A3C67122568B800F08485 /* SidebarBadgeCell.h */,
 				1A5A3C68122568B800F08485 /* SidebarBadgeCell.m */,
 				1A2D2D0A1223B7580074AE7F /* JSON */,
@@ -526,6 +550,8 @@
 				1A79EDAB1231525F007C5AC8 /* ARChartImageView.m in Sources */,
 				1A1CE65A123279D0006FACB9 /* ARBoolValueTransformer.m in Sources */,
 				1A6E08CF1233CE4600168560 /* ARStochasticRankGenerator.m in Sources */,
+				1A198EE21234C7B60074DEB6 /* ARRSSFeedCache.m in Sources */,
+				1A19901B1234EB040074DEB6 /* GTMNSData+zlib.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

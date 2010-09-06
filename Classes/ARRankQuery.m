@@ -36,6 +36,7 @@
 #import "JSON.h"
 #import "SBJSON+Additions.h"
 #import "ARApplication.h"
+#import "ARRSSFeedCache.h"
 
 
 NSString * const kErrorDomain = @"RankQueryErrorDomain";
@@ -44,63 +45,7 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 @implementation ARRankQuery
 
 @synthesize country, category, delegate, ranks, icons;
-
-- (id)initWithCountry:(NSString *)aCountry category:(ARCategoryTuple *)aCategory {
-	self = [super init];
-	if (self != nil) {
-		assert(aCategory);
-		assert(aCountry);
-		NSURL *url = [aCategory rankingURLForCountry:aCountry];
-		if (!url) {
-			[self release];
-			self = nil;
-		} else {
-			ranks = [[NSMutableDictionary alloc] initWithCapacity:[aCategory.applications count]];
-			icons = [[NSMutableDictionary alloc] initWithCapacity:[aCategory.applications count]];
-			for (ARApplication *app in aCategory.applications) {
-				[ranks setObject:[NSNull null] forKey:app.name];
-			}
-			country = [aCountry copy];
-			category = [aCategory retain];
-			
-			NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-			[request setValue:@"text/javascript" forHTTPHeaderField:@"Content-Type"];
-			[request setValue:@"text/javascript" forHTTPHeaderField:@"Accept"];
-			[request setValue:@"gzip, deflate" forHTTPHeaderField:@"Accept-Encoding"];
-			
-			connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
-			if (connection) {
-				receivedData = [[NSMutableData alloc] init];
-			} else {
-				[self release];
-				self = nil;
-			}
-		}
-	}
-	return self;
-}
-
-- (void)dealloc {
-	[icons release];
-	[ranks release];
-	[receivedData release];
-	[connection release];
-	[country release];
-	[category release];
-	[super dealloc];
-}
-
-- (void)start {
-	assert(!started);
-	started = YES;
-	[connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-	[connection start];
-}
-
-- (void)cancel {
-	[connection cancel];
-	canceled = YES;
-}
+@synthesize cached, expiryDate;
 
 #pragma mark -
 #pragma mark Query logic
@@ -137,7 +82,7 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 			}
 			return NO;
 		}
-
+		
 		NSDictionary *name = [entry dictionaryForKey:@"im:name" error:&underlyingError];
 		if (underlyingError) {
 			if (error) {
@@ -184,6 +129,9 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 	void (^failBlock)(NSError *error) = ^(NSError *error) {
 		[error retain];
 		dispatch_async(dispatch_get_main_queue(), ^{
+			if (cached) {
+				[[ARRSSFeedCache sharedARRSSFeedCache] removeCachedFeedForCategory:category country:country];
+			}
 			if (delegate) {
 				[delegate query:self didFailWithError:error];
 			}
@@ -220,9 +168,86 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 				failBlock(error);
 			}
 		}
-
+		
 		[pool drain];
 	});
+}
+
+#pragma mark -
+#pragma mark Lifecycle
+
+- (id)initWithCountry:(NSString *)aCountry category:(ARCategoryTuple *)aCategory {
+	self = [super init];
+	if (self != nil) {
+		assert(aCategory);
+		assert(aCountry);
+		NSURL *url = [aCategory rankingURLForCountry:aCountry];
+		if (!url) {
+			[self release];
+			self = nil;
+		} else {
+			ranks = [[NSMutableDictionary alloc] initWithCapacity:[aCategory.applications count]];
+			icons = [[NSMutableDictionary alloc] initWithCapacity:[aCategory.applications count]];
+			for (ARApplication *app in aCategory.applications) {
+				[ranks setObject:[NSNull null] forKey:app.name];
+			}
+			country = [aCountry copy];
+			category = [aCategory retain];
+
+			NSDate *expDate = nil;
+			NSData *cachedData = [[ARRSSFeedCache sharedARRSSFeedCache] retrieveCachedFeedForCategory:category country:country expiryDate:&expDate];
+			
+			if (!cachedData) {
+				NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+				[request setValue:@"text/javascript" forHTTPHeaderField:@"Content-Type"];
+				[request setValue:@"text/javascript" forHTTPHeaderField:@"Accept"];
+				[request setValue:@"gzip, deflate" forHTTPHeaderField:@"Accept-Encoding"];
+				
+				connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+				if (connection) {
+					receivedData = [[NSMutableData alloc] init];
+				} else {
+					[self release];
+					self = nil;
+				}
+			} else {
+				assert(expDate);
+				expiryDate = [expDate retain];
+				cached = YES;
+				receivedData = [cachedData retain];
+			}
+		}
+	}
+	return self;
+}
+
+- (void)dealloc {
+	[expiryDate release];
+	[icons release];
+	[ranks release];
+	[receivedData release];
+	[connection release];
+	[country release];
+	[category release];
+	[super dealloc];
+}
+
+- (void)start {
+	assert(!started);
+	started = YES;
+	if (connection) {
+		[connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+		[connection start];
+	} else {
+		[self retrieveRank];
+	}
+}
+
+- (void)cancel {
+	if (connection) {
+		[connection cancel];
+	}
+	canceled = YES;
 }
 
 #pragma mark -
@@ -237,10 +262,11 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-	[receivedData appendData:data];
+	[(NSMutableData *)receivedData appendData:data];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+	[[ARRSSFeedCache sharedARRSSFeedCache] cacheFeed:receivedData forCategory:category country:country];
 	if (!canceled) {
 		[self retrieveRank];
 	}

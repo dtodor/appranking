@@ -44,7 +44,7 @@ typedef enum {
 
 @interface ARRankQuery : NSObject {
 	NSURLConnection *connection;
-	NSMutableData *receivedData;
+	NSData *receivedData;
 	id<ARRankQueryDelegate> delegate;
 
 	NSString *country;
@@ -53,13 +53,18 @@ typedef enum {
 	NSMutableDictionary *icons;
 	BOOL started;
 	BOOL canceled;
+	
+	BOOL cached;
+	NSDate *expiryDate;
 }
 
-@property (readonly, copy) NSString *country;
-@property (readonly, copy) ARCategoryTuple *category;
-@property (assign) id<ARRankQueryDelegate> delegate;
-@property (readonly) NSDictionary *ranks;
-@property (readonly) NSDictionary *icons;
+@property (nonatomic, readonly, copy) NSString *country;
+@property (nonatomic, readonly, copy) ARCategoryTuple *category;
+@property (nonatomic, assign) id<ARRankQueryDelegate> delegate;
+@property (nonatomic, readonly) NSDictionary *ranks;
+@property (nonatomic, readonly) NSDictionary *icons;
+@property (nonatomic, readonly, getter=isCached) BOOL cached;
+@property (nonatomic, readonly) NSDate *expiryDate;
 
 - (id)initWithCountry:(NSString *)aCountry category:(ARCategoryTuple *)aCategory;
 - (void)start;

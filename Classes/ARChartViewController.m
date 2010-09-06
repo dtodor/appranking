@@ -57,6 +57,7 @@
 @synthesize selectedTimeFrame;
 @synthesize fromDate;
 @synthesize untilDate;
+@synthesize enabled;
 
 - (void)dealloc {
 	[self removeObserver:self forKeyPath:@"allCountries"];

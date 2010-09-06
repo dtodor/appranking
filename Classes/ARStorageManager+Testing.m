@@ -61,42 +61,49 @@
 	[self deleteAllEntities:@"ARCategoryTuple"];
 	
 	{
-		ARCategoryTuple *tuple = [NSEntityDescription insertNewObjectForEntityForName:@"ARCategoryTuple" inManagedObjectContext:self.managedObjectContext];
-		tuple.name = @"Education";
-		tuple.tupleType = Top_Free_Apps;
+		ARCategoryTuple *category = [NSEntityDescription insertNewObjectForEntityForName:@"ARCategoryTuple" inManagedObjectContext:self.managedObjectContext];
+		category.name = @"Education";
+		category.tupleType = Top_Free_Apps;
 		
 		{
 			ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:self.managedObjectContext];
 			app.appStoreId = [NSNumber numberWithInt:378677412];
 			app.name = @"Spel It Rite 2";
-			app.categories = [NSSet setWithObject:tuple];
+			app.categories = [NSSet setWithObject:category];
 		}
 		
 		{
 			ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:self.managedObjectContext];
 			app.appStoreId = [NSNumber numberWithInt:304520426];
 			app.name = @"Spel It Rite";
-			app.categories = [NSSet setWithObject:tuple];
+			app.categories = [NSSet setWithObject:category];
 		}
 		
 		{
 			ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:self.managedObjectContext];
 			app.appStoreId = [NSNumber numberWithInt:999999999];
 			app.name = TEST_APP_NAME;
-			app.categories = [NSSet setWithObject:tuple];
+			app.categories = [NSSet setWithObject:category];
 		}
 	}
 	
 	{
-		ARCategoryTuple *tuple = [NSEntityDescription insertNewObjectForEntityForName:@"ARCategoryTuple" inManagedObjectContext:self.managedObjectContext];
-		tuple.name = @"Education";
-		tuple.tupleType = Top_Paid_Apps;
+		ARCategoryTuple *category = [NSEntityDescription insertNewObjectForEntityForName:@"ARCategoryTuple" inManagedObjectContext:self.managedObjectContext];
+		category.name = @"Education";
+		category.tupleType = Top_Paid_Apps;
 
 		{
 			ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:self.managedObjectContext];
 			app.appStoreId = [NSNumber numberWithInt:305759482];
 			app.name = @"Spel It Rite Pro";
-			app.categories = [NSSet setWithObject:tuple];
+			app.categories = [NSSet setWithObject:category];
+		}
+
+		{
+			ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:self.managedObjectContext];
+			app.appStoreId = [NSNumber numberWithInt:335608149];
+			app.name = @"Call For Papers";
+			app.categories = [NSSet setWithObject:category];
 		}
 	}
 	

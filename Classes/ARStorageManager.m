@@ -33,11 +33,33 @@
 
 #import "ARStorageManager.h"
 #import "SynthesizeSingleton.h"
+#import "ARRankEntry.h"
+#import "ARRSSFeedCache.h"
+
+@interface ARStorageManager()
+
+@property (nonatomic, retain) NSDate *timestamp;
+
+@end
 
 
 @implementation ARStorageManager
 
 SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
+
+@synthesize timestamp;
+
+- (void)updateTimestamp {
+	self.timestamp = [NSDate date];
+}
+
+- (id)init {
+	self = [super init];
+	if (self != nil) {
+		[self updateTimestamp];
+	}
+	return self;
+}
 
 /**
  Returns the support directory for the application, used to store the Core Data
@@ -208,6 +230,46 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
 	NSArray *objects = [self.managedObjectContext executeFetchRequest:request error:error];
 	[request release];
 	return objects;
+}
+
+- (BOOL)insertRankEntry:(NSNumber *)rank forApplication:(ARApplication *)app query:(ARRankQuery *)query error:(NSError **)error {
+	if (query.cached) {
+		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+		NSEntityDescription *entity = [NSEntityDescription entityForName:@"ARRankEntry" 
+												  inManagedObjectContext:self.managedObjectContext];
+		[fetchRequest setEntity:entity];
+		[fetchRequest setFetchLimit:1];
+		
+		NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO];
+		[fetchRequest setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+		[fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"application == %@ and category == %@ and country == %@ and rank == %@", 
+									app, query.category, query.country, rank]];
+		
+		NSArray *result = [self.managedObjectContext executeFetchRequest:fetchRequest error:error];
+		[fetchRequest release];
+		if (!result) {
+			return NO;
+		}
+		if ([result count] == 1) {
+			ARRankEntry *entry = [result objectAtIndex:0];
+			NSTimeInterval difference = [query.expiryDate timeIntervalSinceDate:entry.timestamp];
+			if (difference < [ARRSSFeedCache expiryInterval]) {
+				NSLog(@"Entry for cached query exists");
+				return YES;
+			}
+		}
+	}
+	ARRankEntry *entry = [NSEntityDescription insertNewObjectForEntityForName:@"ARRankEntry" inManagedObjectContext:self.managedObjectContext];
+	entry.application = app;
+	entry.category = query.category;
+	entry.country = query.country;
+	entry.rank = rank;
+	entry.timestamp = self.timestamp;
+	
+	if (![self.managedObjectContext save:error]) {
+		return NO;
+	}
+	return YES;
 }
 
 @end

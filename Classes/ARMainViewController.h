@@ -53,7 +53,6 @@
 	ARAppDetailsWindowController *detailsViewController;
 	
 	NSTreeController *treeController;
-	NSDate *refreshStartDate;
 	
 	ARChartViewController *chartViewController;
 	NSSplitView *mainContentSplitView;

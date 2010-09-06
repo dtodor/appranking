@@ -43,6 +43,7 @@
 #import "ARStorageManager.h"
 #import "ARAppDetailsWindowController.h"
 #import "ARRankEntry.h"
+#import "ARStorageManager+Testing.h"
 
 
 @interface ARMainViewController() <ARRankQueryDelegate>
@@ -51,7 +52,6 @@
 @property (nonatomic, retain) NSMutableArray *runningQueries;
 @property (nonatomic, retain) NSMutableArray *pendingQueries;
 @property (nonatomic, retain) ARAppDetailsWindowController *detailsViewController;
-@property (nonatomic, retain) NSDate *refreshStartDate;
 
 @end
 
@@ -68,7 +68,6 @@
 @synthesize detailsViewController;
 @synthesize treeController;
 @synthesize outlineViewSortDescriptors;
-@synthesize refreshStartDate;
 @synthesize chartViewController;
 @synthesize mainContentSplitView;
 
@@ -76,7 +75,6 @@
 	self.mainContentSplitView = nil;
 	self.chartViewController = nil;
 	self.applicationsTree = nil;
-	self.refreshStartDate = nil;
 	self.treeController = nil;
 	self.detailsViewController = nil;
 	self.tableSortDescriptors = nil;
@@ -101,6 +99,8 @@
 	NSView *chartPlaceholder = [[mainContentSplitView subviews] objectAtIndex:1];
 	[chartViewController.view setFrame:[chartPlaceholder bounds]];
 	[chartPlaceholder addSubview:chartViewController.view];
+	
+	chartViewController.enabled = YES;
 }
 
 - (void)reloadApplications {
@@ -162,11 +162,14 @@
 		return;
 	}
 	
+	chartViewController.enabled = NO;
+	
 	for (ARTreeNode *node in applicationsTree) {
 		[self resetRanks:node];
 	}
 	
-	self.refreshStartDate = [NSDate date];
+	[[ARStorageManager sharedARStorageManager] updateTimestamp];
+
 	[statusViewController.mainLabel setStringValue:@"Processing RSS feeds ..."];
 	[statusViewController.secondaryLabel setStringValue:@""];
 	[statusViewController.secondaryLabel setHidden:NO];
@@ -191,12 +194,23 @@
 				}
 				[query release];
 			} else {
+				NSLog(@"Unable to start query for category '%@' and country '%@'", rootNode.category, country);
 				// TODO log error message
 			}
 			count++;
 		}
 	}
 	totalNumberOfDownloads = count;
+}
+
+- (void)updateUIOnFinish {
+	[statusViewController.mainLabel setStringValue:@"Done"];
+	[statusViewController.secondaryLabel setHidden:YES];
+	[statusViewController setProgress:0.0];
+	
+	[NSApp setWindowsNeedUpdate:YES];
+	
+	chartViewController.enabled = YES;
 }
 
 - (IBAction)stop:(NSToolbarItem *)sender {
@@ -208,11 +222,8 @@
 	}
 	self.runningQueries = nil;
 	self.pendingQueries = nil;
-	self.refreshStartDate = nil;
 	
-	[statusViewController.mainLabel setStringValue:@"Done"];
-	[statusViewController.secondaryLabel setHidden:YES];
-	[statusViewController setProgress:0.0];
+	[self updateUIOnFinish];
 	
 	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
 	[storageManager.managedObjectContext rollback];
@@ -296,19 +307,18 @@
 	double percent = ((double)totalNumberOfDownloads-count)/totalNumberOfDownloads;
 	[statusViewController setProgress:percent];
 	if ([pendingQueries count] > 0) {
-		ARRankQuery *query = [pendingQueries lastObject];
+		ARRankQuery *query = [[pendingQueries lastObject] retain];
 		[pendingQueries removeLastObject];
-		[runningQueries addObject:query];
+		[runningQueries addObject:[query autorelease]];
 		[query start];
 	}
 	if ([runningQueries count] == 0) {
 		// Finished
 		self.runningQueries = nil;
 		self.pendingQueries = nil;
-		[statusViewController.mainLabel setStringValue:@"Done"];
-		[statusViewController.secondaryLabel setHidden:YES];
-		[statusViewController setProgress:0.0];
-		
+
+		[self updateUIOnFinish];
+
 		ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
 		NSError *error = nil;
 		if (![storageManager.managedObjectContext save:&error]) {
@@ -331,22 +341,6 @@
 	return nil;
 }
 
-// TODO move in ARStorageManager
-- (void)insertRankEntryForApplication:(ARApplication *)app category:(ARCategoryTuple *)category country:(NSString *)country rank:(NSNumber *)rank {
-	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
-	ARRankEntry *entry = [NSEntityDescription insertNewObjectForEntityForName:@"ARRankEntry" inManagedObjectContext:storageManager.managedObjectContext];
-	entry.application = app;
-	entry.category = category;
-	entry.country = country;
-	entry.rank = rank;
-	entry.timestamp = self.refreshStartDate;
-	
-	NSError *error = nil;
-	if (![storageManager.managedObjectContext save:&error]) {
-		[self presentError:error];
-	}
-}
-
 - (void)queryDidFinish:(ARRankQuery *)query {
 	[statusViewController.secondaryLabel setStringValue:[NSString stringWithFormat:@"Finished processing %@ [%@]", query.country, query.category]];
 	for (NSString *appName in query.ranks) {
@@ -366,8 +360,11 @@
 			[applicationNode didChange:NSKeyValueChangeInsertion 
 					   valuesAtIndexes:[NSIndexSet indexSetWithIndex:[entries count]-1] 
 								forKey:@"representedObject"];
-			
-			[self insertRankEntryForApplication:applicationNode.application category:query.category country:query.country rank:value];
+
+			NSError *error = nil;
+			if (![[ARStorageManager sharedARStorageManager] insertRankEntry:value forApplication:applicationNode.application query:query error:&error]) {
+				NSLog(@"Unable to persist result for '%@ - %@ (%@)'", applicationNode.application.name, query.country, query.category);
+			}
 		}
 	}
 	

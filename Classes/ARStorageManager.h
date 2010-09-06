@@ -34,6 +34,7 @@
 #import <Cocoa/Cocoa.h>
 #import "ARApplication.h"
 #import "ARCategoryTuple.h"
+#import "ARRankQuery.h"
 
 
 @interface ARStorageManager : NSObject {
@@ -41,11 +42,17 @@
 	NSPersistentStoreCoordinator *persistentStoreCoordinator;
     NSManagedObjectModel *managedObjectModel;
     NSManagedObjectContext *managedObjectContext;
+	
+	NSDate *timestamp;
 }
 
 @property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
+
+@property (nonatomic, retain, readonly) NSDate *timestamp;
+
+- (void)updateTimestamp;
 
 + (ARStorageManager *)sharedARStorageManager;
 
@@ -58,5 +65,7 @@
 								  from:(NSDate *)from
 								 until:(NSDate *)until
 								 error:(NSError **)error;
+
+- (BOOL)insertRankEntry:(NSNumber *)rank forApplication:(ARApplication *)app query:(ARRankQuery *)query error:(NSError **)error;
 
 @end

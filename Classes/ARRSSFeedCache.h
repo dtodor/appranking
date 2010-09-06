@@ -32,36 +32,19 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "ARApplication.h"
 #import "ARCategoryTuple.h"
-#import "ARChartImageView.h"
 
 
-@interface ARChartViewController : NSViewController {
-	
-	NSArray *allCountries;
-	NSArray *chartCountries;
-	ARApplication *application;
-	ARCategoryTuple *category;
-	ARChartImageView *chartImageView;
-	NSArray *timeFrameChoices;
-	NSNumber *selectedTimeFrame;
-	NSDate *fromDate;
-	NSDate *untilDate;
-	
-	BOOL enabled;
+@interface ARRSSFeedCache : NSObject {
+
+	NSFileManager *fileManager;
 }
 
-@property (nonatomic, readonly, retain) NSArray *chartCountries;
-@property (nonatomic, retain) NSArray *allCountries;
-@property (nonatomic, retain) ARApplication *application;
-@property (nonatomic, retain) ARCategoryTuple *category;
-@property (nonatomic, retain) IBOutlet ARChartImageView *chartImageView;
-@property (nonatomic, readonly, retain) NSArray *timeFrameChoices;
-@property (nonatomic, retain) NSNumber *selectedTimeFrame;
-@property (nonatomic, retain) NSDate *fromDate;
-@property (nonatomic, retain) NSDate *untilDate;
++ (ARRSSFeedCache *)sharedARRSSFeedCache;
++ (NSTimeInterval)expiryInterval;
 
-@property (nonatomic) BOOL enabled;
+- (NSData *)retrieveCachedFeedForCategory:(ARCategoryTuple *)category country:(NSString *)country expiryDate:(NSDate **)expiryDate;
+- (void)cacheFeed:(NSData *)feedData forCategory:(ARCategoryTuple *)category country:(NSString *)country;
+- (void)removeCachedFeedForCategory:(ARCategoryTuple *)category country:(NSString *)country;
 
 @end
