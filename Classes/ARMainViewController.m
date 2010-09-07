@@ -73,21 +73,8 @@
 @synthesize mainContentSplitView;
 @synthesize totalNumberOfDownloads;
 
-- (void)dealloc {
-	self.mainContentSplitView = nil;
-	self.chartViewController = nil;
-	self.applicationsTree = nil;
-	self.treeController = nil;
-	self.detailsViewController = nil;
-	self.tableSortDescriptors = nil;
-	self.outlineViewSortDescriptors = nil;
-	self.statusViewController = nil;
-	self.sidebar = nil;
-	self.statusToolBarItem = nil;
-	self.runningQueries = nil;
-	self.pendingQueries = nil;
-	[super dealloc];
-}
+#pragma mark -
+#pragma mark Lifecycle
 
 - (void)awakeFromNib {
 	[statusToolBarItem setView:[statusViewController view]];
@@ -105,42 +92,58 @@
 	chartViewController.enabled = YES;
 }
 
-- (void)reloadApplications {
-	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
-	
-	NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
-	[fetchRequest setEntity:[NSEntityDescription entityForName:@"ARCategoryTuple" inManagedObjectContext:storageManager.managedObjectContext]];
-	
-	NSError *error = nil;
-	NSArray *categories = [storageManager.managedObjectContext executeFetchRequest:fetchRequest error:&error];
-	if (!categories) {
-		NSLog(@"Unable to retrieve categories, error = %@", [error localizedDescription]);
-		[self presentError:error];
-		self.applicationsTree = nil;
-		return;
-	}
-	
-	NSMutableArray *array = [NSMutableArray array];
-	for (ARCategoryTuple *category in categories) {
-		ARTreeNode *node = [ARTreeNode treeNodeWithRepresentedObject:nil];
-		node.category = category;
-		node.name = [NSString stringWithFormat:@"%@ (%@)", 
-					 [[category typeName] uppercaseString], 
-					 (category.name?[category.name uppercaseString]:@"ALL")];
-		for (ARApplication *application in category.applications) {
-			NSMutableArray *representedObject = [storageManager testRanksForApplication:application inCategory:category];
-			ARTreeNode *child = [ARTreeNode treeNodeWithRepresentedObject:representedObject];
-			child.category = category;
-			child.application = application;
-			child.name = application.name;
-			child.icon = application.iconImage;
-			[[node mutableChildNodes] addObject:child];
+- (void)dealloc {
+	self.mainContentSplitView = nil;
+	self.chartViewController = nil;
+	self.applicationsTree = nil;
+	self.treeController = nil;
+	self.detailsViewController = nil;
+	self.tableSortDescriptors = nil;
+	self.outlineViewSortDescriptors = nil;
+	self.statusViewController = nil;
+	self.sidebar = nil;
+	self.statusToolBarItem = nil;
+	self.runningQueries = nil;
+	self.pendingQueries = nil;
+	[super dealloc];
+}
+
+#pragma mark -
+#pragma mark Private helper methods
+
+- (void)updateChartCountries {
+	NSArray *selectedObjects = [self.treeController selectedObjects];
+	if ([selectedObjects count] == 1) {
+		ARTreeNode *selection = [selectedObjects objectAtIndex:0];
+		chartViewController.application = selection.application;
+		chartViewController.category = selection.category;
+		NSError *error = nil;
+		NSArray *countries = [[ARStorageManager sharedARStorageManager] rankedCountriesForApplication:selection.application 
+																						   inCategory:selection.category 
+																								error:&error];
+		if (!countries) {
+			chartViewController.allCountries = nil;
+			[self presentError:error];
+		} else {
+			chartViewController.allCountries = countries;
 		}
-		[array addObject:node];
 	}
-	self.applicationsTree = array;
+}
+
+- (void)updateUIOnFinish {
+	[statusViewController.mainLabel setStringValue:@"Done"];
+	[statusViewController.secondaryLabel setHidden:YES];
+	[statusViewController setProgress:0.0];
 	
-	[sidebar expandItem:nil expandChildren:YES];
+	[NSApp setWindowsNeedUpdate:YES];
+	
+	[self updateChartCountries];
+	chartViewController.enabled = YES;
+}
+
+- (ARApplication *)selectedApplication {
+	ARTreeNode *applicationNode = [[self.treeController selectedObjects] objectAtIndex:0];
+	return applicationNode.application;
 }
 
 #pragma mark -
@@ -205,16 +208,6 @@
 	totalNumberOfDownloads = count;
 }
 
-- (void)updateUIOnFinish {
-	[statusViewController.mainLabel setStringValue:@"Done"];
-	[statusViewController.secondaryLabel setHidden:YES];
-	[statusViewController setProgress:0.0];
-	
-	[NSApp setWindowsNeedUpdate:YES];
-	
-	chartViewController.enabled = YES;
-}
-
 - (IBAction)stop:(NSToolbarItem *)sender {
 	for (ARRankQuery *query in runningQueries) {
 		[query cancel];
@@ -229,11 +222,6 @@
 	
 	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
 	[storageManager.managedObjectContext rollback];
-}
-
-- (ARApplication *)selectedApplication {
-	ARTreeNode *applicationNode = [[self.treeController selectedObjects] objectAtIndex:0];
-	return applicationNode.application;
 }
 
 - (IBAction)info:(NSToolbarItem *)sender {
@@ -430,21 +418,7 @@
 }
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification {
-	NSArray *selectedObjects = [self.treeController selectedObjects];
-	if ([selectedObjects count] == 1) {
-		ARTreeNode *selection = [selectedObjects objectAtIndex:0];
-		NSError *error = nil;
-		NSArray *countries = [[ARStorageManager sharedARStorageManager] rankedCountriesForApplication:selection.application 
-																	  inCategory:selection.category 
-																		   error:&error];
-		if (!countries) {
-			[self presentError:error];
-		} else {
-			chartViewController.application = selection.application;
-			chartViewController.category = selection.category;
-			chartViewController.allCountries = countries;
-		}
-	}
+	[self updateChartCountries];
 }
 
 #pragma mark -
@@ -459,6 +433,56 @@
 		return [[sidebar selectedRowIndexes] count] == 1 && !self.runningQueries;
 	}
 	return NO;
+}
+
+#pragma mark -
+#pragma mark NSTableViewDelegate
+
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+	if ([[tableColumn identifier] isEqualToString:@"NumberColumn"]) {
+		[cell setStringValue:[NSString stringWithFormat:@"%d", row+1]];
+	}
+}
+
+#pragma mark -
+#pragma mark Public interface
+
+- (void)reloadApplications {
+	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
+	
+	NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+	[fetchRequest setEntity:[NSEntityDescription entityForName:@"ARCategoryTuple" inManagedObjectContext:storageManager.managedObjectContext]];
+	
+	NSError *error = nil;
+	NSArray *categories = [storageManager.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+	if (!categories) {
+		NSLog(@"Unable to retrieve categories, error = %@", [error localizedDescription]);
+		[self presentError:error];
+		self.applicationsTree = nil;
+		return;
+	}
+	
+	NSMutableArray *array = [NSMutableArray array];
+	for (ARCategoryTuple *category in categories) {
+		ARTreeNode *node = [ARTreeNode treeNodeWithRepresentedObject:nil];
+		node.category = category;
+		node.name = [NSString stringWithFormat:@"%@ (%@)", 
+					 [[category typeName] uppercaseString], 
+					 (category.name?[category.name uppercaseString]:@"ALL")];
+		for (ARApplication *application in category.applications) {
+			NSMutableArray *representedObject = [storageManager testRanksForApplication:application inCategory:category];
+			ARTreeNode *child = [ARTreeNode treeNodeWithRepresentedObject:representedObject];
+			child.category = category;
+			child.application = application;
+			child.name = application.name;
+			child.icon = application.iconImage;
+			[[node mutableChildNodes] addObject:child];
+		}
+		[array addObject:node];
+	}
+	self.applicationsTree = array;
+	
+	[sidebar expandItem:nil expandChildren:YES];
 }
 
 @end

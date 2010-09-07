@@ -124,7 +124,8 @@ NSString *extendedEncode(double value, double maxValue) {
 		
 		for (ARRankEntry *entry in entriesForCountry) {
 			NSString *timeValue = extendedEncode([entry.timestamp timeIntervalSinceDate:self.startDate], timeSpan);
-			NSString *rankValue = extendedEncode([entry.rank doubleValue], 300.0);
+			static double maxValue = 300.0;
+			NSString *rankValue = extendedEncode(maxValue-[entry.rank doubleValue], maxValue);
 			[x appendString:timeValue];
 			[y appendString:rankValue];
 		}

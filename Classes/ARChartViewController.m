@@ -143,11 +143,12 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 	if ([keyPath isEqualToString:@"allCountries"]) {
 		[self updateCountriesData];
+		[self updateTimeSpan];
 	} else if ([keyPath isEqualToString:@"selectedTimeFrame"]) {
 		[self updateTimeSpan];
 		[self reloadChart];
-	} else {
-		NSLog(@"Country selection has changed");
+	} else if ([keyPath isEqualToString:@"value"]) {
+		[self updateTimeSpan];
 		[self reloadChart];
 	}
 }
