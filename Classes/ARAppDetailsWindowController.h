@@ -42,8 +42,6 @@ typedef enum {
 
 
 @interface ARAppDetailsWindowController : NSWindowController {
-	ARApplication *application;
-	NSMutableArray *tempCategories;
 }
 
 @property (nonatomic, retain) ARApplication *application;

@@ -47,7 +47,9 @@
 
 @implementation ARChart
 
-@synthesize startDate, endDate, postParameters;
+@synthesize startDate;
+@synthesize endDate;
+@synthesize postParameters;
 
 + (NSDateFormatter *)dateFormatter {
 	static NSDateFormatter *dateFormatter = nil;

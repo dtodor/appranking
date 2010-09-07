@@ -36,7 +36,8 @@
 
 @interface ARStochasticRankGenerator : NSObject {
 
-	double **transitionMatrix;
+@private
+	double *transitionMatrix;
 	NSUInteger minRank;
 	NSUInteger maxRank;
 	NSUInteger currentValue;

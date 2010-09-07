@@ -39,17 +39,15 @@ typedef enum {
 	CorruptConfigurationFile
 } ConfigurationErrorCodes;
 
+
 @interface ARConfiguration : NSObject {
-
-	// NSString -> NSString
-	NSDictionary *appStoreIds;
-
-	// NSString -> NSString
-	NSDictionary *genres;
 }
 
-@property (readonly) NSDictionary *appStoreIds;
-@property (readonly) NSDictionary *genres;
+// NSString -> NSString
+@property (nonatomic, readonly, retain) NSDictionary *appStoreIds;
+
+// NSString -> NSString
+@property (nonatomic, readonly, retain) NSDictionary *genres;
 
 + (ARConfiguration *)sharedARConfiguration;
 

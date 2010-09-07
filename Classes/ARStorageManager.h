@@ -38,12 +38,6 @@
 
 
 @interface ARStorageManager : NSObject {
-
-	NSPersistentStoreCoordinator *persistentStoreCoordinator;
-    NSManagedObjectModel *managedObjectModel;
-    NSManagedObjectContext *managedObjectContext;
-	
-	NSDate *timestamp;
 }
 
 @property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;

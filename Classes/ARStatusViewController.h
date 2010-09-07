@@ -35,17 +35,11 @@
 
 
 @interface ARStatusViewController : NSViewController {
-	NSTextField *mainLabel;
-	NSTextField *secondaryLabel;
-	NSView *progressBar;
-	
-	double progressPercent;
 }
 
 @property (nonatomic, retain) IBOutlet NSTextField *mainLabel;
 @property (nonatomic, retain) IBOutlet NSTextField *secondaryLabel;
 @property (nonatomic, retain) IBOutlet NSView *progressBar;
-
-- (void)setProgress:(double)percent;
+@property (nonatomic) double progress;
 
 @end

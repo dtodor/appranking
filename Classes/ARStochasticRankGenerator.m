@@ -51,7 +51,7 @@ double pdf(NSUInteger distance) {
 		maxRank = max;
 		
 		NSUInteger range = maxRank-minRank+1;
-		transitionMatrix = malloc(sizeof(double *)*range);
+		transitionMatrix = malloc(sizeof(double)*range*range);
 		for (NSUInteger index = 0; index < range; index++) {
 			double sum = 0;
 			for (NSUInteger i = 0; i < range; i++) {
@@ -59,10 +59,9 @@ double pdf(NSUInteger distance) {
 				sum += pdf(distance);
 			}
 			double k = 1.0 / sum;
-			transitionMatrix[index] = malloc(sizeof(double)*range);
-			for (int i = 0; i < range; i++) {
+			for (NSUInteger i = 0; i < range; i++) {
 				NSUInteger distance = abs(i - index);
-				transitionMatrix[index][i] = k * pdf(distance);
+				transitionMatrix[index*range+i] = k * pdf(distance);
 			}
 		}
 		
@@ -72,10 +71,6 @@ double pdf(NSUInteger distance) {
 }
 
 - (void)dealloc {
-	NSUInteger range = maxRank-minRank+1;
-	for (NSUInteger i = 0; i < range; i++) {
-		free(transitionMatrix[i]);
-	}
 	free(transitionMatrix);
 	[super dealloc];
 }
@@ -84,13 +79,13 @@ double pdf(NSUInteger distance) {
 #define RANDOM ((double)(arc4random()%(MAX_RANDOM+1))/MAX_RANDOM)
 
 - (NSUInteger)nextRankValue {
-	double *transitionProbabilities = transitionMatrix[currentValue];
+	NSUInteger range = maxRank-minRank+1;
+	NSUInteger offset = currentValue*range;
 	double random = RANDOM;
 	NSUInteger newValue = 0;
 	double sum = 0;
-	NSUInteger range = maxRank-minRank+1;
 	for (; newValue < range; newValue++) {
-		sum += transitionProbabilities[newValue];
+		sum += transitionMatrix[offset+newValue];
 		if (random <= sum) {
 			break;
 		}

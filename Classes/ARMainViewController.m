@@ -52,6 +52,7 @@
 @property (nonatomic, retain) NSMutableArray *runningQueries;
 @property (nonatomic, retain) NSMutableArray *pendingQueries;
 @property (nonatomic, retain) ARAppDetailsWindowController *detailsViewController;
+@property (nonatomic) NSUInteger totalNumberOfDownloads;
 
 @end
 
@@ -70,6 +71,7 @@
 @synthesize outlineViewSortDescriptors;
 @synthesize chartViewController;
 @synthesize mainContentSplitView;
+@synthesize totalNumberOfDownloads;
 
 - (void)dealloc {
 	self.mainContentSplitView = nil;

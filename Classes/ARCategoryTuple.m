@@ -42,7 +42,10 @@ static NSString * const kFeedURLTemplate_All = @"http://ax.itunes.apple.com/WebO
 
 @implementation ARCategoryTuple
 
-@dynamic name, type, applications, rankEntries;
+@dynamic name;
+@dynamic type;
+@dynamic applications;
+@dynamic rankEntries;
 
 - (void)dealloc {
 	self.rankEntries = nil;

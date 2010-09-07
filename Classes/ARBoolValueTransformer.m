@@ -36,10 +36,12 @@
 
 @implementation ARBoolValueTransformer
 
+@synthesize evalBlock;
+
 - (id)initWithEvaluationBlock:(EvalBlock)evaluationBlock {
 	if (self = [super init]) {
 		assert(evaluationBlock);
-		evalBlock = [evaluationBlock copy];
+		self.evalBlock = evaluationBlock;
 	}
 	return self;
 }

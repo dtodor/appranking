@@ -38,24 +38,6 @@
 
 
 @interface ARMainViewController : NSViewController <NSOutlineViewDelegate> {
-
-	NSUInteger totalNumberOfDownloads;
-	NSMutableArray *runningQueries;
-	NSMutableArray *pendingQueries;
-	NSMutableArray *applicationsTree;
-	NSMutableArray *treeSelection;
-	NSMutableArray *tableSortDescriptors;
-	NSMutableArray *outlineViewSortDescriptors;
-	
-	NSOutlineView *sidebar;
-	NSToolbarItem *statusToolBarItem;
-	ARStatusViewController *statusViewController;
-	ARAppDetailsWindowController *detailsViewController;
-	
-	NSTreeController *treeController;
-	
-	ARChartViewController *chartViewController;
-	NSSplitView *mainContentSplitView;
 }
 
 @property (nonatomic, readonly, retain) NSArray *applicationsTree;

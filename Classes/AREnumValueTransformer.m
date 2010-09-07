@@ -36,16 +36,18 @@
 
 @implementation AREnumValueTransformer
 
+@synthesize valueNames;
+
 - (id)initWithValueNames:(NSArray *)names {
 	if (self = [super init]) {
 		assert([names count] > 0);
-		valueNames = [names copy];
+		self.valueNames = names;
 	}
 	return self;
 }
 
 - (void)dealloc {
-	[valueNames release];
+	self.valueNames = nil;
 	[super dealloc];
 }
 

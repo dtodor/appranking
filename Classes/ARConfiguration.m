@@ -42,11 +42,20 @@
 NSString * const kConfigurationErrorDomain = @"ConfigurationErrorDomain";
 
 
+@interface ARConfiguration()
+
+@property (nonatomic, retain) NSDictionary *appStoreIds;
+@property (nonatomic, retain) NSDictionary *genres;
+
+@end
+
+
 @implementation ARConfiguration
 
 SYNTHESIZE_SINGLETON_FOR_CLASS(ARConfiguration)
 
-@synthesize appStoreIds, genres;
+@synthesize appStoreIds;
+@synthesize genres;
 
 - (NSDictionary *)loadDictionary:(NSString *)fileName error:(NSError **)error {
 	NSURL *url = [[NSBundle mainBundle] URLForResource:fileName withExtension:@"json"];
@@ -90,12 +99,12 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARConfiguration)
 		if (appStoreIds) {
 			return YES;
 		}
-		appStoreIds = [[self loadDictionary:@"app-store-ids" error:error] retain];
+		self.appStoreIds = [self loadDictionary:@"app-store-ids" error:error];
 		if (!appStoreIds) {
 			NSLog(@"Unable to load iTunes store ids, error = %@", (error)?[*error localizedDescription]:@"-");
 			return NO;
 		}
-		genres = [[self loadDictionary:@"genres" error:error] retain];
+		self.genres = [self loadDictionary:@"genres" error:error];
 		if (!genres) {
 			NSLog(@"Unable to load iTunes categories, error = %@", (error)?[*error localizedDescription]:@"-");
 			return NO;

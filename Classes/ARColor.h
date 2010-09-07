@@ -35,11 +35,11 @@
 
 
 @interface ARColor : NSObject {
-
-	CGFloat red;
-	CGFloat green;
-	CGFloat blue;
 }
+
+@property (nonatomic, readonly) CGFloat red;
+@property (nonatomic, readonly) CGFloat green;
+@property (nonatomic, readonly) CGFloat blue;
 
 - (NSString *)hexValue;
 - (NSColor *)colorValue;

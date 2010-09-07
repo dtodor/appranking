@@ -12,7 +12,8 @@
 
 @implementation ARTempCategoryTuple
 
-@synthesize name, type;
+@synthesize name;
+@synthesize type;
 
 - (void)dealloc {
 	self.name = nil;

@@ -37,8 +37,9 @@
 typedef BOOL (^EvalBlock)(id value);
 
 @interface ARBoolValueTransformer : NSValueTransformer {
-	EvalBlock evalBlock;
 }
+
+@property (nonatomic, copy) EvalBlock evalBlock;
 
 - (id)initWithEvaluationBlock:(EvalBlock)evaluationBlock;
 

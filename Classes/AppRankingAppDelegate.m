@@ -105,9 +105,9 @@
 	
 	
 	{
-		// ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
-		// [storageManager resetTestData];
-		// [storageManager generateRandomRankingsDeletingExistent:YES];
+//		ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
+//		[storageManager resetTestData];
+//		[storageManager generateRandomRankingsDeletingExistent:YES];
 	}
 	
 	[mainViewController reloadApplications];

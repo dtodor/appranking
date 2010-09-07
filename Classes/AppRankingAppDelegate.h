@@ -36,8 +36,6 @@
 
 
 @interface AppRankingAppDelegate : NSObject <NSApplicationDelegate> {
-    NSWindow *window;
-	ARMainViewController *mainViewController;
 }
 
 @property (assign) IBOutlet NSWindow *window;

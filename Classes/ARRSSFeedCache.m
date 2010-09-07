@@ -37,14 +37,23 @@
 #import "ARStorageManager.h"
 
 
+@interface ARRSSFeedCache()
+
+@property (nonatomic, retain) NSFileManager *fileManager;
+
+@end
+
+
 @implementation ARRSSFeedCache
 
 SYNTHESIZE_SINGLETON_FOR_CLASS(ARRSSFeedCache)
 
+@synthesize fileManager;
+
 - (id)init {
 	self = [super init];
 	if (self != nil) {
-		fileManager = [[NSFileManager alloc] init];
+		self.fileManager = [[[NSFileManager alloc] init] autorelease];
 	}
 	return self;
 }

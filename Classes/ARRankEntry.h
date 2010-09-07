@@ -37,7 +37,6 @@
 
 
 @interface ARRankEntry : NSManagedObject {
-
 }
 
 @property (nonatomic, retain) ARApplication *application;

@@ -35,14 +35,7 @@
 #import "ARCategoryTuple.h"
 #import "ARApplication.h"
 
-
 @interface ARTreeNode : NSTreeNode {
-	NSString *name;
-	NSImage *icon;
-	NSUInteger badge;
-	BOOL displaysBadge;
-	ARCategoryTuple *category;
-	ARApplication *application;
 }
 
 @property (nonatomic, copy) NSString *name;

@@ -38,18 +38,6 @@
 
 
 @interface ARChartViewController : NSViewController {
-	
-	NSArray *allCountries;
-	NSArray *chartCountries;
-	ARApplication *application;
-	ARCategoryTuple *category;
-	ARChartImageView *chartImageView;
-	NSArray *timeFrameChoices;
-	NSNumber *selectedTimeFrame;
-	NSDate *fromDate;
-	NSDate *untilDate;
-	
-	BOOL enabled;
 }
 
 @property (nonatomic, readonly, retain) NSArray *chartCountries;

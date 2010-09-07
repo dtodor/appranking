@@ -42,10 +42,38 @@
 NSString * const kErrorDomain = @"RankQueryErrorDomain";
 
 
+@interface ARRankQuery()
+
+@property (nonatomic, copy) NSString *country;
+@property (nonatomic, retain) ARCategoryTuple *category;
+@property (nonatomic, retain) NSMutableDictionary *ranks;
+@property (nonatomic, retain) NSMutableDictionary *icons;
+@property (nonatomic, getter=isCached) BOOL cached;
+@property (nonatomic, retain) NSDate *expiryDate;
+
+@property (nonatomic, retain) NSURLConnection *connection;
+@property (nonatomic, retain) NSData *receivedData;
+@property (nonatomic) BOOL started;
+@property (nonatomic) BOOL canceled;
+
+@end
+
+
+
 @implementation ARRankQuery
 
-@synthesize country, category, delegate, ranks, icons;
-@synthesize cached, expiryDate;
+@synthesize country;
+@synthesize category;
+@synthesize delegate;
+@synthesize ranks;
+@synthesize icons;
+@synthesize cached;
+@synthesize expiryDate;
+
+@synthesize connection;
+@synthesize receivedData;
+@synthesize started;
+@synthesize canceled;
 
 #pragma mark -
 #pragma mark Query logic
@@ -186,13 +214,13 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 			[self release];
 			self = nil;
 		} else {
-			ranks = [[NSMutableDictionary alloc] initWithCapacity:[aCategory.applications count]];
-			icons = [[NSMutableDictionary alloc] initWithCapacity:[aCategory.applications count]];
+			self.ranks = [NSMutableDictionary dictionaryWithCapacity:[aCategory.applications count]];
+			self.icons = [NSMutableDictionary dictionaryWithCapacity:[aCategory.applications count]];
 			for (ARApplication *app in aCategory.applications) {
 				[ranks setObject:[NSNull null] forKey:app.name];
 			}
-			country = [aCountry copy];
-			category = [aCategory retain];
+			self.country = aCountry;
+			self.category = aCategory;
 
 			NSDate *expDate = nil;
 			NSData *cachedData = [[ARRSSFeedCache sharedARRSSFeedCache] retrieveCachedFeedForCategory:category country:country expiryDate:&expDate];
@@ -203,18 +231,18 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 				[request setValue:@"text/javascript" forHTTPHeaderField:@"Accept"];
 				[request setValue:@"gzip, deflate" forHTTPHeaderField:@"Accept-Encoding"];
 				
-				connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
-				if (connection) {
-					receivedData = [[NSMutableData alloc] init];
+				self.connection = [[[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO] autorelease];
+				if (self.connection) {
+					self.receivedData = [[NSMutableData alloc] init];
 				} else {
 					[self release];
 					self = nil;
 				}
 			} else {
 				assert(expDate);
-				expiryDate = [expDate retain];
-				cached = YES;
-				receivedData = [cachedData retain];
+				self.expiryDate = expDate;
+				self.cached = YES;
+				self.receivedData = cachedData;
 			}
 		}
 	}
@@ -222,19 +250,19 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 }
 
 - (void)dealloc {
-	[expiryDate release];
-	[icons release];
-	[ranks release];
-	[receivedData release];
-	[connection release];
-	[country release];
-	[category release];
+	self.expiryDate = nil;
+	self.icons = nil;
+	self.ranks = nil;
+	self.receivedData = nil;
+	self.connection = nil;
+	self.country = nil;
+	self.category = nil;
 	[super dealloc];
 }
 
 - (void)start {
 	assert(!started);
-	started = YES;
+	self.started = YES;
 	if (connection) {
 		[connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 		[connection start];
@@ -247,15 +275,14 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 	if (connection) {
 		[connection cancel];
 	}
-	canceled = YES;
+	self.canceled = YES;
 }
 
 #pragma mark -
 #pragma mark NSURLConnection delegate methods
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-	[receivedData release];
-	receivedData = nil;
+	self.receivedData = nil;
 	if (delegate && !canceled) {
 		[delegate query:self didFailWithError:error];
 	}

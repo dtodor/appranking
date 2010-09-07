@@ -35,9 +35,6 @@
 
 
 @interface ARChart : NSObject {
-	NSDate *startDate;
-	NSDate *endDate;
-	NSMutableDictionary *postParameters;
 }
 
 @property (nonatomic, readonly, retain) NSDate *startDate;

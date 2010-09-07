@@ -45,6 +45,10 @@
 #define RANDOM ((double)(arc4random()%(MAX_RANDOM+1))/MAX_RANDOM)
 #define GOLDEN_RATIO_CONJUGATE 0.618033988749895
 
+@synthesize red;
+@synthesize green;
+@synthesize blue;
+
 - (id)init {
 	self = [super init];
 	if (self != nil) {

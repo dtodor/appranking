@@ -36,7 +36,6 @@
 
 
 @interface ARApplication : NSManagedObject {
-	NSImage *iconImage;
 }
 
 @property (nonatomic, retain) NSNumber *appStoreId;

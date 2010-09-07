@@ -36,7 +36,11 @@
 
 @implementation ARApplication
 
-@dynamic appStoreId, name, categories, iconData, rankEntries;
+@dynamic appStoreId;
+@dynamic name;
+@dynamic categories;
+@dynamic iconData;
+@dynamic rankEntries;
 @synthesize iconImage;
 
 - (void)awakeFromFetch {

@@ -38,6 +38,9 @@
 
 @interface ARStorageManager()
 
+@property (nonatomic, retain) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, retain) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain) NSDate *timestamp;
 
 @end
@@ -47,6 +50,9 @@
 
 SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
 
+@synthesize persistentStoreCoordinator;
+@synthesize managedObjectModel;
+@synthesize managedObjectContext;
 @synthesize timestamp;
 
 - (void)updateTimestamp {
@@ -61,35 +67,18 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
 	return self;
 }
 
-/**
- Returns the support directory for the application, used to store the Core Data
- store file.  This code uses a directory named "TestCoreData" for
- the content, either in the NSApplicationSupportDirectory location or (if the
- former cannot be found), the system's temporary directory.
- */
 - (NSString *)applicationSupportDirectory {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
     NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : NSTemporaryDirectory();
     return [basePath stringByAppendingPathComponent:@"AppRanking"];
 }
 
-/**
- Creates, retains, and returns the managed object model for the application 
- by merging all of the models found in the application bundle.
- */
 - (NSManagedObjectModel *)managedObjectModel {
     if (managedObjectModel) return managedObjectModel;
-    managedObjectModel = [[NSManagedObjectModel mergedModelFromBundles:nil] retain];    
+    self.managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
     return managedObjectModel;
 }
 
-
-/**
- Returns the persistent store coordinator for the application.  This 
- implementation will create and return a coordinator, having added the 
- store for the application to it.  (The directory for the store is created, 
- if necessary.)
- */
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
     if (persistentStoreCoordinator) return persistentStoreCoordinator;
     NSManagedObjectModel *mom = [self managedObjectModel];
@@ -112,7 +101,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
     }
     
     NSURL *url = [NSURL fileURLWithPath:[applicationSupportDirectory stringByAppendingPathComponent: @"storedata"]];
-    persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: mom];
+    self.persistentStoreCoordinator = [[[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: mom] autorelease];
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
 							 [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
 							 [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
@@ -122,17 +111,13 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
 														options:options 
 														  error:&error]){
         [[NSApplication sharedApplication] presentError:error];
-        [persistentStoreCoordinator release], persistentStoreCoordinator = nil;
+		self.persistentStoreCoordinator = nil;
         return nil;
     }    
 	
     return persistentStoreCoordinator;
 }
 
-/**
- Returns the managed object context for the application (which is already
- bound to the persistent store coordinator for the application.) 
- */
 - (NSManagedObjectContext *)managedObjectContext {
     if (managedObjectContext) return managedObjectContext;
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
@@ -144,8 +129,8 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
         [[NSApplication sharedApplication] presentError:error];
         return nil;
     }
-    managedObjectContext = [[NSManagedObjectContext alloc] init];
-    [managedObjectContext setPersistentStoreCoordinator: coordinator];
+    self.managedObjectContext = [[[NSManagedObjectContext alloc] init] autorelease];
+    [managedObjectContext setPersistentStoreCoordinator:coordinator];
 	
     return managedObjectContext;
 }

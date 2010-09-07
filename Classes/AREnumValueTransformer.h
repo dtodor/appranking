@@ -35,8 +35,9 @@
 
 
 @interface AREnumValueTransformer : NSValueTransformer {
-	NSArray *valueNames;
 }
+
+@property (nonatomic, copy) NSArray *valueNames;
 
 - (id)initWithValueNames:(NSArray *)names;
 

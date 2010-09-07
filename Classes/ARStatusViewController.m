@@ -40,6 +40,7 @@
 @synthesize mainLabel;
 @synthesize progressBar;
 @synthesize secondaryLabel;
+@synthesize progress;
 
 - (void)dealloc {
 	self.mainLabel = nil;
@@ -80,17 +81,17 @@
 - (void)layoutSublayersOfLayer:(CALayer *)layer {
 	CALayer *indicator = [[layer sublayers] objectAtIndex:0];
 	[CATransaction begin];
-	if (progressPercent == 0.0) {
+	if (progress == 0.0) {
 		[CATransaction setDisableActions:YES];
 	}
-	indicator.bounds = CGRectMake(0, 0, progressPercent*layer.bounds.size.width, layer.bounds.size.height);
+	indicator.bounds = CGRectMake(0, 0, progress*layer.bounds.size.width, layer.bounds.size.height);
 	[CATransaction commit];
-	layer.opacity = (progressPercent == 0.0)?0.0:1.0;
+	layer.opacity = (progress == 0.0)?0.0:1.0;
 }
 
 - (void)setProgress:(double)percent {
 	assert(percent >= 0 && percent <= 100.0);
-	progressPercent = percent;
+	progress = percent;
 	[[progressBar layer] setNeedsLayout];
 }
 

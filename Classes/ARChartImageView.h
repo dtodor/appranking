@@ -35,9 +35,6 @@
 
 
 @interface ARChartImageView : NSView<NSWindowDelegate> {
-	
-	NSImage *image;
-	NSWindow *zoomWindow; 
 }
 
 @property (nonatomic, retain) NSImage *image;

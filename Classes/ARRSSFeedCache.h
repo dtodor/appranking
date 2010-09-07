@@ -36,8 +36,6 @@
 
 
 @interface ARRSSFeedCache : NSObject {
-
-	NSFileManager *fileManager;
 }
 
 + (ARRSSFeedCache *)sharedARRSSFeedCache;

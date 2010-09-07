@@ -11,8 +11,6 @@
 
 
 @interface ARTempCategoryTuple : NSObject {
-	NSString *name;
-	NSNumber *type;
 }
 
 @property (nonatomic, retain) NSString *name;
