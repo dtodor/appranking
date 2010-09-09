@@ -104,6 +104,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARRSSFeedCache)
 	}
 	NSDate *lastModificationDate = [attributes objectForKey:NSFileModificationDate];
 	if (!lastModificationDate || -[lastModificationDate timeIntervalSinceNow] > CACHE_EXPIRY_INTERVAL) {
+		error = nil;
 		if (![fileManager removeItemAtPath:cacheFile error:&error]) {
 			NSLog(@"Unable to remove stale cache file '%@', error = %@", cacheFile, [error localizedDescription]);
 		}
@@ -113,13 +114,28 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARRSSFeedCache)
 	NSData *cachedData = [NSData dataWithContentsOfFile:cacheFile options:0 error:&error];
 	if (!cachedData) {
 		NSLog(@"Unable to read cache file '%@', error = %@", cacheFile, [error localizedDescription]);
+		error = nil;
+		if (![fileManager removeItemAtPath:cacheFile error:&error]) {
+			NSLog(@"Unable to remove corrupt cache file '%@', error = %@", cacheFile, [error localizedDescription]);
+		}
+		return nil;
+	}
+
+	NSData *data = [NSData gtm_dataByInflatingData:cachedData];
+	if (!data) {
+		error = nil;
+		NSLog(@"Unable to inflate cache file '%@'", cacheFile);
+		if (![fileManager removeItemAtPath:cacheFile error:&error]) {
+			NSLog(@"Unable to remove corrupt cache file '%@', error = %@", cacheFile, [error localizedDescription]);
+		}
+		return nil;
 	}
 	
 	if (expiryDate) {
 		*expiryDate = [NSDate dateWithTimeInterval:CACHE_EXPIRY_INTERVAL sinceDate:lastModificationDate];
 	}
 	
-	return [NSData gtm_dataByInflatingData:cachedData];
+	return data;
 }
 
 - (void)cacheFeed:(NSData *)feedData forCategory:(ARCategoryTuple *)category country:(NSString *)country {
@@ -133,7 +149,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARRSSFeedCache)
 		NSLog(@"Unable to remove cache file '%@', error = %@", cacheFile, [error localizedDescription]);
 		return;
 	}
-	NSData *gzippedFeedData = [NSData gtm_dataByDeflatingData:feedData compressionLevel:9];
+	NSData *gzippedFeedData = [NSData gtm_dataByGzippingData:feedData compressionLevel:9];
 	if (!gzippedFeedData) {
 		NSLog(@"Unable to deflate feed data for cache file '%@'", cacheFile);
 	} else {
