@@ -1,22 +1,22 @@
 /*
  * Copyright (c) 2010 Todor Dimitrov
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the project's author nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -43,56 +43,52 @@
 @synthesize progress;
 
 - (void)dealloc {
-	self.mainLabel = nil;
-	self.secondaryLabel = nil;
-	self.progressBar = nil;
-	[super dealloc];
+    self.mainLabel = nil;
+    self.secondaryLabel = nil;
+    self.progressBar = nil;
+    [super dealloc];
 }
 
 - (void)awakeFromNib {
-	CALayer *layer = [progressBar layer];
-	if (!layer || [[layer sublayers] count] > 0) {
-		return;
-	}
-	layer.delegate = self;
-	layer.borderWidth = 1.0;
-
-	CGColorRef borderColor = CGColorCreateGenericGray(0.3, 0.5);
-	layer.borderColor = borderColor;
-	CGColorRelease(borderColor);
-	
-	layer.cornerRadius = 5;
-	layer.opacity = 0.0;
-	[layer setMasksToBounds:YES];
-	
-	CALayer *indicator = [CALayer layer];
-	
-	CGColorRef bgColor = CGColorCreateGenericGray(0.1, 0.5);
-	indicator.backgroundColor = bgColor;
-	CGColorRelease(bgColor);
-	
-	indicator.bounds = CGRectMake(0, 0, 0, layer.bounds.size.height);
-	indicator.position = CGPointMake(0.0, 0.0);
-	indicator.anchorPoint = CGPointMake(0.0, 0.0);
-	
-	[layer addSublayer:indicator];
+    progressBar.maxValue = 1.0;
+	progressBar.progressColor = [NSColor colorWithDeviceWhite:0.2 alpha:0.9];
+	progressBar.progressHolderColor = [NSColor colorWithDeviceWhite:0.5 alpha:0.5];
+    progressBar.usesThreadedAnimation = YES;
 }
 
-- (void)layoutSublayersOfLayer:(CALayer *)layer {
-	CALayer *indicator = [[layer sublayers] objectAtIndex:0];
-	[CATransaction begin];
-	if (progress == 0.0) {
-		[CATransaction setDisableActions:YES];
+- (void)updateAppIcon {
+    NSImage *appIcon = [NSImage imageNamed:@"NSApplicationIcon"];
+	if (progress > 0) {
+		NSImage *badgeOverlay = [[[NSImage alloc] initWithSize:NSMakeSize(128, 128)] autorelease];
+		[badgeOverlay lockFocus];
+		{
+			[progressBar drawRect:NSMakeRect(0, 0, 128, 24)];
+			[appIcon compositeToPoint:NSZeroPoint operation:NSCompositeDestinationOver];
+		}
+		[badgeOverlay unlockFocus];
+		[NSApp setApplicationIconImage:badgeOverlay];
+	} else {
+		[NSApp setApplicationIconImage:appIcon];
 	}
-	indicator.bounds = CGRectMake(0, 0, progress*layer.bounds.size.width, layer.bounds.size.height);
-	[CATransaction commit];
-	layer.opacity = (progress == 0.0)?0.0:1.0;
 }
 
 - (void)setProgress:(double)percent {
-	assert(percent >= 0 && percent <= 100.0);
-	progress = percent;
-	[[progressBar layer] setNeedsLayout];
+    assert(percent >= 0 && percent <= 1.0);
+    progress = percent;
+    [progressBar setHidden:(progress == 0)];
+	if (progress > 0) {
+		[progressBar stopAnimation:nil];
+		[progressBar setIsIndeterminate:NO];
+		progressBar.doubleValue = progress;
+		[progressBar setNeedsDisplay:YES];
+	}
+	[self updateAppIcon];
+}
+
+- (void)displayIndeterminateProgress {
+    [progressBar setHidden:NO];
+    [progressBar setIsIndeterminate:YES];
+    [progressBar startAnimation:nil];
 }
 
 @end

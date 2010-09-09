@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1A198EE21234C7B60074DEB6 /* ARRSSFeedCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A198EE11234C7B60074DEB6 /* ARRSSFeedCache.m */; };
-		1A19901B1234EB040074DEB6 /* GTMNSData+zlib.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A19901A1234EB040074DEB6 /* GTMNSData+zlib.m */; };
 		1A19902A1234EBA00074DEB6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A1990291234EBA00074DEB6 /* libz.dylib */; };
 		1A19B62A122D191B00924F72 /* ARStorageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A19B629122D191B00924F72 /* ARStorageManager.m */; };
 		1A19B6E5122D313300924F72 /* ARAppDetailsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A19B6E4122D313300924F72 /* ARAppDetailsWindowController.m */; };
@@ -21,11 +20,6 @@
 		1A2D2D1A1223B7580074AE7F /* ARCategoryTuple.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D051223B7580074AE7F /* ARCategoryTuple.m */; };
 		1A2D2D1B1223B7580074AE7F /* ARConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D071223B7580074AE7F /* ARConfiguration.m */; };
 		1A2D2D1C1223B7580074AE7F /* ARRankQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D091223B7580074AE7F /* ARRankQuery.m */; };
-		1A2D2D1D1223B7580074AE7F /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D0D1223B7580074AE7F /* NSObject+SBJSON.m */; };
-		1A2D2D1E1223B7580074AE7F /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D0F1223B7580074AE7F /* NSString+SBJSON.m */; };
-		1A2D2D1F1223B7580074AE7F /* SBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D111223B7580074AE7F /* SBJsonBase.m */; };
-		1A2D2D201223B7580074AE7F /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D131223B7580074AE7F /* SBJsonParser.m */; };
-		1A2D2D211223B7580074AE7F /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D151223B7580074AE7F /* SBJsonWriter.m */; };
 		1A2D2D221223B7580074AE7F /* SBJSON+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D171223B7580074AE7F /* SBJSON+Additions.m */; };
 		1A2D2D271223B77A0074AE7F /* app-store-ids.json in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D2D231223B77A0074AE7F /* app-store-ids.json */; };
 		1A2D2D291223B77A0074AE7F /* genres.json in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D2D251223B77A0074AE7F /* genres.json */; };
@@ -35,7 +29,6 @@
 		1A45D9ED122640FE00A1DF36 /* BWToolkitFramework.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A45D9B1122640D500A1DF36 /* BWToolkitFramework.framework */; };
 		1A45D9EE122640FE00A1DF36 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A45D9B2122640D500A1DF36 /* Sparkle.framework */; };
 		1A45D9F51226430400A1DF36 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 1A45D9F41226430400A1DF36 /* dsa_pub.pem */; };
-		1A5A3C6B122568B800F08485 /* SidebarBadgeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A5A3C68122568B800F08485 /* SidebarBadgeCell.m */; };
 		1A5A3C6C122568B800F08485 /* ARTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A5A3C6A122568B800F08485 /* ARTreeNode.m */; };
 		1A5A3C891225775F00F08485 /* MainView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A5A3C881225775F00F08485 /* MainView.xib */; };
 		1A5A3CFC1225965A00F08485 /* ARStatusView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A5A3CFB1225965A00F08485 /* ARStatusView.m */; };
@@ -53,6 +46,16 @@
 		1A6E08CF1233CE4600168560 /* ARStochasticRankGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6E08CE1233CE4600168560 /* ARStochasticRankGenerator.m */; };
 		1A70CC2D1226D43F0031E8CF /* stop.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A70CC2C1226D43F0031E8CF /* stop.icns */; };
 		1A79EDAB1231525F007C5AC8 /* ARChartImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A79EDAA1231525F007C5AC8 /* ARChartImageView.m */; };
+		1A8A0DDB1238E4E900BC399C /* NSBezierPath+MCAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A0DD61238E4E900BC399C /* NSBezierPath+MCAdditions.m */; };
+		1A8A0DDC1238E4E900BC399C /* NSBezierPath+PXRoundedRectangleAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A0DD81238E4E900BC399C /* NSBezierPath+PXRoundedRectangleAdditions.m */; };
+		1A8A0DDD1238E4E900BC399C /* TSPProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A0DDA1238E4E900BC399C /* TSPProgressIndicator.m */; };
+		1A8A0DE11238E4FB00BC399C /* GTMNSData+zlib.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A0DE01238E4FB00BC399C /* GTMNSData+zlib.m */; };
+		1A8A0DE41238E50900BC399C /* SidebarBadgeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A0DE31238E50900BC399C /* SidebarBadgeCell.m */; };
+		1A8A0DF11238E51A00BC399C /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A0DE81238E51A00BC399C /* NSObject+SBJSON.m */; };
+		1A8A0DF21238E51A00BC399C /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A0DEA1238E51A00BC399C /* NSString+SBJSON.m */; };
+		1A8A0DF31238E51A00BC399C /* SBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A0DEC1238E51A00BC399C /* SBJsonBase.m */; };
+		1A8A0DF41238E51A00BC399C /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A0DEE1238E51A00BC399C /* SBJsonParser.m */; };
+		1A8A0DF51238E51A00BC399C /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A0DF01238E51A00BC399C /* SBJsonWriter.m */; };
 		1AB276D9122E548D006CFC8F /* AppDetailsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1ABE9A6B1227198D00065E5D /* AppDetailsWindow.xib */; };
 		1AB27706122E8185006CFC8F /* ARRankEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB27705122E8185006CFC8F /* ARRankEntry.m */; };
 		1ACEBF36122FDD1C007D5C1A /* ARChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACEBF35122FDD1C007D5C1A /* ARChart.m */; };
@@ -86,9 +89,6 @@
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		1A198EE01234C7B60074DEB6 /* ARRSSFeedCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARRSSFeedCache.h; sourceTree = "<group>"; };
 		1A198EE11234C7B60074DEB6 /* ARRSSFeedCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARRSSFeedCache.m; sourceTree = "<group>"; };
-		1A1990191234EB040074DEB6 /* GTMNSData+zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTMNSData+zlib.h"; sourceTree = "<group>"; };
-		1A19901A1234EB040074DEB6 /* GTMNSData+zlib.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSData+zlib.m"; sourceTree = "<group>"; };
-		1A19901E1234EB5E0074DEB6 /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
 		1A1990291234EBA00074DEB6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1A19B624122D115600924F72 /* AppRanking-1.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = "AppRanking-1.xcdatamodel"; sourceTree = "<group>"; };
 		1A19B628122D191B00924F72 /* ARStorageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARStorageManager.h; sourceTree = "<group>"; };
@@ -112,17 +112,6 @@
 		1A2D2D071223B7580074AE7F /* ARConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARConfiguration.m; sourceTree = "<group>"; };
 		1A2D2D081223B7580074AE7F /* ARRankQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARRankQuery.h; sourceTree = "<group>"; };
 		1A2D2D091223B7580074AE7F /* ARRankQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARRankQuery.m; sourceTree = "<group>"; };
-		1A2D2D0B1223B7580074AE7F /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
-		1A2D2D0C1223B7580074AE7F /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
-		1A2D2D0D1223B7580074AE7F /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
-		1A2D2D0E1223B7580074AE7F /* NSString+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SBJSON.h"; sourceTree = "<group>"; };
-		1A2D2D0F1223B7580074AE7F /* NSString+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBJSON.m"; sourceTree = "<group>"; };
-		1A2D2D101223B7580074AE7F /* SBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonBase.h; sourceTree = "<group>"; };
-		1A2D2D111223B7580074AE7F /* SBJsonBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonBase.m; sourceTree = "<group>"; };
-		1A2D2D121223B7580074AE7F /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
-		1A2D2D131223B7580074AE7F /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonParser.m; sourceTree = "<group>"; };
-		1A2D2D141223B7580074AE7F /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
-		1A2D2D151223B7580074AE7F /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
 		1A2D2D161223B7580074AE7F /* SBJSON+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SBJSON+Additions.h"; sourceTree = "<group>"; };
 		1A2D2D171223B7580074AE7F /* SBJSON+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SBJSON+Additions.m"; sourceTree = "<group>"; };
 		1A2D2D231223B77A0074AE7F /* app-store-ids.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "app-store-ids.json"; path = "Resources/app-store-ids.json"; sourceTree = "<group>"; };
@@ -133,8 +122,6 @@
 		1A45D9B1122640D500A1DF36 /* BWToolkitFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BWToolkitFramework.framework; path = Frameworks/BWToolkitFramework.framework; sourceTree = "<group>"; };
 		1A45D9B2122640D500A1DF36 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		1A45D9F41226430400A1DF36 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dsa_pub.pem; path = Resources/Keys/dsa_pub.pem; sourceTree = "<group>"; };
-		1A5A3C67122568B800F08485 /* SidebarBadgeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SidebarBadgeCell.h; sourceTree = "<group>"; };
-		1A5A3C68122568B800F08485 /* SidebarBadgeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SidebarBadgeCell.m; sourceTree = "<group>"; };
 		1A5A3C69122568B800F08485 /* ARTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARTreeNode.h; sourceTree = "<group>"; };
 		1A5A3C6A122568B800F08485 /* ARTreeNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARTreeNode.m; sourceTree = "<group>"; };
 		1A5A3CFA1225965A00F08485 /* ARStatusView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARStatusView.h; sourceTree = "<group>"; };
@@ -158,6 +145,28 @@
 		1A70CC2C1226D43F0031E8CF /* stop.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = stop.icns; path = Resources/Images/stop.icns; sourceTree = "<group>"; };
 		1A79EDA91231525F007C5AC8 /* ARChartImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARChartImageView.h; sourceTree = "<group>"; };
 		1A79EDAA1231525F007C5AC8 /* ARChartImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARChartImageView.m; sourceTree = "<group>"; };
+		1A8A0DD51238E4E900BC399C /* NSBezierPath+MCAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSBezierPath+MCAdditions.h"; path = "Third Party/TSPProgressIndicator/NSBezierPath+MCAdditions.h"; sourceTree = "<group>"; };
+		1A8A0DD61238E4E900BC399C /* NSBezierPath+MCAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSBezierPath+MCAdditions.m"; path = "Third Party/TSPProgressIndicator/NSBezierPath+MCAdditions.m"; sourceTree = "<group>"; };
+		1A8A0DD71238E4E900BC399C /* NSBezierPath+PXRoundedRectangleAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSBezierPath+PXRoundedRectangleAdditions.h"; path = "Third Party/TSPProgressIndicator/NSBezierPath+PXRoundedRectangleAdditions.h"; sourceTree = "<group>"; };
+		1A8A0DD81238E4E900BC399C /* NSBezierPath+PXRoundedRectangleAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSBezierPath+PXRoundedRectangleAdditions.m"; path = "Third Party/TSPProgressIndicator/NSBezierPath+PXRoundedRectangleAdditions.m"; sourceTree = "<group>"; };
+		1A8A0DD91238E4E900BC399C /* TSPProgressIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TSPProgressIndicator.h; path = "Third Party/TSPProgressIndicator/TSPProgressIndicator.h"; sourceTree = "<group>"; };
+		1A8A0DDA1238E4E900BC399C /* TSPProgressIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TSPProgressIndicator.m; path = "Third Party/TSPProgressIndicator/TSPProgressIndicator.m"; sourceTree = "<group>"; };
+		1A8A0DDE1238E4FB00BC399C /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMDefines.h; path = "Third Party/Google Toolbox for Mac/GTMDefines.h"; sourceTree = "<group>"; };
+		1A8A0DDF1238E4FB00BC399C /* GTMNSData+zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "GTMNSData+zlib.h"; path = "Third Party/Google Toolbox for Mac/GTMNSData+zlib.h"; sourceTree = "<group>"; };
+		1A8A0DE01238E4FB00BC399C /* GTMNSData+zlib.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "GTMNSData+zlib.m"; path = "Third Party/Google Toolbox for Mac/GTMNSData+zlib.m"; sourceTree = "<group>"; };
+		1A8A0DE21238E50900BC399C /* SidebarBadgeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SidebarBadgeCell.h; path = "Third Party/SidebarBadgeCell.h"; sourceTree = "<group>"; };
+		1A8A0DE31238E50900BC399C /* SidebarBadgeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SidebarBadgeCell.m; path = "Third Party/SidebarBadgeCell.m"; sourceTree = "<group>"; };
+		1A8A0DE61238E51A00BC399C /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
+		1A8A0DE71238E51A00BC399C /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
+		1A8A0DE81238E51A00BC399C /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
+		1A8A0DE91238E51A00BC399C /* NSString+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SBJSON.h"; sourceTree = "<group>"; };
+		1A8A0DEA1238E51A00BC399C /* NSString+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBJSON.m"; sourceTree = "<group>"; };
+		1A8A0DEB1238E51A00BC399C /* SBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonBase.h; sourceTree = "<group>"; };
+		1A8A0DEC1238E51A00BC399C /* SBJsonBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonBase.m; sourceTree = "<group>"; };
+		1A8A0DED1238E51A00BC399C /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
+		1A8A0DEE1238E51A00BC399C /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonParser.m; sourceTree = "<group>"; };
+		1A8A0DEF1238E51A00BC399C /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
+		1A8A0DF01238E51A00BC399C /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
 		1AB27704122E8185006CFC8F /* ARRankEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARRankEntry.h; sourceTree = "<group>"; };
 		1AB27705122E8185006CFC8F /* ARRankEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARRankEntry.m; sourceTree = "<group>"; };
 		1ABE9A6B1227198D00065E5D /* AppDetailsWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = AppDetailsWindow.xib; path = ../AppDetailsWindow.xib; sourceTree = "<group>"; };
@@ -223,14 +232,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1A1990151234EADB0074DEB6 /* Google Toolbox For Mac */ = {
+		1A1990151234EADB0074DEB6 /* Google Toolbox for Mac */ = {
 			isa = PBXGroup;
 			children = (
-				1A19901E1234EB5E0074DEB6 /* GTMDefines.h */,
-				1A1990191234EB040074DEB6 /* GTMNSData+zlib.h */,
-				1A19901A1234EB040074DEB6 /* GTMNSData+zlib.m */,
+				1A8A0DDE1238E4FB00BC399C /* GTMDefines.h */,
+				1A8A0DDF1238E4FB00BC399C /* GTMNSData+zlib.h */,
+				1A8A0DE01238E4FB00BC399C /* GTMNSData+zlib.m */,
 			);
-			name = "Google Toolbox For Mac";
+			name = "Google Toolbox for Mac";
 			sourceTree = "<group>";
 		};
 		1A19B623122D110300924F72 /* Core Data Model */ = {
@@ -329,31 +338,14 @@
 			path = Classes;
 			sourceTree = "<group>";
 		};
-		1A2D2D0A1223B7580074AE7F /* JSON */ = {
-			isa = PBXGroup;
-			children = (
-				1A2D2D0B1223B7580074AE7F /* JSON.h */,
-				1A2D2D0C1223B7580074AE7F /* NSObject+SBJSON.h */,
-				1A2D2D0D1223B7580074AE7F /* NSObject+SBJSON.m */,
-				1A2D2D0E1223B7580074AE7F /* NSString+SBJSON.h */,
-				1A2D2D0F1223B7580074AE7F /* NSString+SBJSON.m */,
-				1A2D2D101223B7580074AE7F /* SBJsonBase.h */,
-				1A2D2D111223B7580074AE7F /* SBJsonBase.m */,
-				1A2D2D121223B7580074AE7F /* SBJsonParser.h */,
-				1A2D2D131223B7580074AE7F /* SBJsonParser.m */,
-				1A2D2D141223B7580074AE7F /* SBJsonWriter.h */,
-				1A2D2D151223B7580074AE7F /* SBJsonWriter.m */,
-			);
-			path = JSON;
-			sourceTree = "<group>";
-		};
 		1A5A3C6D122568C800F08485 /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
-				1A1990151234EADB0074DEB6 /* Google Toolbox For Mac */,
-				1A5A3C67122568B800F08485 /* SidebarBadgeCell.h */,
-				1A5A3C68122568B800F08485 /* SidebarBadgeCell.m */,
-				1A2D2D0A1223B7580074AE7F /* JSON */,
+				1A8A0DE21238E50900BC399C /* SidebarBadgeCell.h */,
+				1A8A0DE31238E50900BC399C /* SidebarBadgeCell.m */,
+				1A8A0DE51238E51A00BC399C /* JSON */,
+				1AB1181B1238C7150069C23E /* TSPProgressIndicator */,
+				1A1990151234EADB0074DEB6 /* Google Toolbox for Mac */,
 			);
 			name = "Third Party";
 			sourceTree = "<group>";
@@ -382,6 +374,38 @@
 				1A6633721230F9A000D623D3 /* ARStorageManager+Testing.m */,
 			);
 			name = Testing;
+			sourceTree = "<group>";
+		};
+		1A8A0DE51238E51A00BC399C /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				1A8A0DE61238E51A00BC399C /* JSON.h */,
+				1A8A0DE71238E51A00BC399C /* NSObject+SBJSON.h */,
+				1A8A0DE81238E51A00BC399C /* NSObject+SBJSON.m */,
+				1A8A0DE91238E51A00BC399C /* NSString+SBJSON.h */,
+				1A8A0DEA1238E51A00BC399C /* NSString+SBJSON.m */,
+				1A8A0DEB1238E51A00BC399C /* SBJsonBase.h */,
+				1A8A0DEC1238E51A00BC399C /* SBJsonBase.m */,
+				1A8A0DED1238E51A00BC399C /* SBJsonParser.h */,
+				1A8A0DEE1238E51A00BC399C /* SBJsonParser.m */,
+				1A8A0DEF1238E51A00BC399C /* SBJsonWriter.h */,
+				1A8A0DF01238E51A00BC399C /* SBJsonWriter.m */,
+			);
+			name = JSON;
+			path = "Third Party/JSON";
+			sourceTree = "<group>";
+		};
+		1AB1181B1238C7150069C23E /* TSPProgressIndicator */ = {
+			isa = PBXGroup;
+			children = (
+				1A8A0DD51238E4E900BC399C /* NSBezierPath+MCAdditions.h */,
+				1A8A0DD61238E4E900BC399C /* NSBezierPath+MCAdditions.m */,
+				1A8A0DD71238E4E900BC399C /* NSBezierPath+PXRoundedRectangleAdditions.h */,
+				1A8A0DD81238E4E900BC399C /* NSBezierPath+PXRoundedRectangleAdditions.m */,
+				1A8A0DD91238E4E900BC399C /* TSPProgressIndicator.h */,
+				1A8A0DDA1238E4E900BC399C /* TSPProgressIndicator.m */,
+			);
+			name = TSPProgressIndicator;
 			sourceTree = "<group>";
 		};
 		1ACEC0E4123031C4007D5C1A /* Charting */ = {
@@ -526,14 +550,8 @@
 				1A2D2D1A1223B7580074AE7F /* ARCategoryTuple.m in Sources */,
 				1A2D2D1B1223B7580074AE7F /* ARConfiguration.m in Sources */,
 				1A2D2D1C1223B7580074AE7F /* ARRankQuery.m in Sources */,
-				1A2D2D1D1223B7580074AE7F /* NSObject+SBJSON.m in Sources */,
-				1A2D2D1E1223B7580074AE7F /* NSString+SBJSON.m in Sources */,
-				1A2D2D1F1223B7580074AE7F /* SBJsonBase.m in Sources */,
-				1A2D2D201223B7580074AE7F /* SBJsonParser.m in Sources */,
-				1A2D2D211223B7580074AE7F /* SBJsonWriter.m in Sources */,
 				1A2D2D221223B7580074AE7F /* SBJSON+Additions.m in Sources */,
 				1A2D2EBD122560460074AE7F /* ARMainViewController.m in Sources */,
-				1A5A3C6B122568B800F08485 /* SidebarBadgeCell.m in Sources */,
 				1A5A3C6C122568B800F08485 /* ARTreeNode.m in Sources */,
 				1A5A3CFC1225965A00F08485 /* ARStatusView.m in Sources */,
 				1A5A3E531225B91A00F08485 /* ARStatusViewController.m in Sources */,
@@ -551,7 +569,16 @@
 				1A1CE65A123279D0006FACB9 /* ARBoolValueTransformer.m in Sources */,
 				1A6E08CF1233CE4600168560 /* ARStochasticRankGenerator.m in Sources */,
 				1A198EE21234C7B60074DEB6 /* ARRSSFeedCache.m in Sources */,
-				1A19901B1234EB040074DEB6 /* GTMNSData+zlib.m in Sources */,
+				1A8A0DDB1238E4E900BC399C /* NSBezierPath+MCAdditions.m in Sources */,
+				1A8A0DDC1238E4E900BC399C /* NSBezierPath+PXRoundedRectangleAdditions.m in Sources */,
+				1A8A0DDD1238E4E900BC399C /* TSPProgressIndicator.m in Sources */,
+				1A8A0DE11238E4FB00BC399C /* GTMNSData+zlib.m in Sources */,
+				1A8A0DE41238E50900BC399C /* SidebarBadgeCell.m in Sources */,
+				1A8A0DF11238E51A00BC399C /* NSObject+SBJSON.m in Sources */,
+				1A8A0DF21238E51A00BC399C /* NSString+SBJSON.m in Sources */,
+				1A8A0DF31238E51A00BC399C /* SBJsonBase.m in Sources */,
+				1A8A0DF41238E51A00BC399C /* SBJsonParser.m in Sources */,
+				1A8A0DF51238E51A00BC399C /* SBJsonWriter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

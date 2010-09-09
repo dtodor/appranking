@@ -32,6 +32,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "TSPProgressIndicator.h"
 
 
 @interface ARStatusViewController : NSViewController {
@@ -39,7 +40,9 @@
 
 @property (nonatomic, retain) IBOutlet NSTextField *mainLabel;
 @property (nonatomic, retain) IBOutlet NSTextField *secondaryLabel;
-@property (nonatomic, retain) IBOutlet NSView *progressBar;
+@property (nonatomic, retain) IBOutlet TSPProgressIndicator *progressBar;
 @property (nonatomic) double progress;
+
+- (void)displayIndeterminateProgress;
 
 @end

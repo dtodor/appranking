@@ -113,24 +113,9 @@
 	[mainViewController reloadApplications];
 }
 
-/**
- Implementation of the applicationShouldTerminate: method, used here to
- handle the saving of changes in the application managed object context
- before the application terminates.
- */
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
     NSError *error = nil;
 	if (![[ARStorageManager sharedARStorageManager] commitChanges:&error]) {
-		
-        // This error handling simply presents error information in a panel with an 
-        // "Ok" button, which does not include any attempt at error recovery (meaning, 
-        // attempting to fix the error.)  As a result, this implementation will 
-        // present the information to the user and then follow up with a panel asking 
-        // if the user wishes to "Quit Anyway", without saving the changes.
-		
-        // Typically, this process should be altered to include application-specific 
-        // recovery steps.  
-		
         BOOL result = [sender presentError:error];
         if (result) return NSTerminateCancel;
 		

@@ -55,9 +55,11 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 @property (nonatomic, retain) NSData *receivedData;
 @property (nonatomic) BOOL started;
 @property (nonatomic) BOOL canceled;
+@property (nonatomic, retain) NSURL *url;
+
++ (dispatch_queue_t)cacheAccessSerialQueue;
 
 @end
-
 
 
 @implementation ARRankQuery
@@ -74,6 +76,16 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 @synthesize receivedData;
 @synthesize started;
 @synthesize canceled;
+@synthesize url;
+
++ (dispatch_queue_t)cacheAccessSerialQueue {
+	static dispatch_queue_t queue;
+	static dispatch_once_t once;
+	dispatch_once(&once, ^{
+		queue = dispatch_queue_create("de.todordimitrov.appranking.cache-access-serial-queue", NULL);
+	});
+	return queue;
+}
 
 #pragma mark -
 #pragma mark Query logic
@@ -179,8 +191,6 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 		NSAutoreleasePool *pool = [NSAutoreleasePool new];
 		
 		NSString *jsonString = [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding];
-		[receivedData release];
-		receivedData = nil;
 		SBJsonParser *parser = [[SBJsonParser alloc] init];
 		NSError *error = nil;
 		NSDictionary *feed = [parser dictionaryWithString:jsonString error:&error];
@@ -209,7 +219,7 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 	if (self != nil) {
 		assert(aCategory);
 		assert(aCountry);
-		NSURL *url = [aCategory rankingURLForCountry:aCountry];
+		self.url = [aCategory rankingURLForCountry:aCountry];
 		if (!url) {
 			[self release];
 			self = nil;
@@ -221,35 +231,13 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 			}
 			self.country = aCountry;
 			self.category = aCategory;
-
-			NSDate *expDate = nil;
-			NSData *cachedData = [[ARRSSFeedCache sharedARRSSFeedCache] retrieveCachedFeedForCategory:category country:country expiryDate:&expDate];
-			
-			if (!cachedData) {
-				NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-				[request setValue:@"text/javascript" forHTTPHeaderField:@"Content-Type"];
-				[request setValue:@"text/javascript" forHTTPHeaderField:@"Accept"];
-				[request setValue:@"gzip, deflate" forHTTPHeaderField:@"Accept-Encoding"];
-				
-				self.connection = [[[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO] autorelease];
-				if (self.connection) {
-					self.receivedData = [[NSMutableData alloc] init];
-				} else {
-					[self release];
-					self = nil;
-				}
-			} else {
-				assert(expDate);
-				self.expiryDate = expDate;
-				self.cached = YES;
-				self.receivedData = cachedData;
-			}
 		}
 	}
 	return self;
 }
 
 - (void)dealloc {
+	self.url = nil;
 	self.expiryDate = nil;
 	self.icons = nil;
 	self.ranks = nil;
@@ -263,12 +251,45 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 - (void)start {
 	assert(!started);
 	self.started = YES;
-	if (connection) {
-		[connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-		[connection start];
-	} else {
-		[self retrieveRank];
-	}
+	
+	dispatch_async([ARRankQuery cacheAccessSerialQueue], ^{
+		NSAutoreleasePool *pool = [NSAutoreleasePool new];
+		NSDate *expDate = nil;
+		NSData *cachedData = [[ARRSSFeedCache sharedARRSSFeedCache] retrieveCachedFeedForCategory:category country:country expiryDate:&expDate];
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if (!cachedData) {
+				NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url 
+																	   cachePolicy:NSURLRequestUseProtocolCachePolicy 
+																   timeoutInterval:60.0];
+				
+				[request setValue:@"text/javascript" forHTTPHeaderField:@"Content-Type"];
+				[request setValue:@"text/javascript" forHTTPHeaderField:@"Accept"];
+				[request setValue:@"gzip, deflate" forHTTPHeaderField:@"Accept-Encoding"];
+				
+				self.connection = [[[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO] autorelease];
+				if (connection) {
+					self.receivedData = [[NSMutableData alloc] init];
+					[connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+					[connection start];
+				} else {
+					if (delegate && !canceled) {
+						NSError *error = [NSError errorWithDomain:@"ARRankQueryErrorDomain" 
+															 code:0 
+														 userInfo:[NSDictionary dictionaryWithObject:@"Unable to open connection to RSS feed" 
+																							  forKey:NSLocalizedDescriptionKey]];
+						[delegate query:self didFailWithError:error];
+					}
+				}
+			} else {
+				assert(expDate);
+				self.expiryDate = expDate;
+				self.cached = YES;
+				self.receivedData = cachedData;
+				[self retrieveRank];
+			}
+		});
+		[pool drain];
+	});
 }
 
 - (void)cancel {
@@ -293,7 +314,11 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-	[[ARRSSFeedCache sharedARRSSFeedCache] cacheFeed:receivedData forCategory:category country:country];
+	dispatch_async([ARRankQuery cacheAccessSerialQueue], ^{
+		NSAutoreleasePool *pool = [NSAutoreleasePool new];
+		[[ARRSSFeedCache sharedARRSSFeedCache] cacheFeed:receivedData forCategory:category country:country];
+		[pool drain];
+	});
 	if (!canceled) {
 		[self retrieveRank];
 	}

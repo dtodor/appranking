@@ -167,6 +167,11 @@
 		return;
 	}
 	
+	[statusViewController.mainLabel setStringValue:@"Processing RSS feeds ..."];
+	[statusViewController.secondaryLabel setStringValue:@""];
+	[statusViewController.secondaryLabel setHidden:NO];
+	[statusViewController displayIndeterminateProgress];
+	
 	chartViewController.enabled = NO;
 	
 	for (ARTreeNode *node in applicationsTree) {
@@ -175,19 +180,17 @@
 	
 	[[ARStorageManager sharedARStorageManager] updateTimestamp];
 
-	[statusViewController.mainLabel setStringValue:@"Processing RSS feeds ..."];
-	[statusViewController.secondaryLabel setStringValue:@""];
-	[statusViewController.secondaryLabel setHidden:NO];
-
 	self.runningQueries = [NSMutableArray array];
 	self.pendingQueries = [NSMutableArray array];
 	
 	static NSUInteger maxConcurrent = 20;
-	
-	NSUInteger count = 0;
+
 	ARConfiguration *config = [ARConfiguration sharedARConfiguration];
+
+	NSUInteger count = 0;
 	for (NSString *country in config.appStoreIds) {
 		for (ARTreeNode *rootNode in self.applicationsTree) {
+			count++;
 			ARRankQuery *query = [[ARRankQuery alloc] initWithCountry:country category:rootNode.category];
 			if (query) {
 				query.delegate = self;
@@ -200,9 +203,7 @@
 				[query release];
 			} else {
 				NSLog(@"Unable to start query for category '%@' and country '%@'", rootNode.category, country);
-				// TODO log error message
 			}
-			count++;
 		}
 	}
 	totalNumberOfDownloads = count;
@@ -332,6 +333,9 @@
 }
 
 - (void)queryDidFinish:(ARRankQuery *)query {
+	if (self.runningQueries == nil) {
+		return;
+	}
 	[statusViewController.secondaryLabel setStringValue:[NSString stringWithFormat:@"Finished processing %@ [%@]", query.country, query.category]];
 	for (NSString *appName in query.ranks) {
 		id value = [query.ranks objectForKey:appName];
@@ -483,6 +487,8 @@
 	self.applicationsTree = array;
 	
 	[sidebar expandItem:nil expandChildren:YES];
+	NSUInteger indexes[] = { 0, 0 };
+	[treeController setSelectionIndexPath:[NSIndexPath indexPathWithIndexes:indexes length:2]];
 }
 
 @end
