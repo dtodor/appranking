@@ -45,8 +45,10 @@
 #import "ARRankEntry.h"
 #import "ARStorageManager+Testing.h"
 
+#import <Growl/Growl.h>
 
-@interface ARMainViewController() <ARRankQueryDelegate>
+
+@interface ARMainViewController() <ARRankQueryDelegate, GrowlApplicationBridgeDelegate>
 
 @property (nonatomic, retain) NSArray *applicationsTree;
 @property (nonatomic, retain) NSMutableArray *runningQueries;
@@ -90,6 +92,8 @@
 	[chartPlaceholder addSubview:chartViewController.view];
 	
 	chartViewController.enabled = YES;
+	
+	[GrowlApplicationBridge setGrowlDelegate:self];
 }
 
 - (void)dealloc {
@@ -144,6 +148,16 @@
 - (ARApplication *)selectedApplication {
 	ARTreeNode *applicationNode = [[self.treeController selectedObjects] objectAtIndex:0];
 	return applicationNode.application;
+}
+
+- (void)postFinishNotifications {
+	[GrowlApplicationBridge notifyWithTitle:@"Finished updating ranks" 
+								description:@"AppRanking has finished updating the ranks for your applications. To review the results, select an application from the categories and applications list on the left." 
+						   notificationName:@"ARRefreshFinishedNotification" 
+								   iconData:nil 
+								   priority:0 
+								   isSticky:NO 
+							   clickContext:nil];
 }
 
 #pragma mark -
@@ -315,6 +329,8 @@
 		if (![storageManager.managedObjectContext save:&error]) {
 			[self presentError:error];
 		}
+		
+		[self postFinishNotifications];
 	}
 }
 

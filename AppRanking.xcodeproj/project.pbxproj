@@ -58,6 +58,9 @@
 		1A8A0DF51238E51A00BC399C /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8A0DF01238E51A00BC399C /* SBJsonWriter.m */; };
 		1AB276D9122E548D006CFC8F /* AppDetailsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1ABE9A6B1227198D00065E5D /* AppDetailsWindow.xib */; };
 		1AB27706122E8185006CFC8F /* ARRankEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB27705122E8185006CFC8F /* ARRankEntry.m */; };
+		1AB34ED5123ABFB100194E86 /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AB34ED4123ABFB100194E86 /* Growl.framework */; };
+		1AB34ED8123ABFC000194E86 /* Growl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1AB34ED4123ABFB100194E86 /* Growl.framework */; };
+		1AB34EFA123AC2D400194E86 /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = 1AB34EF9123AC2D400194E86 /* Growl Registration Ticket.growlRegDict */; };
 		1ACEBF36122FDD1C007D5C1A /* ARChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACEBF35122FDD1C007D5C1A /* ARChart.m */; };
 		1ACEC0E7123031DC007D5C1A /* ARChartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACEC0E6123031DC007D5C1A /* ARChartViewController.m */; };
 		1ACEC0EF12303291007D5C1A /* ChartView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1ACEC0EE12303291007D5C1A /* ChartView.xib */; };
@@ -75,6 +78,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				1AB34ED8123ABFC000194E86 /* Growl.framework in Copy Frameworks */,
 				1A45D9ED122640FE00A1DF36 /* BWToolkitFramework.framework in Copy Frameworks */,
 				1A45D9EE122640FE00A1DF36 /* Sparkle.framework in Copy Frameworks */,
 			);
@@ -169,6 +173,8 @@
 		1A8A0DF01238E51A00BC399C /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
 		1AB27704122E8185006CFC8F /* ARRankEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARRankEntry.h; sourceTree = "<group>"; };
 		1AB27705122E8185006CFC8F /* ARRankEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARRankEntry.m; sourceTree = "<group>"; };
+		1AB34ED4123ABFB100194E86 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Growl.framework; path = Frameworks/Growl.framework; sourceTree = "<group>"; };
+		1AB34EF9123AC2D400194E86 /* Growl Registration Ticket.growlRegDict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "Growl Registration Ticket.growlRegDict"; path = "Resources/Growl Registration Ticket.growlRegDict"; sourceTree = "<group>"; };
 		1ABE9A6B1227198D00065E5D /* AppDetailsWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = AppDetailsWindow.xib; path = ../AppDetailsWindow.xib; sourceTree = "<group>"; };
 		1AC5B1FC1221B80F00999BCF /* SynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynthesizeSingleton.h; sourceTree = "<group>"; };
 		1ACEBF34122FDD1C007D5C1A /* ARChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARChart.h; sourceTree = "<group>"; };
@@ -196,6 +202,7 @@
 				1A45D9B3122640D500A1DF36 /* BWToolkitFramework.framework in Frameworks */,
 				1A45D9B4122640D500A1DF36 /* Sparkle.framework in Frameworks */,
 				1A19902A1234EBA00074DEB6 /* libz.dylib in Frameworks */,
+				1AB34ED5123ABFB100194E86 /* Growl.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,6 +212,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1AB34ED4123ABFB100194E86 /* Growl.framework */,
 				1A1990291234EBA00074DEB6 /* libz.dylib */,
 				1A45D9B1122640D500A1DF36 /* BWToolkitFramework.framework */,
 				1A45D9B2122640D500A1DF36 /* Sparkle.framework */,
@@ -450,6 +458,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1AB34EF9123AC2D400194E86 /* Growl Registration Ticket.growlRegDict */,
 				1A45D9F41226430400A1DF36 /* dsa_pub.pem */,
 				1A5A3EC91225C16E00F08485 /* Images */,
 				1A2D2D231223B77A0074AE7F /* app-store-ids.json */,
@@ -534,6 +543,7 @@
 				1A45D9F51226430400A1DF36 /* dsa_pub.pem in Resources */,
 				1ACEC0EF12303291007D5C1A /* ChartView.xib in Resources */,
 				1A1CE79E12329291006FACB9 /* zoom-cursor.png in Resources */,
+				1AB34EFA123AC2D400194E86 /* Growl Registration Ticket.growlRegDict in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
