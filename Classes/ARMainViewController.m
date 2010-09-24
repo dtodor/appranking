@@ -146,7 +146,7 @@
 }
 
 - (ARApplication *)selectedApplication {
-	ARTreeNode *applicationNode = [[self.treeController selectedObjects] objectAtIndex:0];
+	ARTreeNode *applicationNode = [[treeController selectedObjects] objectAtIndex:0];
 	return applicationNode.application;
 }
 
@@ -171,6 +171,8 @@
 		[ranks removeAllObjects];
 		[node didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:@"representedObject"];
 	}
+	node.badge = 0;
+	node.displaysBadge = NO;
 	for (ARTreeNode *child in [node childNodes]) {
 		[self resetRanks:child];
 	}
@@ -361,15 +363,18 @@
 			assert(applicationNode);
 			NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:value, @"rank", query.country, @"country", nil];
 			NSMutableArray *entries = [applicationNode representedObject];
+			
 			[applicationNode willChange:NSKeyValueChangeInsertion 
 						valuesAtIndexes:[NSIndexSet indexSetWithIndex:[entries count]] 
 								 forKey:@"representedObject"];
-			
 			[entries addObject:entry];
-			
 			[applicationNode didChange:NSKeyValueChangeInsertion 
 					   valuesAtIndexes:[NSIndexSet indexSetWithIndex:[entries count]-1] 
 								forKey:@"representedObject"];
+			
+			applicationNode.badge = [entries count];
+			applicationNode.displaysBadge = YES;
+			[sidebar reloadItem:nil];
 
 			NSError *error = nil;
 			if (![[ARStorageManager sharedARStorageManager] insertRankEntry:value forApplication:applicationNode.application query:query error:&error]) {
