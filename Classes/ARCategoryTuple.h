@@ -39,7 +39,10 @@ typedef enum {
 	Top_Grossing_Apps      = 2,
 	Top_Free_iPad_Apps     = 3,
 	Top_Paid_iPad_Apps     = 4,
-	Top_Grossing_iPad_Apps = 5
+	Top_Grossing_iPad_Apps = 5,
+	New_Apps			   = 6,
+	New_Free_Apps		   = 7,
+	New_Paid_Apps		   = 8
 } CategoryTupleType;
 
 @interface ARCategoryTuple : NSManagedObject {

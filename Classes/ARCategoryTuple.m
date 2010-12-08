@@ -118,7 +118,8 @@ static NSString * const kFeedURLTemplate_All = @"http://ax.itunes.apple.com/WebO
 	dispatch_once(&once, ^{
 		typeNames = [[NSArray alloc] initWithObjects:@"Top Free", @"Top Paid", 
 					 @"Top Grossing", @"Top Free iPad", @"Top Paid iPad", 
-					 @"Top Grossing iPad", nil];
+					 @"Top Grossing iPad", @"New", @"New Free", 
+					 @"New Paid", nil];
 	});
 	return typeNames;
 }

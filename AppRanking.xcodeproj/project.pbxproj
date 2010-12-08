@@ -91,6 +91,7 @@
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		1A08FA4D12AF9926009ABF72 /* AppRanking-3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "AppRanking-3.xcdatamodel"; sourceTree = "<group>"; };
 		1A198EE01234C7B60074DEB6 /* ARRSSFeedCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARRSSFeedCache.h; sourceTree = "<group>"; };
 		1A198EE11234C7B60074DEB6 /* ARRSSFeedCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARRSSFeedCache.m; sourceTree = "<group>"; };
 		1A1990291234EBA00074DEB6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -746,8 +747,9 @@
 			children = (
 				1A19B624122D115600924F72 /* AppRanking-1.xcdatamodel */,
 				1ADAFD54122E8C24007A2396 /* AppRanking-2.xcdatamodel */,
+				1A08FA4D12AF9926009ABF72 /* AppRanking-3.xcdatamodel */,
 			);
-			currentVersion = 1ADAFD54122E8C24007A2396 /* AppRanking-2.xcdatamodel */;
+			currentVersion = 1A08FA4D12AF9926009ABF72 /* AppRanking-3.xcdatamodel */;
 			path = AppRanking.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
