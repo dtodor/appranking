@@ -94,6 +94,9 @@
 	chartViewController.enabled = YES;
 	
 	[GrowlApplicationBridge setGrowlDelegate:self];
+	
+	[sidebar setDoubleAction:@selector(doubleAction:)];
+	[sidebar setTarget:self];
 }
 
 - (void)dealloc {
@@ -114,6 +117,26 @@
 
 #pragma mark -
 #pragma mark Private helper methods
+
+- (void)displayInfoForApplication:(ARApplication *)app {
+	if (detailsViewController) {
+		return;
+	}
+	self.detailsViewController = [[ARAppDetailsWindowController alloc] initWithWindowNibName:@"AppDetailsWindow"];
+	self.detailsViewController.application = app;
+ 	[NSApp beginSheet:[self.detailsViewController window] 
+	   modalForWindow:[NSApp mainWindow] 
+		modalDelegate:self 
+	   didEndSelector:@selector(editAppSheetDidEnd:returnCode:contextInfo:) 
+		  contextInfo:NULL];
+}
+
+- (void)doubleAction:(NSOutlineView *)sender {
+	ARTreeNode *item = [[sender itemAtRow:[sender clickedRow]] representedObject];
+	if (item.application) {
+		[self displayInfoForApplication:item.application];
+	}
+}
 
 - (void)updateChartCountries {
 	NSArray *selectedObjects = [self.treeController selectedObjects];
@@ -242,13 +265,7 @@
 }
 
 - (IBAction)info:(NSToolbarItem *)sender {
-	self.detailsViewController = [[ARAppDetailsWindowController alloc] initWithWindowNibName:@"AppDetailsWindow"];
-	self.detailsViewController.application = [self selectedApplication];
- 	[NSApp beginSheet:[self.detailsViewController window] 
-	   modalForWindow:[NSApp mainWindow] 
-		modalDelegate:self 
-	   didEndSelector:@selector(editAppSheetDidEnd:returnCode:contextInfo:) 
-		  contextInfo:NULL];
+	[self displayInfoForApplication:[self selectedApplication]];
 }
 
 - (IBAction)addApplication:(NSButton *)sender {
