@@ -42,13 +42,4 @@
 @dynamic rank;
 @dynamic timestamp;
 
-- (void)dealloc {
-	self.application = nil;
-	self.category = nil;
-	self.country = nil;
-	self.rank = nil;
-	self.timestamp = nil;
-	[super dealloc];
-}
-
 @end

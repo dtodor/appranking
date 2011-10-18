@@ -47,14 +47,6 @@ static NSString * const kFeedURLTemplate_All = @"http://itunes.apple.com/%@/rss/
 @dynamic applications;
 @dynamic rankEntries;
 
-- (void)dealloc {
-	self.rankEntries = nil;
-	self.name = nil;
-	self.type = nil;
-	self.applications = nil;
-	[super dealloc];
-}
-
 - (CategoryTupleType)tupleType {
 	return (CategoryTupleType)[self.type intValue];
 }
