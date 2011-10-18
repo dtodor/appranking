@@ -79,12 +79,6 @@
 			app.categories = [NSSet setWithObject:category];
 		}
 		
-		{
-			ARApplication *app = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" inManagedObjectContext:self.managedObjectContext];
-			app.appStoreId = [NSNumber numberWithInt:999999999];
-			app.name = TEST_APP_NAME;
-			app.categories = [NSSet setWithObject:category];
-		}
 	}
 	
 	{
@@ -140,7 +134,7 @@
 		}
 	}
 	
-	NSArray *allCountries = [[ARConfiguration sharedARConfiguration].appStoreIds allKeys];
+	NSArray *allCountries = [[ARConfiguration sharedARConfiguration].countries allKeys];
 	NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:-HOUR*(int)(ENTRIES_PER_CATEGORY+1)];
 	NSArray *apps = [self applications];
 	if (!apps) {

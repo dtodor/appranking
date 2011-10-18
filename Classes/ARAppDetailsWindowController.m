@@ -77,8 +77,8 @@
 
 - (void)dealloc {
 	[self removeObserver:self forKeyPath:@"application"];
-	self.tempCategories = nil;
-	self.application = nil;
+	[tempCategories release], tempCategories = nil;
+	[application release], application = nil;
 	[super dealloc];
 }
 

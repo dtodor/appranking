@@ -48,8 +48,8 @@
 
 - (void)dealloc {
 	[self removeObserver:self forKeyPath:@"image"];
-	self.image = nil;
-	self.zoomWindow = nil;
+	[image release], image = nil;
+	[zoomWindow release], zoomWindow = nil;
 	[super dealloc];
 }
 

@@ -63,14 +63,16 @@
 }
 
 - (void)dealloc {
-	self.postParameters = nil;
-	self.startDate = nil;
-	self.endDate = nil;
+	[postParameters release], postParameters = nil;
+	[startDate release], startDate = nil;
+	[endDate release], endDate = nil;
 	[super dealloc];
 }
 
 // Same as simple encoding, but for extended encoding.
 static NSString * const EXTENDED_MAP = @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.";
+
+NSString *extendedEncode(double value, double maxValue);
 
 NSString *extendedEncode(double value, double maxValue) {
 	static NSUInteger EXTENDED_MAP_LENGTH;

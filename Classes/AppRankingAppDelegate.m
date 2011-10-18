@@ -82,8 +82,8 @@
 }
 
 - (void)dealloc {
-	self.mainViewController = nil;
-    [window release];
+	[mainViewController release], mainViewController = nil;
+    [window release], window = nil;
     [super dealloc];
 }
 
@@ -105,9 +105,9 @@
 	
 	
 	{
-//		ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
-//		[storageManager resetTestData];
-//		[storageManager generateRandomRankingsDeletingExistent:YES];
+		//ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
+		//[storageManager resetTestData];
+		//[storageManager generateRandomRankingsDeletingExistent:YES];
 	}
 	
 	[mainViewController reloadApplications];

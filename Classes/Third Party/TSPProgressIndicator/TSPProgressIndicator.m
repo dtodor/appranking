@@ -30,9 +30,9 @@
 @synthesize shadowColor;
 
 - (id)initWithFrame:(NSRect)frameRect {
-    id superInit = [super initWithFrame:frameRect];
+    self = [super initWithFrame:frameRect];
 
-    if (superInit) {
+    if (self) {
         [self setMaxValue:100.0];
         [self setCornerRadius:15];
         [self setFontSize:11];
@@ -47,7 +47,7 @@
         _step = 0;
     }
 
-    return superInit;
+    return self;
 }
 
 - (void)drawRect:(NSRect)dirtyRect {

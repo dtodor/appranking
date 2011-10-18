@@ -47,7 +47,7 @@
 }
 
 - (void)dealloc {
-	[evalBlock release];
+	[evalBlock release], evalBlock = nil;
 	[super dealloc];
 }
 

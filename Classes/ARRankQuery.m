@@ -237,14 +237,14 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 }
 
 - (void)dealloc {
-	self.url = nil;
-	self.expiryDate = nil;
-	self.icons = nil;
-	self.ranks = nil;
-	self.receivedData = nil;
-	self.connection = nil;
-	self.country = nil;
-	self.category = nil;
+	[url release], url = nil;
+	[expiryDate release], expiryDate = nil;
+	[icons release], icons = nil;
+	[ranks release], ranks = nil;
+	[receivedData release], receivedData = nil;
+	[connection release], connection = nil;
+	[country release], country = nil;
+	[category release], category = nil;
 	[super dealloc];
 }
 
@@ -268,7 +268,7 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 				
 				self.connection = [[[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO] autorelease];
 				if (connection) {
-					self.receivedData = [[NSMutableData alloc] init];
+					self.receivedData = [[[NSMutableData alloc] init] autorelease];
 					[connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 					[connection start];
 				} else {

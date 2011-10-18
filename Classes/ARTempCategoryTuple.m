@@ -16,8 +16,8 @@
 @synthesize type;
 
 - (void)dealloc {
-	self.name = nil;
-	self.type = nil;
+	[name release], name = nil;
+	[type release], type = nil;
 	[super dealloc];
 }
 

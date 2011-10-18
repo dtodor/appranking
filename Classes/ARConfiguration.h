@@ -44,7 +44,7 @@ typedef enum {
 }
 
 // NSString -> NSString
-@property (nonatomic, readonly, retain) NSDictionary *appStoreIds;
+@property (nonatomic, readonly, retain) NSDictionary *countries;
 
 // NSString -> NSString
 @property (nonatomic, readonly, retain) NSDictionary *genres;

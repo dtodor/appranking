@@ -40,6 +40,8 @@
 #define B 1.0
 #define C 2.0
 
+double pdf(NSUInteger distance);
+
 double pdf(NSUInteger distance) {
 	return 1.0 / (A + B * pow(distance, C));
 }

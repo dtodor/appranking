@@ -37,7 +37,7 @@
 @synthesize icon = _icon;
 
 - (void)dealloc {
-	[_icon release];
+	[_icon release], _icon = nil;
 	[super dealloc];
 }
 

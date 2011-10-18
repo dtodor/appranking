@@ -1,5 +1,7 @@
 build
 .DS_Store
-AppRanking.xcodeproj/*.pbxuser
-AppRanking.xcodeproj/*.perspectivev3
+*.xcodeproj/*.pbxuser
+*.xcodeproj/*.perspectivev3
+*.xcodeproj/project.xcworkspace
+*.xcodeproj/xcuserdata
 dsa_priv.pem

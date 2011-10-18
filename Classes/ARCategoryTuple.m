@@ -36,8 +36,8 @@
 #import "ARConfiguration.h"
 
 
-static NSString * const kFeedURLTemplate_SelectedCategory = @"http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/%@/sf=%@/limit=300/genre=%@/json";
-static NSString * const kFeedURLTemplate_All = @"http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/%@/sf=%@/limit=300/json";
+static NSString * const kFeedURLTemplate_SelectedCategory = @"http://itunes.apple.com/%@/rss/%@/limit=300/genre=%@/json";
+static NSString * const kFeedURLTemplate_All = @"http://itunes.apple.com/%@/rss/%@/limit=300/json";
 
 
 @implementation ARCategoryTuple
@@ -85,8 +85,8 @@ static NSString * const kFeedURLTemplate_All = @"http://ax.itunes.apple.com/WebO
 
 - (NSURL *)rankingURLForCountry:(NSString *)country {
 	ARConfiguration *config = [ARConfiguration sharedARConfiguration];
-	NSString *storeId = [config.appStoreIds objectForKey:country];
-	if (!storeId) {
+	NSString *countryCode = [config.countries objectForKey:country];
+	if (!countryCode) {
 		return nil;
 	}
 
@@ -98,9 +98,9 @@ static NSString * const kFeedURLTemplate_All = @"http://ax.itunes.apple.com/WebO
 		if (!ganreId) {
 			return nil;
 		}
-		return [NSURL URLWithString:[NSString stringWithFormat:kFeedURLTemplate_SelectedCategory, urlPart, storeId, ganreId]];
+		return [NSURL URLWithString:[NSString stringWithFormat:kFeedURLTemplate_SelectedCategory, countryCode, urlPart, ganreId]];
 	} else {
-		return [NSURL URLWithString:[NSString stringWithFormat:kFeedURLTemplate_All, urlPart, storeId]];
+		return [NSURL URLWithString:[NSString stringWithFormat:kFeedURLTemplate_All, countryCode, urlPart]];
 	}
 }
 

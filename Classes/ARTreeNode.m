@@ -44,10 +44,10 @@
 @synthesize application;
 
 - (void)dealloc {
-	self.application = nil;
-	self.category = nil;
-	self.icon = nil;
-	self.name = nil;
+	[application release], application = nil;
+	[category release], category = nil;
+	[icon release], icon = nil;
+	[name release], name = nil;
 	[super dealloc];
 }
 

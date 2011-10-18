@@ -44,7 +44,7 @@ NSString * const kConfigurationErrorDomain = @"ConfigurationErrorDomain";
 
 @interface ARConfiguration()
 
-@property (nonatomic, retain) NSDictionary *appStoreIds;
+@property (nonatomic, retain) NSDictionary *countries;
 @property (nonatomic, retain) NSDictionary *genres;
 
 @end
@@ -54,7 +54,7 @@ NSString * const kConfigurationErrorDomain = @"ConfigurationErrorDomain";
 
 SYNTHESIZE_SINGLETON_FOR_CLASS(ARConfiguration)
 
-@synthesize appStoreIds;
+@synthesize countries;
 @synthesize genres;
 
 - (NSDictionary *)loadDictionary:(NSString *)fileName error:(NSError **)error {
@@ -96,19 +96,23 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARConfiguration)
 
 - (BOOL)loadConfiguration:(NSError **)error {
 	@synchronized(self) {
-		if (appStoreIds) {
+		if (countries && genres) {
 			return YES;
 		}
-		self.appStoreIds = [self loadDictionary:@"app-store-ids" error:error];
-		if (!appStoreIds) {
-			NSLog(@"Unable to load iTunes store ids, error = %@", (error)?[*error localizedDescription]:@"-");
-			return NO;
-		}
-		self.genres = [self loadDictionary:@"genres" error:error];
-		if (!genres) {
-			NSLog(@"Unable to load iTunes categories, error = %@", (error)?[*error localizedDescription]:@"-");
-			return NO;
-		}
+        if (!countries) {
+            self.countries = [self loadDictionary:@"countries" error:error];
+            if (!countries) {
+                NSLog(@"Unable to load iTunes store ids, error = %@", (error)?[*error localizedDescription]:@"-");
+                return NO;
+            }
+        }
+        if (!genres) {
+            self.genres = [self loadDictionary:@"genres" error:error];
+            if (!genres) {
+                NSLog(@"Unable to load iTunes categories, error = %@", (error)?[*error localizedDescription]:@"-");
+                return NO;
+            }
+        }
 		return YES;
 	}
 }

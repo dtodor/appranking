@@ -43,9 +43,9 @@
 @synthesize progress;
 
 - (void)dealloc {
-    self.mainLabel = nil;
-    self.secondaryLabel = nil;
-    self.progressBar = nil;
+    [mainLabel release], mainLabel = nil;
+    [secondaryLabel release], secondaryLabel = nil;
+    [progressBar release], progressBar = nil;
     [super dealloc];
 }
 

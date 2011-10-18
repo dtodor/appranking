@@ -63,15 +63,15 @@
 	[self removeObserver:self forKeyPath:@"allCountries"];
 	[self removeObserver:self forKeyPath:@"selectedTimeFrame"];
 	
-	self.fromDate = nil;
-	self.untilDate = nil;
-	self.selectedTimeFrame = nil;
-	self.timeFrameChoices = nil;
-	self.chartImageView = nil;
-	self.application = nil;
-	self.category = nil;
-	self.allCountries = nil;
-	self.chartCountries = nil;
+	[fromDate release], fromDate = nil;
+	[untilDate release], untilDate = nil;
+	[selectedTimeFrame release], selectedTimeFrame = nil;
+	[timeFrameChoices release], timeFrameChoices = nil;
+	[chartImageView release], chartImageView = nil;
+	[application release], application = nil;
+	[category release], category = nil;
+	[allCountries release], allCountries = nil;
+	[chartCountries release], chartCountries = nil;
 	[super dealloc];
 }
 

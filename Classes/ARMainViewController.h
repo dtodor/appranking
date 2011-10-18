@@ -37,7 +37,7 @@
 #import "ARChartViewController.h"
 
 
-@interface ARMainViewController : NSViewController <NSOutlineViewDelegate> {
+@interface ARMainViewController : NSViewController <NSOutlineViewDelegate, NSSplitViewDelegate> {
 }
 
 @property (nonatomic, readonly, retain) NSArray *applicationsTree;

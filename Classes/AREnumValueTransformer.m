@@ -47,7 +47,7 @@
 }
 
 - (void)dealloc {
-	self.valueNames = nil;
+	[valueNames release], valueNames = nil;
 	[super dealloc];
 }
 

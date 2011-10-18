@@ -100,18 +100,18 @@
 }
 
 - (void)dealloc {
-	self.mainContentSplitView = nil;
-	self.chartViewController = nil;
-	self.applicationsTree = nil;
-	self.treeController = nil;
-	self.detailsViewController = nil;
-	self.tableSortDescriptors = nil;
-	self.outlineViewSortDescriptors = nil;
-	self.statusViewController = nil;
-	self.sidebar = nil;
-	self.statusToolBarItem = nil;
-	self.runningQueries = nil;
-	self.pendingQueries = nil;
+	[mainContentSplitView release], mainContentSplitView = nil;
+	[chartViewController release], chartViewController = nil;
+	[applicationsTree release], applicationsTree = nil;
+	[treeController release], treeController = nil;
+	[detailsViewController release], detailsViewController = nil;
+	[tableSortDescriptors release], tableSortDescriptors = nil;
+	[outlineViewSortDescriptors release], outlineViewSortDescriptors = nil;
+	[statusViewController release], statusViewController = nil;
+	[sidebar release], sidebar = nil;
+	[statusToolBarItem release], statusToolBarItem = nil;
+	[runningQueries release], runningQueries = nil;
+	[pendingQueries release], pendingQueries = nil;
 	[super dealloc];
 }
 
@@ -122,7 +122,7 @@
 	if (detailsViewController) {
 		return;
 	}
-	self.detailsViewController = [[ARAppDetailsWindowController alloc] initWithWindowNibName:@"AppDetailsWindow"];
+	self.detailsViewController = [[[ARAppDetailsWindowController alloc] initWithWindowNibName:@"AppDetailsWindow"] autorelease];
 	self.detailsViewController.application = app;
  	[NSApp beginSheet:[self.detailsViewController window] 
 	   modalForWindow:[NSApp mainWindow] 
@@ -230,7 +230,7 @@
 	ARConfiguration *config = [ARConfiguration sharedARConfiguration];
 
 	NSUInteger count = 0;
-	for (NSString *country in config.appStoreIds) {
+	for (NSString *country in config.countries) {
 		for (ARTreeNode *rootNode in self.applicationsTree) {
 			count++;
 			ARRankQuery *query = [[ARRankQuery alloc] initWithCountry:country category:rootNode.category];
@@ -272,7 +272,7 @@
 }
 
 - (IBAction)addApplication:(NSButton *)sender {
-	self.detailsViewController = [[ARAppDetailsWindowController alloc] initWithWindowNibName:@"AppDetailsWindow"];
+	self.detailsViewController = [[[ARAppDetailsWindowController alloc] initWithWindowNibName:@"AppDetailsWindow"] autorelease];
  	[NSApp beginSheet:[self.detailsViewController window] 
 	   modalForWindow:[NSApp mainWindow] 
 		modalDelegate:self 
@@ -441,7 +441,7 @@
 #pragma mark NSOutlineViewDelegate
 
 - (void)outlineView:(NSOutlineView *)outlineView
-    willDisplayCell:(NSCell*)cell
+    willDisplayCell:(NSCell *)cell
      forTableColumn:(NSTableColumn *)tableColumn
                item:(id)item {
 	
@@ -530,6 +530,37 @@
 	[sidebar expandItem:nil expandChildren:YES];
 	NSUInteger indexes[] = { 0, 0 };
 	[treeController setSelectionIndexPath:[NSIndexPath indexPathWithIndexes:indexes length:2]];
+}
+
+#pragma mark -
+#pragma mark NSSplitViewDelegate
+
+- (CGFloat)splitView:(NSSplitView *)splitView constrainSplitPosition:(CGFloat)proposedPosition ofSubviewAt:(NSInteger)dividerIndex {
+    
+    NSSize size = [splitView bounds].size;
+    if (splitView.isVertical) {
+#define kMinLeft 200.0
+#define kMinRight 300.0
+        
+        if (proposedPosition < kMinLeft) {
+            return kMinLeft;
+        } else if (proposedPosition > size.width-kMinRight) {
+            return size.width-kMinRight;
+        }
+        
+    } else {
+#define kMinTop 200.0
+#define kMinBottom 200.0
+        
+        if (proposedPosition < kMinTop) {
+            return kMinTop;
+        } else if (proposedPosition > size.height-kMinBottom) {
+            return size.height-kMinBottom;
+        }
+        
+    }
+    
+    return proposedPosition;
 }
 
 @end
