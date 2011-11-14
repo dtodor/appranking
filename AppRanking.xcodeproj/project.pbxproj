@@ -29,7 +29,6 @@
 		1A5A3C6C122568B800F08485 /* ARTreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A5A3C6A122568B800F08485 /* ARTreeNode.m */; };
 		1A5A3CFC1225965A00F08485 /* ARStatusView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A5A3CFB1225965A00F08485 /* ARStatusView.m */; };
 		1A5A3E531225B91A00F08485 /* ARStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A5A3E521225B91A00F08485 /* ARStatusViewController.m */; };
-		1A5A3E591225BBB000F08485 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A5A3E581225BBB000F08485 /* QuartzCore.framework */; };
 		1A5A3EBC1225C14A00F08485 /* StatusView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A5A3EBB1225C14A00F08485 /* StatusView.xib */; };
 		1A5A3EC31225C16500F08485 /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A5A3EBD1225C16500F08485 /* icon.icns */; };
 		1A5A3EC41225C16500F08485 /* info.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1A5A3EBE1225C16500F08485 /* info.icns */; };
@@ -197,7 +196,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
-				1A5A3E591225BBB000F08485 /* QuartzCore.framework in Frameworks */,
 				1A45D9B4122640D500A1DF36 /* Sparkle.framework in Frameworks */,
 				1A19902A1234EBA00074DEB6 /* libz.dylib in Frameworks */,
 				1AB34ED5123ABFB100194E86 /* Growl.framework in Frameworks */,
