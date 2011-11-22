@@ -63,7 +63,7 @@
 }
 
 - (void)drawImage {
-	[[NSGraphicsContext currentContext] setImageInterpolation: NSImageInterpolationHigh];
+	[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
 	
 	NSSize viewSize  = [self bounds].size;
 	NSSize imageSize = [image size];
@@ -107,14 +107,29 @@
 	destRect.size = imageSize;
 	destRect = NSInsetRect(destRect, 5, 5);
 	
+    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+    CGContextSaveGState(context);
+    CGContextSetShadow(context, CGSizeMake(0, 0), 5); 
+
+    [[NSColor whiteColor] set];
+	NSRectFill(destRect);
+    CGContextRestoreGState(context);
+
 	[image drawInRect:destRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+    
 }
 
 - (void)drawInfoMessage {
 	NSRect bounds = [self bounds];
 	
-	[[NSColor whiteColor] set];
+    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+    CGContextSaveGState(context);
+    CGContextSetShadow(context, CGSizeMake(0, 0), 5); 
+
+    [[NSColor whiteColor] set];
 	NSRectFill(NSInsetRect(bounds, 5, 5));
+    
+    CGContextRestoreGState(context);
 	
 	[[NSColor blackColor] set];
 	NSString *displayString = @"No data available";
