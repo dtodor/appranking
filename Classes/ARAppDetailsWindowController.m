@@ -39,21 +39,14 @@
 
 @implementation ARAppDetailsWindowController
 
-@synthesize application;
-@synthesize tempCategories;
+@synthesize application = _application;
+@synthesize tempCategories = _tempCategories;
 
 - (id)initWithWindowNibName:(NSString *)windowNibName {
 	if (self = [super initWithWindowNibName:windowNibName]) {
-		[self addObserver:self forKeyPath:@"application" options:NSKeyValueObservingOptionNew context:NULL];
+		[self addObserver:self forKeyPath:@"application" options:0 context:NULL];
 	}
 	return self;
-}
-
-- (void)windowDidLoad {
-	[super windowDidLoad];
-	if (!self.application) {
-		self.application = nil;
-	}
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -61,7 +54,6 @@
 		ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
 		self.application = [NSEntityDescription insertNewObjectForEntityForName:@"ARApplication" 
 														 inManagedObjectContext:storageManager.managedObjectContext];
-		self.tempCategories = [NSMutableArray array];
 	} else {
 		NSMutableArray *categories = [NSMutableArray array];
 		for (ARCategoryTuple *category in self.application.categories) {
@@ -77,8 +69,8 @@
 
 - (void)dealloc {
 	[self removeObserver:self forKeyPath:@"application"];
-	[tempCategories release], tempCategories = nil;
-	[application release], application = nil;
+	[_tempCategories release], _tempCategories = nil;
+	[_application release], _application = nil;
 	[super dealloc];
 }
 
@@ -164,7 +156,7 @@
 	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
 	[storageManager.managedObjectContext rollback];
 	NSWindow *sheet = [self window];
-	[NSApp endSheet:sheet returnCode:DidSaveChanges];
+	[NSApp endSheet:sheet returnCode:DidDiscardChanges];
 	[sheet orderOut:nil];
 }
 
