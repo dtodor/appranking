@@ -32,10 +32,17 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "ARChartViewControllerDelegate.h"
 
-@interface ARChartImageView : NSView <ARChartViewControllerDelegate>
 
-@property (nonatomic, retain) NSImage *image;
+@interface ARGoogleChart : NSObject
+
+@property (nonatomic, readonly, retain) NSDate *startDate;
+@property (nonatomic, readonly, retain) NSDate *endDate;
+
+- (id)initWithEntries:(NSArray *)entries sorted:(BOOL)sorted;
++ (id)chartForEntries:(NSArray *)entries sorted:(BOOL)sorted;
+
+- (NSURLRequest *)URLRequest;
+- (NSImage *)image;
 
 @end

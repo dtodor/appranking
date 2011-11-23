@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Todor Dimitrov
+ * Copyright (c) 2011 Todor Dimitrov
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -33,13 +33,14 @@
 
 #import "ARColor.h"
 
-
 /*
  * Random color generation done using a method presented by Martin Ankerl:
  * http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
  */
 
-@implementation ARColor
+@implementation ARColor {
+    CGColorRef _CGColor;
+}
 
 #define MAX_RANDOM 0x100000000
 #define RANDOM ((double)(arc4random()%(MAX_RANDOM+1))/MAX_RANDOM)
@@ -65,12 +66,29 @@
 	return self;
 }
 
-- (NSString *)hexValue {
+- (void)dealloc {
+    if (_CGColor) {
+        CGColorRelease(_CGColor), _CGColor = NULL;
+    }
+    [super dealloc];
+}
+
+- (NSString *)hex {
 	return [NSString stringWithFormat:@"%.2X%.2X%.2X", (int)(red*255), (int)(green*255), (int)(blue*255)];
 }
 
-- (NSColor *)colorValue {
+- (NSColor *)color {
 	return [NSColor colorWithDeviceRed:red green:green blue:blue alpha:1.0];
+}
+
+- (CGColorRef)CGColor {
+    if (!_CGColor) {
+        CGFloat components[4] = {red, green, blue, 1.0};
+        CGColorSpaceRef theColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
+        _CGColor = CGColorCreate(theColorSpace, components);
+        CGColorSpaceRelease(theColorSpace);
+    }
+    return _CGColor;
 }
 
 + (ARColor *)randomColor {

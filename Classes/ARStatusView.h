@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Todor Dimitrov
+ * Copyright (c) 2011 Todor Dimitrov
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,6 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface ARStatusView : NSView {
-}
+@interface ARStatusView : NSView
 
 @end

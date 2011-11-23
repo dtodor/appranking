@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Todor Dimitrov
+ * Copyright (c) 2011 Todor Dimitrov
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@
 #import "ARChartViewController.h"
 #import "ARRankEntry.h"
 #import "ARStorageManager.h"
-#import "ARChart.h"
+#import "ARGoogleChart.h"
 #import "ARColor.h"
 
 
@@ -52,7 +52,7 @@
 @synthesize allCountries;
 @synthesize application;
 @synthesize category;
-@synthesize chartImageView;
+@synthesize delegate;
 @synthesize timeFrameChoices;
 @synthesize selectedTimeFrame;
 @synthesize fromDate;
@@ -67,7 +67,6 @@
 	[untilDate release], untilDate = nil;
 	[selectedTimeFrame release], selectedTimeFrame = nil;
 	[timeFrameChoices release], timeFrameChoices = nil;
-	[chartImageView release], chartImageView = nil;
 	[application release], application = nil;
 	[category release], category = nil;
 	[allCountries release], allCountries = nil;
@@ -100,7 +99,9 @@
 		}];
 	}
 	self.chartCountries = countriesForChart;
-	self.chartImageView.image = nil;
+    if (self.delegate) {
+        [self.delegate chartViewController:self didUpdateData:nil sorted:NO];
+    }
 }
 
 - (void)updateTimeSpan {
@@ -117,9 +118,10 @@
 			[countries addObject:[data objectForKey:@"title"]];
 		}
 	}
+    NSArray *entries = nil;
 	if ([countries count] > 0) {
 		NSError *error = nil;
-		NSArray *entries = [[ARStorageManager sharedARStorageManager] rankEntriesForApplication:application 
+		entries = [[ARStorageManager sharedARStorageManager] rankEntriesForApplication:application 
 																					 inCategory:category 
 																					  countries:countries 
 																						   from:self.fromDate
@@ -127,17 +129,11 @@
 																						  error:&error];
 		if (!entries) {
 			[self presentError:error];
-		} else {
-			if ([entries count] > 1) {
-				ARChart *chart = [ARChart chartForEntries:entries sorted:YES];
-				self.chartImageView.image = [chart image];
-			} else {
-				self.chartImageView.image = nil;
-			}
 		}
-	} else {
-		self.chartImageView.image = nil;
 	}
+    if (self.delegate) {
+        [self.delegate chartViewController:self didUpdateData:entries sorted:YES];
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -161,7 +157,7 @@
 	NSString *country = [data objectForKey:@"title"];
 	[cell setTitle:country];
 	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-								[[ARColor colorForCountry:country] colorValue], NSForegroundColorAttributeName,
+								[ARColor colorForCountry:country].color, NSForegroundColorAttributeName,
 								[NSFont boldSystemFontOfSize:14.0], NSFontAttributeName, nil];
 	NSAttributedString *altTitle = [[[NSAttributedString alloc] initWithString:country 
 																	attributes:attributes] autorelease];

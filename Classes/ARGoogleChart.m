@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Todor Dimitrov
+ * Copyright (c) 2011 Todor Dimitrov
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -31,12 +31,12 @@
  *
  */
 
-#import "ARChart.h"
+#import "ARGoogleChart.h"
 #import "ARRankEntry.h"
 #import "ARColor.h"
 
 
-@interface ARChart()
+@interface ARGoogleChart()
 
 @property (nonatomic, retain) NSDate *startDate;
 @property (nonatomic, retain) NSDate *endDate;
@@ -45,7 +45,7 @@
 @end
 
 
-@implementation ARChart
+@implementation ARGoogleChart
 
 @synthesize startDate;
 @synthesize endDate;
@@ -135,7 +135,7 @@ NSString *extendedEncode(double value, double maxValue) {
 		[data appendFormat:@"%@,%@", x, y];
 		[labels appendString:country];
 		[lineSizes appendString:@"2"];
-		[colors appendString:[[ARColor colorForCountry:country] hexValue]];
+		[colors appendString:[ARColor colorForCountry:country].hex];
 		[markers appendFormat:@"o,FF0000,%d,-1,2", countryIndex];
 		if (countryIndex++ < [country2entries count]-1) {
 			[data appendString:@","];
@@ -174,9 +174,9 @@ NSString *extendedEncode(double value, double maxValue) {
 		self.postParameters = [NSMutableDictionary dictionary];
 		NSDate *midPoint = [NSDate dateWithTimeInterval:[self.endDate timeIntervalSinceDate:self.startDate]/2 sinceDate:self.startDate];
 		NSString *labels = [NSString stringWithFormat:@"0:|%@|%@|%@|1:|300|270|240|210|180|150|120|90|60|30|1|", 
-							[[ARChart dateFormatter] stringFromDate:self.startDate],
-							[[ARChart dateFormatter] stringFromDate:midPoint],
-							[[ARChart dateFormatter] stringFromDate:self.endDate]];
+							[[ARGoogleChart dateFormatter] stringFromDate:self.startDate],
+							[[ARGoogleChart dateFormatter] stringFromDate:midPoint],
+							[[ARGoogleChart dateFormatter] stringFromDate:self.endDate]];
 		[postParameters setObject:labels forKey:@"chxl"];
 		[postParameters setObject:@"0,10,50,90|1,300,270,240,210,180,150,120,90,60,30,1" forKey:@"chxp"];
 		[postParameters setObject:@"1,300,0" forKey:@"chxr"];

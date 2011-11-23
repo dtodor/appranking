@@ -31,11 +31,19 @@
  *
  */
 
-#import <Cocoa/Cocoa.h>
-#import "ARChartViewControllerDelegate.h"
+#import "ARDataPoint.h"
 
-@interface ARChartImageView : NSView <ARChartViewControllerDelegate>
+@implementation ARDataPoint
 
-@property (nonatomic, retain) NSImage *image;
+@synthesize x=x_;
+@synthesize y=y_;
+
+- (id)initWithX:(CGFloat)x y:(CGFloat)y {
+    if (self = [super init]) {
+        x_ = x;
+        y_ = y;
+    }
+    return self;
+}
 
 @end

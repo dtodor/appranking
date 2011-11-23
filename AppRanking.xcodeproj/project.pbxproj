@@ -23,6 +23,9 @@
 		1A2D2D221223B7580074AE7F /* SBJSON+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2D171223B7580074AE7F /* SBJSON+Additions.m */; };
 		1A2D2D291223B77A0074AE7F /* genres.json in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D2D251223B77A0074AE7F /* genres.json */; };
 		1A2D2EBD122560460074AE7F /* ARMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D2EBC122560460074AE7F /* ARMainViewController.m */; };
+		1A2E18A9147D345400C5E9A9 /* ARDataPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E18A4147D345400C5E9A9 /* ARDataPoint.m */; };
+		1A2E18AA147D345400C5E9A9 /* ARGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E18A6147D345400C5E9A9 /* ARGraphView.m */; };
+		1A2E18AB147D345400C5E9A9 /* ARSeries.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2E18A8147D345400C5E9A9 /* ARSeries.m */; };
 		1A45D9B4122640D500A1DF36 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A45D9B2122640D500A1DF36 /* Sparkle.framework */; };
 		1A45D9EE122640FE00A1DF36 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1A45D9B2122640D500A1DF36 /* Sparkle.framework */; };
 		1A45D9F51226430400A1DF36 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 1A45D9F41226430400A1DF36 /* dsa_pub.pem */; };
@@ -58,7 +61,7 @@
 		1AB6CF16144DA6AB006D317B /* AppDetailsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AB6CF18144DA6AB006D317B /* AppDetailsWindow.xib */; };
 		1AC3A2C1144D7AF00066C0EB /* countries.json in Resources */ = {isa = PBXBuildFile; fileRef = 1AC3A2C0144D7AF00066C0EB /* countries.json */; };
 		1AC3A2C5144D7F610066C0EB /* ARMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AC3A2C7144D7F610066C0EB /* ARMainViewController.xib */; };
-		1ACEBF36122FDD1C007D5C1A /* ARChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACEBF35122FDD1C007D5C1A /* ARChart.m */; };
+		1ACEBF36122FDD1C007D5C1A /* ARGoogleChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACEBF35122FDD1C007D5C1A /* ARGoogleChart.m */; };
 		1ACEC0E7123031DC007D5C1A /* ARChartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACEC0E6123031DC007D5C1A /* ARChartViewController.m */; };
 		1ACEC0EF12303291007D5C1A /* ChartView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1ACEC0EE12303291007D5C1A /* ChartView.xib */; };
 		1ADAFD15122E881F007A2396 /* AppRanking.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1ADAFD14122E881F007A2396 /* AppRanking.xcdatamodeld */; };
@@ -118,6 +121,13 @@
 		1A2D2D251223B77A0074AE7F /* genres.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = genres.json; path = Resources/genres.json; sourceTree = "<group>"; };
 		1A2D2EBB122560460074AE7F /* ARMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARMainViewController.h; sourceTree = "<group>"; };
 		1A2D2EBC122560460074AE7F /* ARMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARMainViewController.m; sourceTree = "<group>"; };
+		1A2E18A3147D345400C5E9A9 /* ARDataPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARDataPoint.h; sourceTree = "<group>"; };
+		1A2E18A4147D345400C5E9A9 /* ARDataPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARDataPoint.m; sourceTree = "<group>"; };
+		1A2E18A5147D345400C5E9A9 /* ARGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARGraphView.h; sourceTree = "<group>"; };
+		1A2E18A6147D345400C5E9A9 /* ARGraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARGraphView.m; sourceTree = "<group>"; };
+		1A2E18A7147D345400C5E9A9 /* ARSeries.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARSeries.h; sourceTree = "<group>"; };
+		1A2E18A8147D345400C5E9A9 /* ARSeries.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARSeries.m; sourceTree = "<group>"; };
+		1A2E18AF147D3E8F00C5E9A9 /* ARChartViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARChartViewControllerDelegate.h; sourceTree = "<group>"; };
 		1A45D9B2122640D500A1DF36 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		1A45D9F41226430400A1DF36 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dsa_pub.pem; path = Resources/Keys/dsa_pub.pem; sourceTree = "<group>"; };
 		1A5A3C69122568B800F08485 /* ARTreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARTreeNode.h; sourceTree = "<group>"; };
@@ -175,8 +185,8 @@
 		1AC3A2C6144D7F610066C0EB /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/ARMainViewController.xib; sourceTree = "<group>"; };
 		1AC3A2C8144D86870066C0EB /* AppRanking-4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "AppRanking-4.xcdatamodel"; sourceTree = "<group>"; };
 		1AC5B1FC1221B80F00999BCF /* SynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynthesizeSingleton.h; sourceTree = "<group>"; };
-		1ACEBF34122FDD1C007D5C1A /* ARChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARChart.h; sourceTree = "<group>"; };
-		1ACEBF35122FDD1C007D5C1A /* ARChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARChart.m; sourceTree = "<group>"; };
+		1ACEBF34122FDD1C007D5C1A /* ARGoogleChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARGoogleChart.h; sourceTree = "<group>"; };
+		1ACEBF35122FDD1C007D5C1A /* ARGoogleChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARGoogleChart.m; sourceTree = "<group>"; };
 		1ACEC0E5123031DC007D5C1A /* ARChartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARChartViewController.h; sourceTree = "<group>"; };
 		1ACEC0E6123031DC007D5C1A /* ARChartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARChartViewController.m; sourceTree = "<group>"; };
 		1ACEC0EC12303288007D5C1A /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/ChartView.xib; sourceTree = SOURCE_ROOT; };
@@ -414,10 +424,17 @@
 		1ACEC0E4123031C4007D5C1A /* Charting */ = {
 			isa = PBXGroup;
 			children = (
-				1ACEBF34122FDD1C007D5C1A /* ARChart.h */,
-				1ACEBF35122FDD1C007D5C1A /* ARChart.m */,
+				1A2E18A3147D345400C5E9A9 /* ARDataPoint.h */,
+				1A2E18A4147D345400C5E9A9 /* ARDataPoint.m */,
+				1A2E18A5147D345400C5E9A9 /* ARGraphView.h */,
+				1A2E18A6147D345400C5E9A9 /* ARGraphView.m */,
+				1A2E18A7147D345400C5E9A9 /* ARSeries.h */,
+				1A2E18A8147D345400C5E9A9 /* ARSeries.m */,
+				1ACEBF34122FDD1C007D5C1A /* ARGoogleChart.h */,
+				1ACEBF35122FDD1C007D5C1A /* ARGoogleChart.m */,
 				1ACEC0E5123031DC007D5C1A /* ARChartViewController.h */,
 				1ACEC0E6123031DC007D5C1A /* ARChartViewController.m */,
+				1A2E18AF147D3E8F00C5E9A9 /* ARChartViewControllerDelegate.h */,
 				1ACEC0EE12303291007D5C1A /* ChartView.xib */,
 				1A66341012310AD500D623D3 /* ARColor.h */,
 				1A66341112310AD500D623D3 /* ARColor.m */,
@@ -571,7 +588,7 @@
 				1A19B8B2122D62E100924F72 /* AREnumValueTransformer.m in Sources */,
 				1A19B8D6122D6AEE00924F72 /* ARTempCategoryTuple.m in Sources */,
 				1AB27706122E8185006CFC8F /* ARRankEntry.m in Sources */,
-				1ACEBF36122FDD1C007D5C1A /* ARChart.m in Sources */,
+				1ACEBF36122FDD1C007D5C1A /* ARGoogleChart.m in Sources */,
 				1ACEC0E7123031DC007D5C1A /* ARChartViewController.m in Sources */,
 				1A6633731230F9A000D623D3 /* ARStorageManager+Testing.m in Sources */,
 				1A66341212310AD500D623D3 /* ARColor.m in Sources */,
@@ -589,6 +606,9 @@
 				1A8A0DF31238E51A00BC399C /* SBJsonBase.m in Sources */,
 				1A8A0DF41238E51A00BC399C /* SBJsonParser.m in Sources */,
 				1A8A0DF51238E51A00BC399C /* SBJsonWriter.m in Sources */,
+				1A2E18A9147D345400C5E9A9 /* ARDataPoint.m in Sources */,
+				1A2E18AA147D345400C5E9A9 /* ARGraphView.m in Sources */,
+				1A2E18AB147D345400C5E9A9 /* ARSeries.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

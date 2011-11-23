@@ -31,11 +31,14 @@
  *
  */
 
-#import <Cocoa/Cocoa.h>
-#import "ARChartViewControllerDelegate.h"
+#import <Foundation/Foundation.h>
 
-@interface ARChartImageView : NSView <ARChartViewControllerDelegate>
+@class ARChartViewController;
 
-@property (nonatomic, retain) NSImage *image;
+@protocol ARChartViewControllerDelegate <NSObject>
+
+- (void)chartViewController:(ARChartViewController *)controller 
+              didUpdateData:(NSArray *)data 
+                     sorted:(BOOL)sorted;
 
 @end

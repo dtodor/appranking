@@ -32,10 +32,13 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "ARChartViewControllerDelegate.h"
 
-@interface ARChartImageView : NSView <ARChartViewControllerDelegate>
+@class ARSeries;
 
-@property (nonatomic, retain) NSImage *image;
+@interface ARGraphView : NSView
+
+- (void)addSeries:(ARSeries *)series forKey:(NSString *)key;
+- (void)removeSeriesForKey:(NSString *)key;
+- (void)clear;
 
 @end

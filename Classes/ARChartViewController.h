@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Todor Dimitrov
+ * Copyright (c) 2011 Todor Dimitrov
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -35,16 +35,16 @@
 #import "ARApplication.h"
 #import "ARCategoryTuple.h"
 #import "ARChartImageView.h"
+#import "ARChartViewControllerDelegate.h"
 
 
-@interface ARChartViewController : NSViewController {
-}
+@interface ARChartViewController : NSViewController
 
 @property (nonatomic, readonly, retain) NSArray *chartCountries;
 @property (nonatomic, retain) NSArray *allCountries;
 @property (nonatomic, retain) ARApplication *application;
 @property (nonatomic, retain) ARCategoryTuple *category;
-@property (nonatomic, retain) IBOutlet ARChartImageView *chartImageView;
+@property (nonatomic, assign) IBOutlet id <ARChartViewControllerDelegate> delegate;
 @property (nonatomic, readonly, retain) NSArray *timeFrameChoices;
 @property (nonatomic, retain) NSNumber *selectedTimeFrame;
 @property (nonatomic, retain) NSDate *fromDate;

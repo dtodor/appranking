@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Todor Dimitrov
+ * Copyright (c) 2011 Todor Dimitrov
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -37,8 +37,7 @@
 #import "ARChartViewController.h"
 
 
-@interface ARMainViewController : NSViewController <NSOutlineViewDelegate, NSSplitViewDelegate> {
-}
+@interface ARMainViewController : NSViewController <NSOutlineViewDelegate, NSSplitViewDelegate>
 
 @property (nonatomic, readonly, retain) NSArray *applicationsTree;
 @property (nonatomic, retain) NSMutableArray *tableSortDescriptors;

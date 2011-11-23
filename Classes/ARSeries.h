@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Todor Dimitrov
+ * Copyright (c) 2011 Todor Dimitrov
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -31,19 +31,17 @@
  *
  */
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
+@class ARColor;
 
-@interface ARChart : NSObject {
-}
+@interface ARSeries : NSObject
 
-@property (nonatomic, readonly, retain) NSDate *startDate;
-@property (nonatomic, readonly, retain) NSDate *endDate;
+@property (retain, readonly) NSArray *dataPoints;
+@property (retain) ARColor *color;
 
-- (id)initWithEntries:(NSArray *)entries sorted:(BOOL)sorted;
-+ (id)chartForEntries:(NSArray *)entries sorted:(BOOL)sorted;
-
-- (NSURLRequest *)URLRequest;
-- (NSImage *)image;
+- (void)addDataPointForX:(CGFloat)x y:(CGFloat)y;
+- (void)clear;
+- (void)sort;
 
 @end

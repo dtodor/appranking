@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Todor Dimitrov
+ * Copyright (c) 2011 Todor Dimitrov
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -34,15 +34,15 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface ARColor : NSObject {
-}
+@interface ARColor : NSObject
 
 @property (nonatomic, readonly) CGFloat red;
 @property (nonatomic, readonly) CGFloat green;
 @property (nonatomic, readonly) CGFloat blue;
 
-- (NSString *)hexValue;
-- (NSColor *)colorValue;
+@property (readonly) NSString *hex;
+@property (readonly) NSColor *color;
+@property (readonly) CGColorRef CGColor;
 
 + (ARColor *)randomColor;
 + (ARColor *)colorForCountry:(NSString *)country;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Todor Dimitrov
+ * Copyright (c) 2011 Todor Dimitrov
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -41,8 +41,7 @@ typedef enum {
 } AppDetailsWindowControllerReturnCodes;
 
 
-@interface ARAppDetailsWindowController : NSWindowController {
-}
+@interface ARAppDetailsWindowController : NSWindowController
 
 @property (nonatomic, retain) ARApplication *application;
 @property (nonatomic, retain) NSMutableArray *tempCategories;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Todor Dimitrov
+ * Copyright (c) 2011 Todor Dimitrov
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -32,9 +32,11 @@
  */
 
 #import "ARChartImageView.h"
+#import "ARChartViewController.h"
+#import "ARGoogleChart.h"
 
 
-@interface ARChartImageView()
+@interface ARChartImageView() <NSWindowDelegate>
 
 @property (nonatomic, retain) NSWindow *zoomWindow; 
 
@@ -45,6 +47,15 @@
 
 @synthesize image;
 @synthesize zoomWindow;
+
+- (void)chartViewController:(ARChartViewController *)controller didUpdateData:(NSArray *)data sorted:(BOOL)sorted {
+    if ([data count] > 1) {
+        ARGoogleChart *chart = [ARGoogleChart chartForEntries:data sorted:sorted];
+        self.image = chart.image;
+    } else {
+        self.image = nil;
+    }
+}
 
 - (void)dealloc {
 	[self removeObserver:self forKeyPath:@"image"];

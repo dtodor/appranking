@@ -31,11 +31,13 @@
  *
  */
 
-#import <Cocoa/Cocoa.h>
-#import "ARChartViewControllerDelegate.h"
+#import <Foundation/Foundation.h>
 
-@interface ARChartImageView : NSView <ARChartViewControllerDelegate>
+@interface ARDataPoint : NSObject
 
-@property (nonatomic, retain) NSImage *image;
+@property CGFloat x;
+@property CGFloat y;
+
+- (id)initWithX:(CGFloat)x y:(CGFloat)y;
 
 @end

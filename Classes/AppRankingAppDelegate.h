@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Todor Dimitrov
+ * Copyright (c) 2011 Todor Dimitrov
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -35,8 +35,7 @@
 #import "ARMainViewController.h"
 
 
-@interface AppRankingAppDelegate : NSObject <NSApplicationDelegate> {
-}
+@interface AppRankingAppDelegate : NSObject <NSApplicationDelegate>
 
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet ARMainViewController *mainViewController;
