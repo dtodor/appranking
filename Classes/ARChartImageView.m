@@ -1,34 +1,6 @@
-/*
- * Copyright (c) 2011 Todor Dimitrov
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 
- * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
- * 
- * Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 
- * Neither the name of the project's author nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+/**
+ * Author: Todor Dimitrov
+ * License: http://todor.mit-license.org/
  */
 
 #import "ARChartImageView.h"
@@ -38,17 +10,18 @@
 
 @interface ARChartImageView() <NSWindowDelegate>
 
-@property (nonatomic, retain) NSWindow *zoomWindow; 
+@property (nonatomic, strong) NSWindow *zoomWindow; 
 
 @end
 
 
 @implementation ARChartImageView
 
-@synthesize image;
-@synthesize zoomWindow;
+@synthesize image = _image;
+@synthesize zoomWindow = _zoomWindow;
 
-- (void)chartViewController:(ARChartViewController *)controller didUpdateData:(NSArray *)data sorted:(BOOL)sorted {
+- (void)chartViewController:(ARChartViewController *)controller didUpdateData:(NSArray *)data sorted:(BOOL)sorted 
+{
     if ([data count] > 1) {
         ARGoogleChart *chart = [ARGoogleChart chartForEntries:data sorted:sorted];
         self.image = chart.image;
@@ -57,27 +30,28 @@
     }
 }
 
-- (void)dealloc {
+- (void)dealloc 
+{
 	[self removeObserver:self forKeyPath:@"image"];
-	[image release], image = nil;
-	[zoomWindow release], zoomWindow = nil;
-	[super dealloc];
 }
 
-- (void)awakeFromNib {
+- (void)awakeFromNib 
+{
 	[self addObserver:self forKeyPath:@"image" options:NSKeyValueObservingOptionNew context:NULL];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context 
+{
 	[self setNeedsDisplay:YES];
 	[[self window] invalidateCursorRectsForView:self];
 }
 
-- (void)drawImage {
+- (void)drawImage 
+{
 	[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
 	
 	NSSize viewSize  = [self bounds].size;
-	NSSize imageSize = [image size];
+	NSSize imageSize = [self.image size];
 	CGFloat ratio = imageSize.width/imageSize.height;
 	
 	CGFloat imageWidth = 0;
@@ -126,11 +100,12 @@
 	NSRectFill(destRect);
     CGContextRestoreGState(context);
 
-	[image drawInRect:destRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+	[self.image drawInRect:destRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
     
 }
 
-- (void)drawInfoMessage {
+- (void)drawInfoMessage 
+{
 	NSRect bounds = [self bounds];
 	
     CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
@@ -153,47 +128,50 @@
 	[displayString drawAtPoint:textPosition withAttributes:displayAttributes];
 }
 
-- (void)drawRect:(NSRect)dirtyRect {
-	if (!image) {
+- (void)drawRect:(NSRect)dirtyRect 
+{
+	if (!self.image) {
 		[self drawInfoMessage];
 	} else {
 		[self drawImage];
 	}
 }
 
-- (void)resetCursorRects {
+- (void)resetCursorRects 
+{
     [super resetCursorRects];
-	if (image) {
+	if (self.image) {
 		NSCursor *cursor = [[NSCursor alloc] initWithImage:[NSImage imageNamed:@"zoom-cursor"] hotSpot:NSMakePoint(0, 0)];
 		[self addCursorRect:[self bounds] cursor:cursor];
-		[cursor release];
 	}
 }
 
-- (void)showChartImageInFullSize {
-	NSSize imageSize = [image size];
-	self.zoomWindow = [[[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, imageSize.width, imageSize.height) 
+- (void)showChartImageInFullSize 
+{
+	NSSize imageSize = [self.image size];
+	self.zoomWindow = [[NSPanel alloc] initWithContentRect:NSMakeRect(0, 0, imageSize.width, imageSize.height) 
 												  styleMask:NSUtilityWindowMask|NSHUDWindowMask|NSResizableWindowMask|NSClosableWindowMask|NSTitledWindowMask 
 													backing:NSBackingStoreBuffered 
-													  defer:NO] autorelease];
-	[zoomWindow setTitle:@"Chart"];
+													  defer:NO];
+	[self.zoomWindow setTitle:@"Chart"];
 	NSImageView *imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(10, 10, imageSize.width-20, imageSize.height-20)];
 	[imageView setImageScaling:NSImageScaleProportionallyUpOrDown];
 	[imageView setAutoresizingMask:NSViewMinXMargin|NSViewMaxXMargin|NSViewWidthSizable|NSViewMinYMargin|NSViewMaxYMargin|NSViewHeightSizable];
 	[imageView setImage:self.image];
-	[[zoomWindow contentView] addSubview:imageView];
-	[imageView release];
-	[zoomWindow setFrame:NSMakeRect(0, 0, imageSize.width, imageSize.height) display:NO];
-	[zoomWindow setDelegate:self];
-	[zoomWindow setFrameOrigin:NSMakePoint(imageSize.width/2, imageSize.height/2)];
-	[zoomWindow makeKeyAndOrderFront:nil];
+	[[self.zoomWindow contentView] addSubview:imageView];
+	[self.zoomWindow setFrame:NSMakeRect(0, 0, imageSize.width, imageSize.height) display:NO];
+	[self.zoomWindow setDelegate:self];
+	[self.zoomWindow setFrameOrigin:NSMakePoint(imageSize.width/2, imageSize.height/2)];
+	[self.zoomWindow makeKeyAndOrderFront:nil];
 }
 
-- (void)windowWillClose:(NSNotification *)notification {
+- (void)windowWillClose:(NSNotification *)notification 
+{
 	self.zoomWindow = nil;
 }
 
-- (void)mouseUp:(NSEvent *)theEvent {
+- (void)mouseUp:(NSEvent *)theEvent 
+{
 	if (!self.image) {
 		return;
 	}

@@ -1,68 +1,41 @@
-/*
- * Copyright (c) 2011 Todor Dimitrov
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- *
- * Neither the name of the project's author nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+/**
+ * Author: Todor Dimitrov
+ * License: http://todor.mit-license.org/
  */
 
 #import "ARStatusViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
+@interface ARStatusViewController ()
+
+@property (nonatomic, weak) IBOutlet TSPProgressIndicator *progressBar;
+
+@end
+
 
 @implementation ARStatusViewController
 
-@synthesize mainLabel;
-@synthesize progressBar;
-@synthesize secondaryLabel;
-@synthesize progress;
+@synthesize mainLabel = _mainLabel;
+@synthesize progressBar = _progressBar;
+@synthesize secondaryLabel = _secondaryLabel;
+@synthesize progress = _progress;
 
-- (void)dealloc {
-    [mainLabel release], mainLabel = nil;
-    [secondaryLabel release], secondaryLabel = nil;
-    [progressBar release], progressBar = nil;
-    [super dealloc];
+- (void)awakeFromNib 
+{
+    self.progressBar.maxValue = 1.0;
+	self.progressBar.progressColor = [NSColor colorWithDeviceWhite:0.2 alpha:0.9];
+	self.progressBar.progressHolderColor = [NSColor colorWithDeviceWhite:0.5 alpha:0.5];
+    self.progressBar.usesThreadedAnimation = YES;
 }
 
-- (void)awakeFromNib {
-    progressBar.maxValue = 1.0;
-	progressBar.progressColor = [NSColor colorWithDeviceWhite:0.2 alpha:0.9];
-	progressBar.progressHolderColor = [NSColor colorWithDeviceWhite:0.5 alpha:0.5];
-    progressBar.usesThreadedAnimation = YES;
-}
-
-- (void)updateAppIcon {
+- (void)updateAppIcon 
+{
     NSImage *appIcon = [NSImage imageNamed:@"NSApplicationIcon"];
-	if (progress > 0) {
-		NSImage *badgeOverlay = [[[NSImage alloc] initWithSize:NSMakeSize(128, 128)] autorelease];
+	if (self.progress > 0) {
+		NSImage *badgeOverlay = [[NSImage alloc] initWithSize:NSMakeSize(128, 128)];
 		[badgeOverlay lockFocus];
 		{
-			[progressBar drawRect:NSMakeRect(0, 0, 128, 24)];
+			[self.progressBar drawRect:NSMakeRect(0, 0, 128, 24)];
 			[appIcon compositeToPoint:NSZeroPoint operation:NSCompositeDestinationOver];
 		}
 		[badgeOverlay unlockFocus];
@@ -72,23 +45,25 @@
 	}
 }
 
-- (void)setProgress:(double)percent {
+- (void)setProgress:(double)percent 
+{
     assert(percent >= 0 && percent <= 1.0);
-    progress = percent;
-    [progressBar setHidden:(progress == 0)];
-	if (progress > 0) {
-		[progressBar stopAnimation:nil];
-		[progressBar setIsIndeterminate:NO];
-		progressBar.doubleValue = progress;
-		[progressBar setNeedsDisplay:YES];
+    _progress = percent;
+    [self.progressBar setHidden:(self.progress == 0)];
+	if (self.progress > 0) {
+		[self.progressBar stopAnimation:nil];
+		[self.progressBar setIsIndeterminate:NO];
+		self.progressBar.doubleValue = self.progress;
+		[self.progressBar setNeedsDisplay:YES];
 	}
 	[self updateAppIcon];
 }
 
-- (void)displayIndeterminateProgress {
-    [progressBar setHidden:NO];
-    [progressBar setIsIndeterminate:YES];
-    [progressBar startAnimation:nil];
+- (void)displayIndeterminateProgress 
+{
+    [self.progressBar setHidden:NO];
+    [self.progressBar setIsIndeterminate:YES];
+    [self.progressBar startAnimation:nil];
 }
 
 @end

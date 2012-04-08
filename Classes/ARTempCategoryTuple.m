@@ -1,10 +1,7 @@
-//
-//  ARTempCategoryTuple.m
-//  AppRanking
-//
-//  Created by Todor Dimitrov on 31.08.10.
-//  Copyright 2011 Todor Dimitrov. All rights reserved.
-//
+/**
+ * Author: Todor Dimitrov
+ * License: http://todor.mit-license.org/
+ */
 
 #import "ARTempCategoryTuple.h"
 #import "ARStorageManager.h"
@@ -12,16 +9,11 @@
 
 @implementation ARTempCategoryTuple
 
-@synthesize name;
-@synthesize type;
+@synthesize name = _name;
+@synthesize type = _type;
 
-- (void)dealloc {
-	[name release], name = nil;
-	[type release], type = nil;
-	[super dealloc];
-}
-
-- (BOOL)validateValue:(id *)ioValue forKey:(NSString *)inKey error:(NSError **)outError {
+- (BOOL)validateValue:(id *)ioValue forKey:(NSString *)inKey error:(NSError **)outError 
+{
 	if ([inKey isEqualToString:@"type"]) {
 		if (*ioValue == nil) {
 			if (outError) {
@@ -36,7 +28,8 @@
 	return YES;
 }
 
-- (BOOL)isEqual:(id)object {
+- (BOOL)isEqual:(id)object 
+{
 	if (object == self)
         return YES;
     if (!object || ![object isKindOfClass:[self class]])
@@ -60,7 +53,8 @@
 	return result;
 }
 
-- (NSUInteger)hash {
+- (NSUInteger)hash 
+{
 	int prime = 31;
 	int result = prime;
 	result += prime * [self.name hash];
@@ -68,13 +62,16 @@
 	return result;
 }
 
-- (BOOL)validate:(NSError **)error {
-	return [self validateValue:&type forKey:@"type" error:error];
+- (BOOL)validate:(NSError **)error 
+{
+    id value = self.type;
+	return [self validateValue:&value forKey:@"type" error:error];
 }
 
-- (BOOL)fetchCorrespondingCategory:(ARCategoryTuple **)category error:(NSError **)error {
+- (BOOL)fetchCorrespondingCategory:(ARCategoryTuple **)category error:(NSError **)error 
+{
 	NSManagedObjectContext *managedObjectContext = [ARStorageManager sharedARStorageManager].managedObjectContext;
-	NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 	[fetchRequest setEntity:[NSEntityDescription entityForName:@"ARCategoryTuple" inManagedObjectContext:managedObjectContext]];
 	
 	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@ and type == %d", self.name, [self.type intValue]];

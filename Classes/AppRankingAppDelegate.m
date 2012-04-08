@@ -1,34 +1,6 @@
-/*
- * Copyright (c) 2011 Todor Dimitrov
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 
- * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
- * 
- * Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 
- * Neither the name of the project's author nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+/**
+ * Author: Todor Dimitrov
+ * License: http://todor.mit-license.org/
  */
 
 #import "AppRankingAppDelegate.h"
@@ -44,15 +16,15 @@
 
 @implementation AppRankingAppDelegate
 
-@synthesize window;
-@synthesize mainViewController;
+@synthesize window = _window;
+@synthesize mainViewController = _mainViewController;
 
-+ (void)initialize {
++ (void)initialize 
+{
 	if (self == [AppRankingAppDelegate class]) {
 		{
 			AREnumValueTransformer *categoryTypesTransformer = [[AREnumValueTransformer alloc] initWithValueNames:[ARCategoryTuple typeNames]];
 			[NSValueTransformer setValueTransformer:categoryTypesTransformer forName:@"ARCategoryTupleTypeValueTransformer"];
-			[categoryTypesTransformer release];
 		}
 		
 		EvalBlock isNilOrNSNull = ^(id value) {
@@ -68,7 +40,6 @@
 		{
 			ARBoolValueTransformer *isNilTransformer = [[ARBoolValueTransformer alloc] initWithEvaluationBlock:isNilOrNSNull];
 			[NSValueTransformer setValueTransformer:isNilTransformer forName:@"ARIsNilOrNSNull"];
-			[isNilTransformer release];
 		}
 
 		{
@@ -76,32 +47,26 @@
 				return (BOOL)!isNilOrNSNull(value);
 			}];
 			[NSValueTransformer setValueTransformer:isNotNilTransformer forName:@"ARIsNotNilOrNSNull"];
-			[isNotNilTransformer release];
 		}
 	}
 }
 
-- (void)dealloc {
-	[mainViewController release], mainViewController = nil;
-    [window release], window = nil;
-    [super dealloc];
-}
-
-- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)application {
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)application 
+{
 	return YES;
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification 
+{
 	NSError *error = nil;
 	if (![[ARConfiguration sharedARConfiguration] loadConfiguration:&error]) {
-		[window presentError:error];
+		[self.window presentError:error];
 	}
-	NSView *mainView = [mainViewController view];
-	NSView *contentView = [window contentView];
+	NSView *mainView = [self.mainViewController view];
+	NSView *contentView = [self.window contentView];
 	CGRect frame = [contentView frame];
 	[mainView setFrame:frame];
-	[[window contentView] addSubview:mainView];
+	[[self.window contentView] addSubview:mainView];
 	
 	
 	{
@@ -110,10 +75,11 @@
 		//[storageManager generateRandomRankingsDeletingExistent:YES];
 	}
 	
-	[mainViewController reloadApplications];
+	[self.mainViewController reloadApplications];
 }
 
-- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender 
+{
     NSError *error = nil;
 	if (![[ARStorageManager sharedARStorageManager] commitChanges:&error]) {
         BOOL result = [sender presentError:error];
@@ -130,7 +96,6 @@
         [alert addButtonWithTitle:cancelButton];
 		
         NSInteger answer = [alert runModal];
-        [alert release];
         alert = nil;
         
         if (answer == NSAlertAlternateReturn) return NSTerminateCancel;

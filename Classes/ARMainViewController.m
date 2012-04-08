@@ -1,34 +1,6 @@
-/*
- * Copyright (c) 2011 Todor Dimitrov
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 
- * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
- * 
- * Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 
- * Neither the name of the project's author nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+/**
+ * Author: Todor Dimitrov
+ * License: http://todor.mit-license.org/
  */
 
 #import "ARMainViewController.h"
@@ -44,85 +16,92 @@
 #import "ARAppDetailsWindowController.h"
 #import "ARRankEntry.h"
 #import "ARStorageManager+Testing.h"
+#import "ARRSSFeedCache.h"
 
 #import <Growl/Growl.h>
 
 
 @interface ARMainViewController() <ARRankQueryDelegate, GrowlApplicationBridgeDelegate>
 
-@property (nonatomic, retain) NSArray *applicationsTree;
-@property (nonatomic, retain) NSMutableArray *runningQueries;
-@property (nonatomic, retain) NSMutableArray *pendingQueries;
-@property (nonatomic, retain) ARAppDetailsWindowController *detailsViewController;
+@property (nonatomic, strong) NSArray *applicationsTree;
+@property (nonatomic, strong) NSMutableArray *runningQueries;
+@property (nonatomic, strong) NSMutableArray *pendingQueries;
+@property (nonatomic, strong) ARAppDetailsWindowController *detailsViewController;
 @property (nonatomic) NSUInteger totalNumberOfDownloads;
+
+- (IBAction)emptyCache:(id)sender;
+@property (weak) IBOutlet NSMenuItem *emptyCacheMenuItem;
+
+@property (nonatomic, strong) NSMutableArray *tableSortDescriptors;
+@property (nonatomic, strong) NSMutableArray *outlineViewSortDescriptors;
+@property (nonatomic, weak) IBOutlet NSOutlineView *sidebar;
+@property (nonatomic, weak) IBOutlet NSToolbarItem *statusToolBarItem;
+@property (nonatomic, assign) IBOutlet ARStatusViewController *statusViewController;
+@property (nonatomic, weak) IBOutlet NSTreeController *treeController;
+@property (nonatomic, assign) IBOutlet ARChartViewController *chartViewController;
+@property (nonatomic, weak) IBOutlet NSSplitView *mainContentSplitView;
+
+- (IBAction)refresh:(NSToolbarItem *)sender;
+- (IBAction)stop:(NSToolbarItem *)sender;
+- (IBAction)info:(NSToolbarItem *)sender;
+
+- (IBAction)addApplication:(NSButton *)sender;
+- (IBAction)removeApplication:(NSButton *)sender;
 
 @end
 
 
 @implementation ARMainViewController
 
-@synthesize applicationsTree;
-@synthesize runningQueries;
-@synthesize pendingQueries;
-@synthesize sidebar;
-@synthesize statusToolBarItem;
-@synthesize statusViewController;
-@synthesize tableSortDescriptors;
-@synthesize detailsViewController;
-@synthesize treeController;
-@synthesize outlineViewSortDescriptors;
-@synthesize chartViewController;
-@synthesize mainContentSplitView;
-@synthesize totalNumberOfDownloads;
+@synthesize emptyCacheMenuItem = _emptyCacheMenuItem;
+@synthesize applicationsTree = _applicationsTree;
+@synthesize runningQueries = _runningQueries;
+@synthesize pendingQueries = _pendingQueries;
+@synthesize sidebar = _sidebar;
+@synthesize statusToolBarItem = _statusToolBarItem;
+@synthesize statusViewController = _statusViewController;
+@synthesize tableSortDescriptors = _tableSortDescriptors;
+@synthesize detailsViewController = _detailsViewController;
+@synthesize treeController = _treeController;
+@synthesize outlineViewSortDescriptors = _outlineViewSortDescriptors;
+@synthesize chartViewController = _chartViewController;
+@synthesize mainContentSplitView = _mainContentSplitView;
+@synthesize totalNumberOfDownloads = _totalNumberOfDownloads;
 
 #pragma mark -
 #pragma mark Lifecycle
 
-- (void)awakeFromNib {
-	[statusToolBarItem setView:[statusViewController view]];
-	[statusViewController.mainLabel setStringValue:@"Welcome"];
-	[statusViewController.secondaryLabel setHidden:YES];
-	[statusViewController setProgress:0.0];
+- (void)awakeFromNib 
+{
+	[self.statusToolBarItem setView:[self.statusViewController view]];
+	[self.statusViewController.mainLabel setStringValue:@"Welcome"];
+	[self.statusViewController.secondaryLabel setHidden:YES];
+	[self.statusViewController setProgress:0.0];
 	
 	self.outlineViewSortDescriptors = [NSMutableArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
 	self.tableSortDescriptors = [NSMutableArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"rank" ascending:YES]];
 	
-	NSView *chartPlaceholder = [[mainContentSplitView subviews] objectAtIndex:1];
-	[chartViewController.view setFrame:[chartPlaceholder bounds]];
-	[chartPlaceholder addSubview:chartViewController.view];
+	NSView *chartPlaceholder = [[self.mainContentSplitView subviews] objectAtIndex:1];
+	[self.chartViewController.view setFrame:[chartPlaceholder bounds]];
+	[chartPlaceholder addSubview:self.chartViewController.view];
 	
-	chartViewController.enabled = YES;
+	self.chartViewController.enabled = YES;
 	
 	[GrowlApplicationBridge setGrowlDelegate:self];
 	
-	[sidebar setDoubleAction:@selector(doubleAction:)];
-	[sidebar setTarget:self];
-}
-
-- (void)dealloc {
-	[mainContentSplitView release], mainContentSplitView = nil;
-	[chartViewController release], chartViewController = nil;
-	[applicationsTree release], applicationsTree = nil;
-	[treeController release], treeController = nil;
-	[detailsViewController release], detailsViewController = nil;
-	[tableSortDescriptors release], tableSortDescriptors = nil;
-	[outlineViewSortDescriptors release], outlineViewSortDescriptors = nil;
-	[statusViewController release], statusViewController = nil;
-	[sidebar release], sidebar = nil;
-	[statusToolBarItem release], statusToolBarItem = nil;
-	[runningQueries release], runningQueries = nil;
-	[pendingQueries release], pendingQueries = nil;
-	[super dealloc];
+	[self.sidebar setDoubleAction:@selector(doubleAction:)];
+	[self.sidebar setTarget:self];
 }
 
 #pragma mark -
 #pragma mark Private helper methods
 
-- (void)displayInfoForApplication:(ARApplication *)app {
-	if (detailsViewController) {
+- (void)displayInfoForApplication:(ARApplication *)app 
+{
+	if (self.detailsViewController) {
 		return;
 	}
-	self.detailsViewController = [[[ARAppDetailsWindowController alloc] initWithWindowNibName:@"AppDetailsWindow"] autorelease];
+	self.detailsViewController = [[ARAppDetailsWindowController alloc] initWithWindowNibName:@"AppDetailsWindow"];
 	self.detailsViewController.application = app;
  	[NSApp beginSheet:[self.detailsViewController window] 
 	   modalForWindow:[NSApp mainWindow] 
@@ -131,7 +110,8 @@
 		  contextInfo:NULL];
 }
 
-- (void)doubleAction:(NSOutlineView *)sender {
+- (void)doubleAction:(NSOutlineView *)sender 
+{
 	if (self.runningQueries) {
 		return;
 	}
@@ -141,42 +121,48 @@
 	}
 }
 
-- (void)updateChartCountries {
+- (void)updateChartCountries 
+{
 	NSArray *selectedObjects = [self.treeController selectedObjects];
 	if ([selectedObjects count] == 1) {
 		ARTreeNode *selection = [selectedObjects objectAtIndex:0];
-		chartViewController.application = selection.application;
-		chartViewController.category = selection.category;
+		self.chartViewController.application = selection.application;
+		self.chartViewController.category = selection.category;
 		NSError *error = nil;
 		NSArray *countries = [[ARStorageManager sharedARStorageManager] rankedCountriesForApplication:selection.application 
 																						   inCategory:selection.category 
 																								error:&error];
 		if (!countries) {
-			chartViewController.allCountries = nil;
+			self.chartViewController.allCountries = nil;
 			[self presentError:error];
 		} else {
-			chartViewController.allCountries = countries;
+			self.chartViewController.allCountries = countries;
 		}
 	}
 }
 
-- (void)updateUIOnFinish {
-	[statusViewController.mainLabel setStringValue:@"Done"];
-	[statusViewController.secondaryLabel setHidden:YES];
-	[statusViewController setProgress:0.0];
+- (void)updateUIOnFinish 
+{
+	[self.statusViewController.mainLabel setStringValue:@"Done"];
+	[self.statusViewController.secondaryLabel setHidden:YES];
+	[self.statusViewController setProgress:0.0];
+    [self.emptyCacheMenuItem.menu setAutoenablesItems:YES];
+    [self.emptyCacheMenuItem setEnabled:YES];
 	
 	[NSApp setWindowsNeedUpdate:YES];
 	
 	[self updateChartCountries];
-	chartViewController.enabled = YES;
+	self.chartViewController.enabled = YES;
 }
 
-- (ARApplication *)selectedApplication {
-	ARTreeNode *applicationNode = [[treeController selectedObjects] objectAtIndex:0];
+- (ARApplication *)selectedApplication 
+{
+	ARTreeNode *applicationNode = [[self.treeController selectedObjects] objectAtIndex:0];
 	return applicationNode.application;
 }
 
-- (void)postFinishNotifications {
+- (void)postFinishNotifications 
+{
 	[GrowlApplicationBridge notifyWithTitle:@"Finished updating ranks" 
 								description:@"AppRanking has finished updating the ranks for your applications. To review the results, select an application from the categories and applications list on the left." 
 						   notificationName:@"ARRefreshFinishedNotification" 
@@ -189,7 +175,22 @@
 #pragma mark -
 #pragma mark IBAction methods
 
-- (void)resetRanks:(ARTreeNode *)node {
+- (IBAction)emptyCache:(id)sender 
+{
+	NSAlert *alert = [NSAlert alertWithMessageText:@"Empty Cache" 
+									 defaultButton:@"Empty" 
+								   alternateButton:@"Cancel" 
+									   otherButton:nil 
+						 informativeTextWithFormat:@"Are you sure you want to empty the cache?"];
+	[alert setAlertStyle:NSInformationalAlertStyle];
+    NSInteger returnCode = [alert runModal];
+	if (returnCode == NSAlertDefaultReturn) {
+        [[ARRSSFeedCache sharedARRSSFeedCache] emptyCache];
+    }
+}
+
+- (void)resetRanks:(ARTreeNode *)node 
+{
 	NSMutableArray *ranks = [node representedObject];
 	if (ranks) {
 		NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [ranks count])];
@@ -204,19 +205,22 @@
 	}
 }
 
-- (IBAction)refresh:(NSToolbarItem *)sender {
+- (IBAction)refresh:(NSToolbarItem *)sender 
+{
 	if (self.runningQueries) {
 		return;
 	}
 	
-	[statusViewController.mainLabel setStringValue:@"Processing RSS feeds ..."];
-	[statusViewController.secondaryLabel setStringValue:@""];
-	[statusViewController.secondaryLabel setHidden:NO];
-	[statusViewController displayIndeterminateProgress];
+	[self.statusViewController.mainLabel setStringValue:@"Processing RSS feeds ..."];
+	[self.statusViewController.secondaryLabel setStringValue:@""];
+	[self.statusViewController.secondaryLabel setHidden:NO];
+    [self.emptyCacheMenuItem.menu setAutoenablesItems:NO];
+    [self.emptyCacheMenuItem setEnabled:NO];
+	[self.statusViewController displayIndeterminateProgress];
 	
-	chartViewController.enabled = NO;
+	self.chartViewController.enabled = NO;
 	
-	for (ARTreeNode *node in applicationsTree) {
+	for (ARTreeNode *node in self.applicationsTree) {
 		[self resetRanks:node];
 	}
 	
@@ -237,25 +241,25 @@
 			if (query) {
 				query.delegate = self;
 				if (count < maxConcurrent) {
-					[runningQueries addObject:query];
+					[self.runningQueries addObject:query];
 					[query start];
 				} else {
-					[pendingQueries addObject:query];
+					[self.pendingQueries addObject:query];
 				}
-				[query release];
 			} else {
 				NSLog(@"Unable to start query for category '%@' and country '%@'", rootNode.category, country);
 			}
 		}
 	}
-	totalNumberOfDownloads = count;
+	self.totalNumberOfDownloads = count;
 }
 
-- (IBAction)stop:(NSToolbarItem *)sender {
-	for (ARRankQuery *query in runningQueries) {
+- (IBAction)stop:(NSToolbarItem *)sender 
+{
+	for (ARRankQuery *query in self.runningQueries) {
 		[query cancel];
 	}
-	for (ARRankQuery *query in pendingQueries) {
+	for (ARRankQuery *query in self.pendingQueries) {
 		[query cancel];
 	}
 	self.runningQueries = nil;
@@ -267,12 +271,15 @@
 	[storageManager.managedObjectContext rollback];
 }
 
-- (IBAction)info:(NSToolbarItem *)sender {
+- (IBAction)info:(NSToolbarItem *)sender 
+{
 	[self displayInfoForApplication:[self selectedApplication]];
 }
 
-- (IBAction)addApplication:(NSButton *)sender {
-	self.detailsViewController = [[[ARAppDetailsWindowController alloc] initWithWindowNibName:@"AppDetailsWindow"] autorelease];
+- (IBAction)addApplication:(NSButton *)sender 
+{
+	self.detailsViewController = [[ARAppDetailsWindowController alloc] initWithWindowNibName:@"AppDetailsWindow"];
+	self.detailsViewController.application = nil;
  	[NSApp beginSheet:[self.detailsViewController window] 
 	   modalForWindow:[NSApp mainWindow] 
 		modalDelegate:self 
@@ -280,7 +287,8 @@
 		  contextInfo:NULL];
 }
 
-- (void)editAppSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo {
+- (void)editAppSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo 
+{
 	self.detailsViewController = nil;
 	if (returnCode == DidSaveChanges) {
 		[[ARStorageManager sharedARStorageManager] tryDeletingUnusedCategories];
@@ -288,7 +296,8 @@
 	}
 }
 
-- (IBAction)removeApplication:(NSButton *)sender {
+- (IBAction)removeApplication:(NSButton *)sender 
+{
 	ARApplication *application = [self selectedApplication];
 	NSAlert *alert = [NSAlert alertWithMessageText:@"Delete Confirmation" 
 									 defaultButton:@"Yes" 
@@ -302,7 +311,8 @@
 						contextInfo:NULL];
 }
 
-- (void)deleteConfirmationSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo {
+- (void)deleteConfirmationSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo 
+{
 	if (returnCode == NSAlertDefaultReturn) {
 		ARApplication *application = [self selectedApplication];
 		NSManagedObjectContext *managedObjectContext = [ARStorageManager sharedARStorageManager].managedObjectContext;
@@ -317,29 +327,22 @@
 	}
 }
 	 
-- (IBAction)sortByApplications:(NSMenuItem *)sender {
-	NSLog(@"'sort by applications' action");
-}
-
-- (IBAction)sortByCategories:(NSMenuItem *)sender {
-	NSLog(@"'sort by categories' action");
-}
-
 #pragma mark -
 #pragma mark ARRankQueryDelegate
 
-- (void)processQuery:(ARRankQuery *)query {
-	[runningQueries removeObject:query];
-	NSUInteger count = [runningQueries count] + [pendingQueries count];
-	double percent = ((double)totalNumberOfDownloads-count)/totalNumberOfDownloads;
-	[statusViewController setProgress:percent];
-	if ([pendingQueries count] > 0) {
-		ARRankQuery *query = [[pendingQueries lastObject] retain];
-		[pendingQueries removeLastObject];
-		[runningQueries addObject:[query autorelease]];
+- (void)processQuery:(ARRankQuery *)query 
+{
+	[self.runningQueries removeObject:query];
+	NSUInteger count = [self.runningQueries count] + [self.pendingQueries count];
+	double percent = ((double)self.totalNumberOfDownloads-count)/self.totalNumberOfDownloads;
+	[self.statusViewController setProgress:percent];
+	if ([self.pendingQueries count] > 0) {
+		ARRankQuery *query = [self.pendingQueries lastObject];
+		[self.pendingQueries removeLastObject];
+		[self.runningQueries addObject:query];
 		[query start];
 	}
-	if ([runningQueries count] == 0) {
+	if ([self.runningQueries count] == 0) {
 		// Finished
 		self.runningQueries = nil;
 		self.pendingQueries = nil;
@@ -356,8 +359,9 @@
 	}
 }
 
-- (ARTreeNode *)nodeForCategory:(ARCategoryTuple *)category application:(NSString *)app {
-	for (ARTreeNode *rootNode in applicationsTree) {
+- (ARTreeNode *)nodeForCategory:(ARCategoryTuple *)category application:(NSString *)app 
+{
+	for (ARTreeNode *rootNode in self.applicationsTree) {
 		if (rootNode.category == category) {
 			NSArray *children = [rootNode childNodes];
 			for (ARTreeNode *child in children) {
@@ -370,11 +374,12 @@
 	return nil;
 }
 
-- (void)queryDidFinish:(ARRankQuery *)query {
+- (void)queryDidFinish:(ARRankQuery *)query 
+{
 	if (self.runningQueries == nil) {
 		return;
 	}
-	[statusViewController.secondaryLabel setStringValue:[NSString stringWithFormat:@"Finished processing %@ [%@]", query.country, query.category]];
+	[self.statusViewController.secondaryLabel setStringValue:[NSString stringWithFormat:@"Finished processing %@ [%@]", query.country, query.category]];
 	for (NSString *appName in query.ranks) {
 		id value = [query.ranks objectForKey:appName];
 		if ([value isKindOfClass:[NSNumber class]]) {
@@ -394,7 +399,7 @@
 			
 			applicationNode.badge = [entries count];
 			applicationNode.displaysBadge = YES;
-			[sidebar reloadItem:nil];
+			[self.sidebar reloadItem:nil];
 
 			NSError *error = nil;
 			if (![[ARStorageManager sharedARStorageManager] insertRankEntry:value forApplication:applicationNode.application query:query error:&error]) {
@@ -412,11 +417,10 @@
 				NSImage *icon = [[NSImage alloc] initWithContentsOfURL:[NSURL URLWithString:iconUrl]];
 				if (icon) {
 					app.iconImage = icon;
-					[icon release];
 					
 					ARTreeNode *node = [self nodeForCategory:query.category application:appName];
 					node.icon = icon;
-					[sidebar reloadItem:nil];
+					[self.sidebar reloadItem:nil];
 				}
 				
 				break;
@@ -427,13 +431,12 @@
 	[self processQuery:query];
 }
 
-- (void)query:(ARRankQuery *)query didFailWithError:(NSError *)error {
-	NSDictionary *attributes = [NSDictionary dictionaryWithObject:[NSColor redColor] forKey:NSForegroundColorAttributeName];
-	NSString *message = [NSString stringWithFormat:@"%@ - %@ failed (error: %@)\n", 
-						 query.country, query.category, [error localizedDescription]];
-	NSAttributedString *text = [[NSAttributedString alloc] initWithString:message attributes:attributes];
-	// TODO log error message
-	[text release];
+- (void)query:(ARRankQuery *)query didFailWithError:(NSError *)error 
+{
+//	NSDictionary *attributes = [NSDictionary dictionaryWithObject:[NSColor redColor] forKey:NSForegroundColorAttributeName];
+//	NSString *message = [NSString stringWithFormat:@"%@ - %@ failed (error: %@)\n", 
+//						 query.country, query.category, [error localizedDescription]];
+//	NSAttributedString *text = [[NSAttributedString alloc] initWithString:message attributes:attributes];
 	[self processQuery:query];
 }
 
@@ -443,7 +446,8 @@
 - (void)outlineView:(NSOutlineView *)outlineView
     willDisplayCell:(NSCell *)cell
      forTableColumn:(NSTableColumn *)tableColumn
-               item:(id)item {
+               item:(id)item 
+{
 	
 	if ([cell isKindOfClass:[SidebarBadgeCell class]]) {
 		SidebarBadgeCell *badgeCell = (SidebarBadgeCell *)cell;
@@ -454,28 +458,32 @@
 	}
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView_ isGroupItem:(id)item {
+- (BOOL)outlineView:(NSOutlineView *)outlineView_ isGroupItem:(id)item 
+{
 	return [outlineView_ parentForItem:item] == nil;
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView_ shouldSelectItem:(id)item {
+- (BOOL)outlineView:(NSOutlineView *)outlineView_ shouldSelectItem:(id)item 
+{
 	return [outlineView_ parentForItem:item] != nil;
 }
 
-- (void)outlineViewSelectionDidChange:(NSNotification *)notification {
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification 
+{
 	[self updateChartCountries];
 }
 
 #pragma mark -
 #pragma mark NSToolbarItemValidation
 
-- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem {
+- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem 
+{
 	if ([[theItem itemIdentifier] isEqualToString:@"RefreshToolbarItem"]) {
 		return self.runningQueries == nil;
 	} else if ([[theItem itemIdentifier] isEqualToString:@"StopToolbarItem"]) {
 		return self.runningQueries != nil;
 	} else if ([[theItem itemIdentifier] isEqualToString:@"InfoToolbarItem"]) {
-		return [[sidebar selectedRowIndexes] count] == 1 && !self.runningQueries;
+		return [[self.sidebar selectedRowIndexes] count] == 1 && !self.runningQueries;
 	}
 	return NO;
 }
@@ -483,7 +491,8 @@
 #pragma mark -
 #pragma mark NSTableViewDelegate
 
-- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row 
+{
 	if ([[tableColumn identifier] isEqualToString:@"NumberColumn"]) {
 		[cell setStringValue:[NSString stringWithFormat:@"%d", row+1]];
 	}
@@ -492,10 +501,11 @@
 #pragma mark -
 #pragma mark Public interface
 
-- (void)reloadApplications {
+- (void)reloadApplications 
+{
 	ARStorageManager *storageManager = [ARStorageManager sharedARStorageManager];
 	
-	NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 	[fetchRequest setEntity:[NSEntityDescription entityForName:@"ARCategoryTuple" inManagedObjectContext:storageManager.managedObjectContext]];
 	
 	NSError *error = nil;
@@ -527,15 +537,16 @@
 	}
 	self.applicationsTree = array;
 	
-	[sidebar expandItem:nil expandChildren:YES];
+	[self.sidebar expandItem:nil expandChildren:YES];
 	NSUInteger indexes[] = { 0, 0 };
-	[treeController setSelectionIndexPath:[NSIndexPath indexPathWithIndexes:indexes length:2]];
+	[self.treeController setSelectionIndexPath:[NSIndexPath indexPathWithIndexes:indexes length:2]];
 }
 
 #pragma mark -
 #pragma mark NSSplitViewDelegate
 
-- (CGFloat)splitView:(NSSplitView *)splitView constrainSplitPosition:(CGFloat)proposedPosition ofSubviewAt:(NSInteger)dividerIndex {
+- (CGFloat)splitView:(NSSplitView *)splitView constrainSplitPosition:(CGFloat)proposedPosition ofSubviewAt:(NSInteger)dividerIndex 
+{
     
     NSSize size = [splitView bounds].size;
     if (splitView.isVertical) {

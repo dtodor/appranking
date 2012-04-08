@@ -1,34 +1,6 @@
-/*
- * Copyright (c) 2011 Todor Dimitrov
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 
- * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
- * 
- * Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 
- * Neither the name of the project's author nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+/**
+ * Author: Todor Dimitrov
+ * License: http://todor.mit-license.org/
  */
 
 #import "ARRankQuery.h"
@@ -45,17 +17,17 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 @interface ARRankQuery()
 
 @property (nonatomic, copy) NSString *country;
-@property (nonatomic, retain) ARCategoryTuple *category;
-@property (nonatomic, retain) NSMutableDictionary *ranks;
-@property (nonatomic, retain) NSMutableDictionary *icons;
+@property (nonatomic, strong) ARCategoryTuple *category;
+@property (nonatomic, strong) NSDictionary *ranks;
+@property (nonatomic, strong) NSDictionary *icons;
 @property (nonatomic, getter=isCached) BOOL cached;
-@property (nonatomic, retain) NSDate *expiryDate;
+@property (nonatomic, strong) NSDate *expiryDate;
 
-@property (nonatomic, retain) NSURLConnection *connection;
-@property (nonatomic, retain) NSData *receivedData;
+@property (nonatomic, strong) NSURLConnection *connection;
+@property (nonatomic, strong) NSData *receivedData;
 @property (nonatomic) BOOL started;
 @property (nonatomic) BOOL canceled;
-@property (nonatomic, retain) NSURL *url;
+@property (nonatomic, strong) NSURL *url;
 
 + (dispatch_queue_t)cacheAccessSerialQueue;
 
@@ -64,21 +36,22 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 
 @implementation ARRankQuery
 
-@synthesize country;
-@synthesize category;
-@synthesize delegate;
-@synthesize ranks;
-@synthesize icons;
-@synthesize cached;
-@synthesize expiryDate;
+@synthesize country = _country;
+@synthesize category = _category;
+@synthesize delegate = _delegate;
+@synthesize ranks = _ranks;
+@synthesize icons = _icons;
+@synthesize cached = _cached;
+@synthesize expiryDate = _expiryDate;
 
-@synthesize connection;
-@synthesize receivedData;
-@synthesize started;
-@synthesize canceled;
-@synthesize url;
+@synthesize connection = _connection;
+@synthesize receivedData = _receivedData;
+@synthesize started = _started;
+@synthesize canceled = _canceled;
+@synthesize url = _url;
 
-+ (dispatch_queue_t)cacheAccessSerialQueue {
++ (dispatch_queue_t)cacheAccessSerialQueue 
+{
 	static dispatch_queue_t queue;
 	static dispatch_once_t once;
 	dispatch_once(&once, ^{
@@ -90,14 +63,16 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 #pragma mark -
 #pragma mark Query logic
 
-- (NSError *)errorForUnderlyingError:(NSError *)error {
+- (NSError *)errorForUnderlyingError:(NSError *)error 
+{
 	return [NSError errorWithDomain:kErrorDomain 
 							   code:UnableToParseFeed 
 						   userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Unable to parse iTunes feed!", NSLocalizedDescriptionKey, 
 									 error, NSUnderlyingErrorKey, nil]];
 }
 
-- (BOOL)parseFeed:(NSDictionary *)feed error:(NSError **)error {
+- (BOOL)parseFeed:(NSDictionary *)feed error:(NSError **)error 
+{
 	NSError *underlyingError = nil;
 	NSDictionary *feedDict = [feed dictionaryForKey:@"feed" error:&underlyingError];
 	if (underlyingError) {
@@ -139,12 +114,12 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 			return NO;
 		}
 		
-		NSArray *apps = [ranks allKeys];
+		NSArray *apps = [_ranks allKeys];
 		for (NSString *appName in apps) {
 			if ([label isEqualToString:appName]) {
 				NSNumber *rank = [NSNumber numberWithInt:i+1];
 				found++;
-				[ranks setObject:rank forKey:appName];
+				[(NSMutableDictionary *)_ranks setObject:rank forKey:appName];
 				
 				NSArray *images = [entry arrayForKey:@"im:image" error:NULL];
 				if (images && [images count] > 0) {
@@ -152,50 +127,45 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 					if (image) {
 						NSString *imageUrl = [image stringForKey:@"label" error:NULL];
 						if (imageUrl) {
-							[icons setObject:imageUrl forKey:appName];
+							[(NSMutableDictionary *)_icons setObject:imageUrl forKey:appName];
 						}
 					}
 				}
 			}
 		}
-		if (found == [ranks count]) {
+		if (found == [_ranks count]) {
 			break;
 		}
 	}
 	return YES;
 }
 
-- (void)retrieveRank {
+- (void)retrieveRank 
+{
 	void (^failBlock)(NSError *error) = ^(NSError *error) {
-		[error retain];
 		dispatch_async(dispatch_get_main_queue(), ^{
-			if (cached) {
-				[[ARRSSFeedCache sharedARRSSFeedCache] removeCachedFeedForCategory:category country:country];
+			if (self.cached) {
+				[[ARRSSFeedCache sharedARRSSFeedCache] removeCachedFeedForCategory:self.category country:self.country];
 			}
-			if (delegate) {
-				[delegate query:self didFailWithError:error];
+			if (self.delegate) {
+				[self.delegate query:self didFailWithError:error];
 			}
-			[error release];
 		});
 	};
 	
 	void (^successBlock)() = ^{
 		dispatch_async(dispatch_get_main_queue(), ^{
-			if (delegate) {
-				[delegate queryDidFinish:self];
+			if (self.delegate) {
+				[self.delegate queryDidFinish:self];
 			}
 		});
 	};
 	
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-		NSAutoreleasePool *pool = [NSAutoreleasePool new];
-		
-		NSString *jsonString = [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding];
+		NSString *jsonString = [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
 		SBJsonParser *parser = [[SBJsonParser alloc] init];
 		NSError *error = nil;
 		NSDictionary *feed = [parser dictionaryWithString:jsonString error:&error];
-		[jsonString release];
-		[parser release];
 		
 		if (!feed) {
 			failBlock(error);
@@ -206,28 +176,26 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 				failBlock(error);
 			}
 		}
-		
-		[pool drain];
 	});
 }
 
 #pragma mark -
 #pragma mark Lifecycle
 
-- (id)initWithCountry:(NSString *)aCountry category:(ARCategoryTuple *)aCategory {
+- (id)initWithCountry:(NSString *)aCountry category:(ARCategoryTuple *)aCategory 
+{
 	self = [super init];
 	if (self != nil) {
 		assert(aCategory);
 		assert(aCountry);
 		self.url = [aCategory rankingURLForCountry:aCountry];
-		if (!url) {
-			[self release];
+		if (!self.url) {
 			self = nil;
 		} else {
 			self.ranks = [NSMutableDictionary dictionaryWithCapacity:[aCategory.applications count]];
 			self.icons = [NSMutableDictionary dictionaryWithCapacity:[aCategory.applications count]];
 			for (ARApplication *app in aCategory.applications) {
-				[ranks setObject:[NSNull null] forKey:app.name];
+				[(NSMutableDictionary *)_ranks setObject:[NSNull null] forKey:app.name];
 			}
 			self.country = aCountry;
 			self.category = aCategory;
@@ -236,29 +204,17 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 	return self;
 }
 
-- (void)dealloc {
-	[url release], url = nil;
-	[expiryDate release], expiryDate = nil;
-	[icons release], icons = nil;
-	[ranks release], ranks = nil;
-	[receivedData release], receivedData = nil;
-	[connection release], connection = nil;
-	[country release], country = nil;
-	[category release], category = nil;
-	[super dealloc];
-}
-
-- (void)start {
-	assert(!started);
+- (void)start 
+{
+	assert(!self.started);
 	self.started = YES;
 	
 	dispatch_async([ARRankQuery cacheAccessSerialQueue], ^{
-		NSAutoreleasePool *pool = [NSAutoreleasePool new];
 		NSDate *expDate = nil;
-		NSData *cachedData = [[ARRSSFeedCache sharedARRSSFeedCache] retrieveCachedFeedForCategory:category country:country expiryDate:&expDate];
+		NSData *cachedData = [[ARRSSFeedCache sharedARRSSFeedCache] retrieveCachedFeedForCategory:self.category country:self.country expiryDate:&expDate];
 		dispatch_async(dispatch_get_main_queue(), ^{
 			if (!cachedData) {
-				NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url 
+				NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.url 
 																	   cachePolicy:NSURLRequestUseProtocolCachePolicy 
 																   timeoutInterval:60.0];
 				
@@ -266,18 +222,18 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 				[request setValue:@"text/javascript" forHTTPHeaderField:@"Accept"];
 				[request setValue:@"gzip, deflate" forHTTPHeaderField:@"Accept-Encoding"];
 				
-				self.connection = [[[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO] autorelease];
-				if (connection) {
-					self.receivedData = [[[NSMutableData alloc] init] autorelease];
-					[connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-					[connection start];
+				self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
+				if (self.connection) {
+					self.receivedData = [[NSMutableData alloc] init];
+					[self.connection scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+					[self.connection start];
 				} else {
-					if (delegate && !canceled) {
+					if (self.delegate && !self.canceled) {
 						NSError *error = [NSError errorWithDomain:@"ARRankQueryErrorDomain" 
 															 code:0 
 														 userInfo:[NSDictionary dictionaryWithObject:@"Unable to open connection to RSS feed" 
 																							  forKey:NSLocalizedDescriptionKey]];
-						[delegate query:self didFailWithError:error];
+						[self.delegate query:self didFailWithError:error];
 					}
 				}
 			} else {
@@ -288,13 +244,13 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 				[self retrieveRank];
 			}
 		});
-		[pool drain];
 	});
 }
 
-- (void)cancel {
-	if (connection) {
-		[connection cancel];
+- (void)cancel 
+{
+	if (self.connection) {
+		[self.connection cancel];
 	}
 	self.canceled = YES;
 }
@@ -302,24 +258,25 @@ NSString * const kErrorDomain = @"RankQueryErrorDomain";
 #pragma mark -
 #pragma mark NSURLConnection delegate methods
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error 
+{
 	self.receivedData = nil;
-	if (delegate && !canceled) {
-		[delegate query:self didFailWithError:error];
+	if (self.delegate && !self.canceled) {
+		[self.delegate query:self didFailWithError:error];
 	}
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-	[(NSMutableData *)receivedData appendData:data];
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data 
+{
+	[(NSMutableData *)self.receivedData appendData:data];
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection 
+{
 	dispatch_async([ARRankQuery cacheAccessSerialQueue], ^{
-		NSAutoreleasePool *pool = [NSAutoreleasePool new];
-		[[ARRSSFeedCache sharedARRSSFeedCache] cacheFeed:receivedData forCategory:category country:country];
-		[pool drain];
+		[[ARRSSFeedCache sharedARRSSFeedCache] cacheFeed:self.receivedData forCategory:self.category country:self.country];
 	});
-	if (!canceled) {
+	if (!self.canceled) {
 		[self retrieveRank];
 	}
 }

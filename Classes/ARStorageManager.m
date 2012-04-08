@@ -1,65 +1,46 @@
-/*
- * Copyright (c) 2011 Todor Dimitrov
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 
- * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
- * 
- * Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 
- * Neither the name of the project's author nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+/**
+ * Author: Todor Dimitrov
+ * License: http://todor.mit-license.org/
  */
 
 #import "ARStorageManager.h"
-#import "SynthesizeSingleton.h"
 #import "ARRankEntry.h"
 #import "ARRSSFeedCache.h"
 
 @interface ARStorageManager()
 
-@property (nonatomic, retain) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (nonatomic, retain) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, retain) NSDate *timestamp;
+@property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSDate *timestamp;
 
 @end
 
 
 @implementation ARStorageManager
 
-SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
+@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+@synthesize managedObjectModel = _managedObjectModel;
+@synthesize managedObjectContext = _managedObjectContext;
+@synthesize timestamp = _timestamp;
 
-@synthesize persistentStoreCoordinator;
-@synthesize managedObjectModel;
-@synthesize managedObjectContext;
-@synthesize timestamp;
++ (ARStorageManager *)sharedARStorageManager
+{
+    static dispatch_once_t onceToken;
+    static ARStorageManager *singleton;
+    dispatch_once(&onceToken, ^{
+        singleton = [[ARStorageManager alloc] init];
+    });
+    return  singleton;
+}
 
-- (void)updateTimestamp {
+- (void)updateTimestamp 
+{
 	self.timestamp = [NSDate date];
 }
 
-- (id)init {
+- (id)init 
+{
 	self = [super init];
 	if (self != nil) {
 		[self updateTimestamp];
@@ -67,20 +48,23 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
 	return self;
 }
 
-- (NSString *)applicationSupportDirectory {
+- (NSString *)applicationSupportDirectory 
+{
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
     NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : NSTemporaryDirectory();
     return [basePath stringByAppendingPathComponent:@"AppRanking"];
 }
 
-- (NSManagedObjectModel *)managedObjectModel {
-    if (managedObjectModel) return managedObjectModel;
+- (NSManagedObjectModel *)managedObjectModel 
+{
+    if (_managedObjectModel) return _managedObjectModel;
     self.managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
-    return managedObjectModel;
+    return _managedObjectModel;
 }
 
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
-    if (persistentStoreCoordinator) return persistentStoreCoordinator;
+- (NSPersistentStoreCoordinator *)persistentStoreCoordinator 
+{
+    if (_persistentStoreCoordinator) return _persistentStoreCoordinator;
     NSManagedObjectModel *mom = [self managedObjectModel];
     if (!mom) {
         NSAssert(NO, @"Managed object model is nil");
@@ -101,11 +85,11 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
     }
     
     NSURL *url = [NSURL fileURLWithPath:[applicationSupportDirectory stringByAppendingPathComponent: @"storedata"]];
-    self.persistentStoreCoordinator = [[[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: mom] autorelease];
+    self.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:mom];
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
 							 [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
 							 [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
-    if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType 
+    if (![self.persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType 
 												  configuration:nil 
 															URL:url 
 														options:options 
@@ -115,11 +99,12 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
         return nil;
     }    
 	
-    return persistentStoreCoordinator;
+    return _persistentStoreCoordinator;
 }
 
-- (NSManagedObjectContext *)managedObjectContext {
-    if (managedObjectContext) return managedObjectContext;
+- (NSManagedObjectContext *)managedObjectContext 
+{
+    if (_managedObjectContext) return _managedObjectContext;
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     if (!coordinator) {
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
@@ -129,30 +114,32 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
         [[NSApplication sharedApplication] presentError:error];
         return nil;
     }
-    self.managedObjectContext = [[[NSManagedObjectContext alloc] init] autorelease];
-    [managedObjectContext setPersistentStoreCoordinator:coordinator];
+    self.managedObjectContext = [[NSManagedObjectContext alloc] init];
+    [self.managedObjectContext setPersistentStoreCoordinator:coordinator];
 	
-    return managedObjectContext;
+    return _managedObjectContext;
 }
 
 #pragma mark -
 #pragma mark Public interface
 
-- (BOOL)commitChanges:(NSError **)error {
-	if (!managedObjectContext) return YES;
+- (BOOL)commitChanges:(NSError **)error 
+{
+	if (!self.managedObjectContext) return YES;
 	
-    if (![managedObjectContext commitEditing]) {
+    if (![self.managedObjectContext commitEditing]) {
         NSLog(@"%@:%@ unable to commit editing to terminate", [self class], NSStringFromSelector(_cmd));
         return NO;
     }
 	
-    if (![managedObjectContext hasChanges]) return YES;
+    if (![self.managedObjectContext hasChanges]) return YES;
 	
-    return [managedObjectContext save:error];
+    return [self.managedObjectContext save:error];
 }
 
-- (void)tryDeletingUnusedCategories {
-	NSFetchRequest *fetchRequest = [[[NSFetchRequest alloc] init] autorelease];
+- (void)tryDeletingUnusedCategories 
+{
+	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 	[fetchRequest setEntity:[NSEntityDescription entityForName:@"ARCategoryTuple" inManagedObjectContext:self.managedObjectContext]];
 	[fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"applications.@count == 0"]];
 	NSError *error = nil;
@@ -169,7 +156,8 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
 	}
 }
 
-- (NSArray *)rankedCountriesForApplication:(ARApplication *)app inCategory:(ARCategoryTuple *)category error:(NSError **)error {
+- (NSArray *)rankedCountriesForApplication:(ARApplication *)app inCategory:(ARCategoryTuple *)category error:(NSError **)error 
+{
 	assert(app);
 	assert(category);
 	NSEntityDescription *entity = [NSEntityDescription entityForName:@"ARRankEntry" inManagedObjectContext:self.managedObjectContext];
@@ -184,7 +172,6 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
 	[request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 	[request setPredicate:[NSPredicate predicateWithFormat:@"application == %@ and category == %@", app, category]];
 	NSArray *objects = [self.managedObjectContext executeFetchRequest:request error:error];
-	[request release];
 	if (objects) {
 		return [objects valueForKeyPath:@"country"];
 	} else {
@@ -213,11 +200,11 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
 	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:YES];
 	[request setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 	NSArray *objects = [self.managedObjectContext executeFetchRequest:request error:error];
-	[request release];
 	return objects;
 }
 
-- (BOOL)insertRankEntry:(NSNumber *)rank forApplication:(ARApplication *)app query:(ARRankQuery *)query error:(NSError **)error {
+- (BOOL)insertRankEntry:(NSNumber *)rank forApplication:(ARApplication *)app query:(ARRankQuery *)query error:(NSError **)error 
+{
 	if (query.cached) {
 		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 		NSEntityDescription *entity = [NSEntityDescription entityForName:@"ARRankEntry" 
@@ -231,7 +218,6 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(ARStorageManager)
 									app, query.category, query.country, rank]];
 		
 		NSArray *result = [self.managedObjectContext executeFetchRequest:fetchRequest error:error];
-		[fetchRequest release];
 		if (!result) {
 			return NO;
 		}

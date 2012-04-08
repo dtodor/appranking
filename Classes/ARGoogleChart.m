@@ -1,34 +1,6 @@
-/*
- * Copyright (c) 2011 Todor Dimitrov
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 
- * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer.
- * 
- * Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * 
- * Neither the name of the project's author nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+/**
+ * Author: Todor Dimitrov
+ * License: http://todor.mit-license.org/
  */
 
 #import "ARGoogleChart.h"
@@ -38,20 +10,21 @@
 
 @interface ARGoogleChart()
 
-@property (nonatomic, retain) NSDate *startDate;
-@property (nonatomic, retain) NSDate *endDate;
-@property (nonatomic, retain) NSMutableDictionary *postParameters;
+@property (nonatomic, strong) NSDate *startDate;
+@property (nonatomic, strong) NSDate *endDate;
+@property (nonatomic, strong) NSMutableDictionary *postParameters;
 
 @end
 
 
 @implementation ARGoogleChart
 
-@synthesize startDate;
-@synthesize endDate;
-@synthesize postParameters;
+@synthesize startDate = _startDate;
+@synthesize endDate = _endDate;
+@synthesize postParameters = _postParameters;
 
-+ (NSDateFormatter *)dateFormatter {
++ (NSDateFormatter *)dateFormatter 
+{
 	static NSDateFormatter *dateFormatter = nil;
 	static dispatch_once_t once;
 	dispatch_once(&once, ^{
@@ -62,19 +35,11 @@
 	return dateFormatter;
 }
 
-- (void)dealloc {
-	[postParameters release], postParameters = nil;
-	[startDate release], startDate = nil;
-	[endDate release], endDate = nil;
-	[super dealloc];
-}
-
 // Same as simple encoding, but for extended encoding.
 static NSString * const EXTENDED_MAP = @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.";
 
-NSString *extendedEncode(double value, double maxValue);
-
-NSString *extendedEncode(double value, double maxValue) {
+static NSString *extendedEncode(double value, double maxValue) 
+{
 	static NSUInteger EXTENDED_MAP_LENGTH;
 	static dispatch_once_t once;
 	dispatch_once(&once, ^{
@@ -96,11 +61,13 @@ NSString *extendedEncode(double value, double maxValue) {
 	return encodedValue;
 }
 
-+ (id)chartForEntries:(NSArray *)entries sorted:(BOOL)sorted {
-	return [[[[self class] alloc] initWithEntries:entries sorted:sorted] autorelease];
++ (id)chartForEntries:(NSArray *)entries sorted:(BOOL)sorted 
+{
+	return [[[self class] alloc] initWithEntries:entries sorted:sorted];
 }
 
-- (void)processSortedEntries:(NSArray *)entries {
+- (void)processSortedEntries:(NSArray *)entries 
+{
 	NSTimeInterval timeSpan = [self.endDate timeIntervalSinceDate:self.startDate];
 	NSMutableDictionary *country2entries = [NSMutableDictionary dictionary];
 	for (ARRankEntry *entry in entries) {
@@ -146,14 +113,15 @@ NSString *extendedEncode(double value, double maxValue) {
 		}
 	}
 	
-	[postParameters setObject:data forKey:@"chd"];
-	[postParameters setObject:labels forKey:@"chdl"];
-	[postParameters setObject:lineSizes forKey:@"chls"];
-	[postParameters setObject:colors forKey:@"chco"];
-	[postParameters setObject:markers forKey:@"chm"];
+	[self.postParameters setObject:data forKey:@"chd"];
+	[self.postParameters setObject:labels forKey:@"chdl"];
+	[self.postParameters setObject:lineSizes forKey:@"chls"];
+	[self.postParameters setObject:colors forKey:@"chco"];
+	[self.postParameters setObject:markers forKey:@"chm"];
 }
 
-- (id)initWithEntries:(NSArray *)entries sorted:(BOOL)sorted {
+- (id)initWithEntries:(NSArray *)entries sorted:(BOOL)sorted 
+{
 	if (self = [super init]) {
 		assert([entries count] > 1);
 		
@@ -167,11 +135,11 @@ NSString *extendedEncode(double value, double maxValue) {
 		self.startDate = ((ARRankEntry *)[sortedEntries objectAtIndex:0]).timestamp;
 		self.endDate = ((ARRankEntry *)[sortedEntries lastObject]).timestamp;
 		
-		assert(startDate);
-		assert(endDate);
-		assert([startDate isLessThan:endDate]);
+		assert(self.startDate);
+		assert(self.endDate);
+		assert([self.startDate isLessThan:self.endDate]);
 		
-		self.postParameters = [NSMutableDictionary dictionary];
+		NSMutableDictionary *postParameters = [NSMutableDictionary dictionary];
 		NSDate *midPoint = [NSDate dateWithTimeInterval:[self.endDate timeIntervalSinceDate:self.startDate]/2 sinceDate:self.startDate];
 		NSString *labels = [NSString stringWithFormat:@"0:|%@|%@|%@|1:|300|270|240|210|180|150|120|90|60|30|1|", 
 							[[ARGoogleChart dateFormatter] stringFromDate:self.startDate],
@@ -185,13 +153,15 @@ NSString *extendedEncode(double value, double maxValue) {
 		[postParameters setObject:@"lxy" forKey:@"cht"];
 		[postParameters setObject:@"0,10,4,8" forKey:@"chg"]; // Grid
 		[postParameters setObject:@"40,20,20,30" forKey:@"chma"]; // Margins
+        self.postParameters = postParameters;
 
 		[self processSortedEntries:sortedEntries];
 	}
 	return self;
 }
 
-- (NSURLRequest *)URLRequest {
+- (NSURLRequest *)URLRequest 
+{
 	NSURL *url = [NSURL URLWithString:@"http://chart.apis.google.com/chart"];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
 	[request setHTTPMethod:@"POST"];
@@ -199,7 +169,7 @@ NSString *extendedEncode(double value, double maxValue) {
 	NSUInteger count = 0;
 	for (NSString *param in self.postParameters) {
 		[postData appendFormat:@"%@=%@", param, [self.postParameters objectForKey:param]];
-		if (count++ < [postParameters count]-1) {
+		if (count++ < [self.postParameters count]-1) {
 			[postData appendString:@"&"];
 		}
 	}
@@ -207,11 +177,12 @@ NSString *extendedEncode(double value, double maxValue) {
 	return request;
 }
 
-- (NSImage *)image {
+- (NSImage *)image 
+{
 	NSError *error = nil;
 	NSData *imageData = [NSURLConnection sendSynchronousRequest:[self URLRequest] returningResponse:NULL error:&error];
 	if (imageData) {
-		return [[[NSImage alloc] initWithData:imageData] autorelease];
+		return [[NSImage alloc] initWithData:imageData];
 	} else {
 		NSLog(@"Unable to retrieve chart image, error = %@", [error localizedDescription]);
 	}

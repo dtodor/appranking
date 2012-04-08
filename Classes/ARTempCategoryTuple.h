@@ -1,10 +1,7 @@
-//
-//  ARTempCategoryTuple.h
-//  AppRanking
-//
-//  Created by Todor Dimitrov on 31.08.10.
-//  Copyright 2011 Todor Dimitrov. All rights reserved.
-//
+/**
+ * Author: Todor Dimitrov
+ * License: http://todor.mit-license.org/
+ */
 
 #import <Cocoa/Cocoa.h>
 #import "ARCategoryTuple.h"
@@ -12,8 +9,8 @@
 
 @interface ARTempCategoryTuple : NSObject
 
-@property (nonatomic, retain) NSString *name;
-@property (nonatomic, retain) NSNumber *type;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSNumber *type;
 
 - (BOOL)validate:(NSError **)error;
 - (BOOL)fetchCorrespondingCategory:(ARCategoryTuple **)category error:(NSError **)error;
