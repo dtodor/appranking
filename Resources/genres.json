@@ -1,6 +1,7 @@
 {
     "Books":6018,
     "Business":6000,
+    "Catalogs":6022,
     "Education":6017,
     "Entertainment":6016,
     "Finance":6015,
@@ -12,7 +13,7 @@
     "Navigation":6010,
     "News":6009,
     "Newsstand":6021,
-    "Photo &amp; Video":6008,
+    "Photo & Video":6008,
     "Productivity":6007,
     "Reference":6006,
     "Social Networking":6005,
