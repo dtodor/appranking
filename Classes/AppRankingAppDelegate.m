@@ -101,6 +101,7 @@
         if (answer == NSAlertAlternateReturn) return NSTerminateCancel;
 		
     }
+    [[[NSApplication sharedApplication] dockTile] setBadgeLabel:@""];
     return NSTerminateNow;
 }
 

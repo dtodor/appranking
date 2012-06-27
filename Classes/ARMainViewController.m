@@ -51,7 +51,9 @@
 @end
 
 
-@implementation ARMainViewController
+@implementation ARMainViewController {
+    NSUInteger _iconBadge;
+}
 
 @synthesize emptyCacheMenuItem = _emptyCacheMenuItem;
 @synthesize applicationsTree = _applicationsTree;
@@ -210,6 +212,9 @@
 	if (self.runningQueries) {
 		return;
 	}
+    
+    _iconBadge = 0;
+    [[[NSApplication sharedApplication] dockTile] setBadgeLabel:@""];
 	
 	[self.statusViewController.mainLabel setStringValue:@"Processing RSS feeds ..."];
 	[self.statusViewController.secondaryLabel setStringValue:@""];
@@ -405,6 +410,9 @@
 			if (![[ARStorageManager sharedARStorageManager] insertRankEntry:value forApplication:applicationNode.application query:query error:&error]) {
 				NSLog(@"Unable to persist result for '%@ - %@ (%@)'", applicationNode.application.name, query.country, query.category);
 			}
+            
+            _iconBadge++;
+            [[[NSApplication sharedApplication] dockTile] setBadgeLabel:[NSString stringWithFormat:@"%d", _iconBadge]];
 		}
 	}
 	
