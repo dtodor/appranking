@@ -165,13 +165,24 @@
 
 - (void)postFinishNotifications 
 {
-	[GrowlApplicationBridge notifyWithTitle:@"Finished updating ranks" 
-								description:@"AppRanking has finished updating the ranks for your applications. To review the results, select an application from the categories and applications list on the left." 
-						   notificationName:@"ARRefreshFinishedNotification" 
-								   iconData:nil 
-								   priority:0 
-								   isSticky:NO 
-							   clickContext:nil];
+    NSString *message = @"AppRanking has finished updating the ranks for your applications. To review the results, select an application from the categories and applications list on the left.";
+    NSString *title = @"Finished updating ranks";
+    if (NSClassFromString(@"NSUserNotification")) {
+        NSUserNotification *notification = [[NSUserNotification alloc] init];
+        notification.deliveryDate = [NSDate date];
+        notification.hasActionButton = NO;
+        notification.title = title;
+        notification.informativeText = message;
+        [[NSUserNotificationCenter defaultUserNotificationCenter] scheduleNotification:notification];
+    } else {
+        [GrowlApplicationBridge notifyWithTitle:title
+                                    description:message
+                               notificationName:@"ARRefreshFinishedNotification" 
+                                       iconData:nil 
+                                       priority:0 
+                                       isSticky:NO 
+                                   clickContext:nil];
+    }
 }
 
 #pragma mark -
@@ -234,7 +245,7 @@
 	self.runningQueries = [NSMutableArray array];
 	self.pendingQueries = [NSMutableArray array];
 	
-	static NSUInteger maxConcurrent = 20;
+	static NSUInteger maxConcurrent = 30;
 
 	ARConfiguration *config = [ARConfiguration sharedARConfiguration];
 
@@ -412,7 +423,7 @@
 			}
             
             _iconBadge++;
-            [[[NSApplication sharedApplication] dockTile] setBadgeLabel:[NSString stringWithFormat:@"%d", _iconBadge]];
+            [[[NSApplication sharedApplication] dockTile] setBadgeLabel:[NSString stringWithFormat:@"%ld", _iconBadge]];
 		}
 	}
 	
@@ -502,7 +513,7 @@
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row 
 {
 	if ([[tableColumn identifier] isEqualToString:@"NumberColumn"]) {
-		[cell setStringValue:[NSString stringWithFormat:@"%d", row+1]];
+		[cell setStringValue:[NSString stringWithFormat:@"%ld", row+1]];
 	}
 }
 
@@ -548,38 +559,6 @@
 	[self.sidebar expandItem:nil expandChildren:YES];
 	NSUInteger indexes[] = { 0, 0 };
 	[self.treeController setSelectionIndexPath:[NSIndexPath indexPathWithIndexes:indexes length:2]];
-}
-
-#pragma mark -
-#pragma mark NSSplitViewDelegate
-
-- (CGFloat)splitView:(NSSplitView *)splitView constrainSplitPosition:(CGFloat)proposedPosition ofSubviewAt:(NSInteger)dividerIndex 
-{
-    
-    NSSize size = [splitView bounds].size;
-    if (splitView.isVertical) {
-#define kMinLeft 200.0
-#define kMinRight 300.0
-        
-        if (proposedPosition < kMinLeft) {
-            return kMinLeft;
-        } else if (proposedPosition > size.width-kMinRight) {
-            return size.width-kMinRight;
-        }
-        
-    } else {
-#define kMinTop 200.0
-#define kMinBottom 200.0
-        
-        if (proposedPosition < kMinTop) {
-            return kMinTop;
-        } else if (proposedPosition > size.height-kMinBottom) {
-            return size.height-kMinBottom;
-        }
-        
-    }
-    
-    return proposedPosition;
 }
 
 @end

@@ -93,7 +93,7 @@
 
 - (CGFloat)drawBadge:(NSRect)cellFrame {
 	// Setup Badge String and Size
-	NSString *badge = [[NSString alloc] initWithFormat:@"%d", _badgeCount];
+	NSString *badge = [[NSString alloc] initWithFormat:@"%ld", _badgeCount];
 	NSSize badgeNumSize = [badge sizeWithAttributes:nil];
 	NSFont *badgeFont = [self font];
 	

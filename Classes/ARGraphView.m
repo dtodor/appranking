@@ -176,7 +176,7 @@
     for (NSUInteger i=0; i<=numberOflines; i++) {
         NSUInteger value = 300-i*(300/numberOflines);
         if (value == 0) value = 1;
-        NSString *label = [NSString stringWithFormat:@"%d", value];
+        NSString *label = [NSString stringWithFormat:@"%ld", value];
         CGFloat labelWidth = [self widthOfString:label inContext:context];
         CGContextSetTextDrawingMode(context, kCGTextFill);
         CGContextShowTextAtPoint(context, paddingLeft-5-labelWidth, paddingBottom-4.0+i*distance, 
@@ -214,20 +214,13 @@
         }
 
         int bitmapBytesPerRow = minWidth * 4;
-        int bitmapByteCount = bitmapBytesPerRow * minHeight;
-        void *bitmapData = calloc(bitmapByteCount, 1);
-        if (bitmapData == NULL) {
-            fprintf(stderr, "Could not allocate memory for bitmap graphics context!");
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
+        CGContextRef _context = CGBitmapContextCreate(NULL, minWidth, minHeight, 8, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast);
+        CGColorSpaceRelease(colorSpace);
+        if (_context == NULL)         {
+            fprintf(stderr, "Could not create bitmal graphics context!");
         } else {
-            CGColorSpaceRef colorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
-            CGContextRef _context = CGBitmapContextCreate(bitmapData, minWidth, minHeight, 8, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast);
-            if (_context == NULL)         {
-                free(bitmapData);
-                fprintf(stderr, "Could not create bitmal graphics context!");
-            } else {
-                context = (__bridge CGContextRef)(CFBridgingRelease(_context));
-            }
-            CGColorSpaceRelease(colorSpace);
+            context = (__bridge CGContextRef)CFBridgingRelease(_context);
         }
     } else {
         context = [[NSGraphicsContext currentContext] graphicsPort];

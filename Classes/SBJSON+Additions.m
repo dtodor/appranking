@@ -133,7 +133,7 @@ NSString * const kSBJSONAdditionsErrorDomain = @"SBJSONAdditionsErrorDomain";
 		if (error) {
 			*error = [NSError errorWithDomain:kSBJSONAdditionsErrorDomain 
 										 code:NotADictinary
-									 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Value at index '%d' is not a dictionary", index] 
+									 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Value at index '%ld' is not a dictionary", index]
 																		  forKey:NSLocalizedDescriptionKey]];
 		}
 		return nil;
@@ -148,7 +148,7 @@ NSString * const kSBJSONAdditionsErrorDomain = @"SBJSONAdditionsErrorDomain";
 		if (error) {
 			*error = [NSError errorWithDomain:kSBJSONAdditionsErrorDomain 
 										 code:NotAnArray
-									 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Value at index '%d' is not an array", index] 
+									 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Value at index '%ld is not an array", index]
 																		  forKey:NSLocalizedDescriptionKey]];
 		}
 		return nil;
@@ -163,7 +163,7 @@ NSString * const kSBJSONAdditionsErrorDomain = @"SBJSONAdditionsErrorDomain";
 		if (error) {
 			*error = [NSError errorWithDomain:kSBJSONAdditionsErrorDomain 
 										 code:NotAString
-									 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Value at index '%d' is not a string", index] 
+									 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Value at index '%ld' is not a string", index]
 																		  forKey:NSLocalizedDescriptionKey]];
 		}
 		return nil;
@@ -178,7 +178,7 @@ NSString * const kSBJSONAdditionsErrorDomain = @"SBJSONAdditionsErrorDomain";
 		if (error) {
 			*error = [NSError errorWithDomain:kSBJSONAdditionsErrorDomain 
 										 code:NotANumber
-									 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Value at index '%d' is not a number", index] 
+									 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Value at index '%ld is not a number", index]
 																		  forKey:NSLocalizedDescriptionKey]];
 		}
 		return nil;
